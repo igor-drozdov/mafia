@@ -7,6 +7,7 @@ import Platform.Cmd
 import Phoenix.Socket
 import Phoenix.Channel
 import Json.Encode as JE
+import Json.Decode as JD exposing (field)
 import Leader.Init as Init
 import Leader.Current as Current
 import Leader.Finished as Finished
@@ -48,6 +49,7 @@ type Msg
     | CurrentMsg Current.Msg
     | FinishedMsg Finished.Msg
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | LoadGame JE.Value
 
 
 type alias Model =
@@ -71,7 +73,7 @@ init { gameId } =
     let
         channel =
             Phoenix.Channel.init ("rooms:leader:" ++ gameId)
-                |> Phoenix.Channel.withPayload userParams
+                |> Phoenix.Channel.onJoin LoadGame
 
         initPhxSocket =
             Phoenix.Socket.init socketServer
@@ -80,8 +82,11 @@ init { gameId } =
         ( phxSocket, phxCmd ) =
             Phoenix.Socket.join channel initPhxSocket
 
+        phxSocketWithListener : Phoenix.Socket.Socket Msg
         phxSocketWithListener =
-            phxSocket |> Phoenix.Socket.on "follower_joined" ("rooms:leader:" ++ gameId) Init.FollowerJoined
+            phxSocket
+                |> Phoenix.Socket.on "follower_joined" ("rooms:leader:" ++ gameId) (Init.FollowerJoined >> InitMsg)
+                |> Phoenix.Socket.on "follower_left" ("rooms:leader:" ++ gameId) (Current.Agree >> CurrentMsg)
 
         initModel : Model
         initModel =
@@ -89,7 +94,7 @@ init { gameId } =
             , initModel = Init.init
             , currentModel = Current.init
             , finishedModel = Finished.init
-            , phxSocket = Phoenix.Socket.map InitMsg phxSocketWithListener
+            , phxSocket = phxSocketWithListener
             }
     in
         ( initModel
@@ -110,11 +115,6 @@ subscriptions model =
 -- UPDATE
 
 
-userParams : JE.Value
-userParams =
-    JE.object [ ( "user_id", JE.string "123" ) ]
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -126,6 +126,29 @@ update msg model =
                 ( { model | phxSocket = phxSocket }
                 , Cmd.map PhoenixMsg phxCmd
                 )
+
+        LoadGame raw ->
+            case JD.decodeValue (field "state" JD.string) raw of
+                Ok stateStr ->
+                    let
+                        state =
+                            case stateStr of
+                                "init" ->
+                                    Init
+
+                                "current" ->
+                                    Current
+
+                                "finished" ->
+                                    Finished
+
+                                _ ->
+                                    Loading
+                    in
+                        { model | state = state } ! []
+
+                Err error ->
+                    model ! []
 
         InitMsg m ->
             let
