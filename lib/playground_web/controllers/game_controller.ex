@@ -16,6 +16,11 @@ defmodule PlaygroundWeb.GameController do
 
   def show(conn, %{"id" => id}) do
     game = Mafia.get_game!(id)
-    render(conn, "show.html", game: game)
+    user_agent =
+      get_req_header(conn, "user-agent")
+      |> List.first
+
+    render(conn, "show.html",
+           game: game, user_agent: user_agent)
   end
 end

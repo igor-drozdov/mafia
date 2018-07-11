@@ -1,1 +1,4 @@
-<div id="elm_target" data-game-id="<%= @game.id %>"></div>
+<%= if mobile?(@user_agent) do %>
+<% else %>
+  <div id="elm_target" data-game-id="<%= @game.id %>"></div>
+<% end %>
