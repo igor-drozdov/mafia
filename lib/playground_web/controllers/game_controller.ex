@@ -16,11 +16,25 @@ defmodule PlaygroundWeb.GameController do
 
   def show(conn, %{"id" => id}) do
     game = Mafia.get_game!(id)
-    user_agent =
-      get_req_header(conn, "user-agent")
-      |> List.first
+    player = player_from_session(conn)
+    user_agents = get_req_header(conn, "user-agent")
 
-    render(conn, "show.html",
-           game: game, user_agent: user_agent)
+    cond do
+      player ->
+        redirect(conn, to: game_player_path(conn, :show, game, player))
+      Enum.any?(user_agents, & mobile?(&1)) ->
+        redirect(conn, to: game_player_path(conn, :new, game))
+      true ->
+        render(conn, "show.html", game: game)
+    end
+  end
+
+  defp mobile?(user_agent) do
+    Regex.match?(~r/Mobile|webOS/, user_agent)
+  end
+
+  def player_from_session(conn) do
+    player_id = get_session(conn, :player_id)
+    player_id && Mafia.get_player!(player_id)
   end
 end

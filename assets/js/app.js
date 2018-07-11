@@ -22,7 +22,7 @@ import "phoenix_html"
 
 import Elm from './leader';
 
-const elmDiv = document.querySelector('#elm_target');
+const elmDiv = document.querySelector('#elm_leader_target');
 
 if (elmDiv) {
   Elm.Leader.embed(elmDiv, { gameId: elmDiv.dataset.gameId });

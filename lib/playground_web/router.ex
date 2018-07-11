@@ -17,7 +17,10 @@ defmodule PlaygroundWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    resources "/games", GameController
+
+    resources "/games", GameController do
+      resources "/players", PlayerController
+    end
   end
 
   # Other scopes may use custom stacks.

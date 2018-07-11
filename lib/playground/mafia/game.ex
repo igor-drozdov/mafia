@@ -8,6 +8,8 @@ defmodule Playground.Mafia.Game do
   schema "games" do
     field :state, :string
 
+    has_many :players, Playground.Mafia.Player
+
     timestamps()
   end
 
