@@ -28,9 +28,6 @@ defmodule PlaygroundWeb.PlayerController do
   end
 
   def show(conn, %{"id" => id, "game_id" => game_id}) do
-    player = Mafia.get_player!(id)
-    game = Mafia.get_game!(game_id)
-
-    render(conn, "show.html", player: player, game: game)
+    render(conn, "show.html", player_id: id, game_id: game_id)
   end
 end

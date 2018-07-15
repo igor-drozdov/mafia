@@ -50,7 +50,7 @@ exports.config = {
     },
     elmBrunch: {
       elmFolder: "elm",
-      mainModules: ["src/Leader.elm"],
+      mainModules: ["src/Leader.elm", "src/Follower.elm"],
       makeParameters: ["--warn"],
       outputFolder: '../js/',
     },

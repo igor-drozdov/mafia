@@ -5,8 +5,6 @@
     </div>
   <% end %>
 
-  <%= hidden_input f, :state, value: "alive" %>
-
   <div class="form-group">
     <%= label f, :name, class: "control-label" %>
     <%= text_input f, :name, class: "form-control" %>

@@ -2,7 +2,8 @@ defmodule PlaygroundWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "rooms:*", PlaygroundWeb.RoomChannel
+  channel "rooms:leader:*", PlaygroundWeb.LeaderRoomChannel
+  channel "rooms:followers:*", PlaygroundWeb.FollowerRoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

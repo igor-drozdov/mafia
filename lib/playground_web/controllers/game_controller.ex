@@ -2,9 +2,10 @@ defmodule PlaygroundWeb.GameController do
   use PlaygroundWeb, :controller
 
   alias Playground.Mafia
+  alias Playground.Repo
 
   def create(conn, _params) do
-    case Mafia.create_game(%{ "state" => "init" }) do
+    case Mafia.create_game() do
       {:ok, game} ->
         conn
         |> redirect(to: game_path(conn, :show, game))
@@ -16,7 +17,7 @@ defmodule PlaygroundWeb.GameController do
 
   def show(conn, %{"id" => id}) do
     game = Mafia.get_game!(id)
-    player = player_from_session(conn)
+    player = player_from_session(conn, game)
     user_agents = get_req_header(conn, "user-agent")
 
     cond do
@@ -33,8 +34,11 @@ defmodule PlaygroundWeb.GameController do
     Regex.match?(~r/Mobile|webOS/, user_agent)
   end
 
-  def player_from_session(conn) do
-    player_id = get_session(conn, :player_id)
-    player_id && Mafia.get_player!(player_id)
+  def player_from_session(conn, game) do
+    case get_session(conn, :player_id) do
+      nil -> nil
+      player_id ->
+        Repo.get_by(Mafia.Player, game_id: game.id, id: player_id)
+    end
   end
 end

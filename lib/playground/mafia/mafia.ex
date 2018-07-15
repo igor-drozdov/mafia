@@ -36,6 +36,7 @@ defmodule Playground.Mafia do
 
   """
   def get_game!(id), do: Repo.get!(Game, id)
+  def get_game(id), do: Repo.get(Game, id)
 
   @doc """
   Creates a game.
@@ -132,6 +133,7 @@ defmodule Playground.Mafia do
 
   """
   def get_player!(id), do: Repo.get!(Player, id)
+  def get_player(id), do: Repo.get(Player, id)
 
   @doc """
   Creates a player.
