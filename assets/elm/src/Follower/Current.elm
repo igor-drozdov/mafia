@@ -1,4 +1,4 @@
-module Leader.Current exposing (..)
+module Follower.Current exposing (..)
 
 import Player
 import Html exposing (Html, div, text)

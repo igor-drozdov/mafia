@@ -2,15 +2,13 @@ module Leader exposing (..)
 
 --where
 
-import Html exposing (Html, div, text)
+import Html exposing (Html)
 import Platform.Cmd
 import Phoenix.Socket
 import Phoenix.Channel
-import Json.Encode as JE
-import Json.Decode as JD exposing (field)
-import Leader.Init as Init
-import Leader.Current as Current
-import Leader.Finished as Finished
+import Leader.Game as Game
+import Leader.Game.Init as Init
+import Leader.Game.Current as Current
 
 
 -- MAIN
@@ -45,27 +43,14 @@ socketServer =
 
 
 type Msg
-    = InitMsg Init.Msg
-    | CurrentMsg Current.Msg
-    | FinishedMsg Finished.Msg
+    = GameMsg Game.Msg
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
-    | LoadGame JE.Value
 
 
 type alias Model =
-    { state : State
-    , initModel : Init.Model
-    , currentModel : Current.Model
-    , finishedModel : Finished.Model
+    { game : Game.Model
     , phxSocket : Phoenix.Socket.Socket Msg
     }
-
-
-type State
-    = Loading
-    | Init
-    | Current
-    | Finished
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -73,7 +58,7 @@ init { gameId } =
     let
         channel =
             Phoenix.Channel.init ("rooms:leader:" ++ gameId)
-                |> Phoenix.Channel.onJoin LoadGame
+                |> Phoenix.Channel.onJoin (Game.LoadGame >> GameMsg)
 
         initPhxSocket =
             Phoenix.Socket.init socketServer
@@ -85,15 +70,12 @@ init { gameId } =
         phxSocketWithListener : Phoenix.Socket.Socket Msg
         phxSocketWithListener =
             phxSocket
-                |> Phoenix.Socket.on "follower_joined" ("rooms:leader:" ++ gameId) (Init.FollowerJoined >> InitMsg)
-                |> Phoenix.Socket.on "follower_left" ("rooms:leader:" ++ gameId) (Current.Agree >> CurrentMsg)
+                |> Phoenix.Socket.on "follower_joined" ("rooms:leader:" ++ gameId) (Init.FollowerJoined >> Game.InitMsg >> GameMsg)
+                |> Phoenix.Socket.on "follower_left" ("rooms:leader:" ++ gameId) (Current.Agree >> Game.CurrentMsg >> GameMsg)
 
         initModel : Model
         initModel =
-            { state = Loading
-            , initModel = Init.init
-            , currentModel = Current.init
-            , finishedModel = Finished.init
+            { game = Game.init
             , phxSocket = phxSocketWithListener
             }
     in
@@ -127,52 +109,13 @@ update msg model =
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
-        LoadGame raw ->
-            case JD.decodeValue (field "state" JD.string) raw of
-                Ok stateStr ->
-                    let
-                        state =
-                            case stateStr of
-                                "init" ->
-                                    Init
-
-                                "current" ->
-                                    Current
-
-                                "finished" ->
-                                    Finished
-
-                                _ ->
-                                    Loading
-                    in
-                        { model | state = state } ! []
-
-                Err error ->
-                    model ! []
-
-        InitMsg m ->
+        GameMsg m ->
             let
-                ( subMdl, subCmd ) =
-                    Init.update m model.initModel
+                ( subMdl, subMsg ) =
+                    Game.update m model.game
             in
-                { model | initModel = subMdl }
-                    ! [ Cmd.map InitMsg subCmd ]
-
-        CurrentMsg m ->
-            let
-                ( subMdl, subCmd ) =
-                    Current.update m model.currentModel
-            in
-                { model | currentModel = subMdl }
-                    ! [ Cmd.map CurrentMsg subCmd ]
-
-        FinishedMsg m ->
-            let
-                ( subMdl, subCmd ) =
-                    Finished.update m model.finishedModel
-            in
-                { model | finishedModel = subMdl }
-                    ! [ Cmd.map FinishedMsg subCmd ]
+                { model | game = subMdl }
+                    ! [ Cmd.map GameMsg subMsg ]
 
 
 
@@ -181,15 +124,4 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    case model.state of
-        Loading ->
-            div [] [ text "Loading" ]
-
-        Init ->
-            Html.map InitMsg <| Init.view model.initModel
-
-        Current ->
-            Html.map CurrentMsg <| Current.view model.currentModel
-
-        Finished ->
-            Html.map FinishedMsg <| Finished.view model.finishedModel
+    Html.map GameMsg <| Game.view model.game

@@ -1,4 +1,4 @@
-module Leader.Init exposing (..)
+module Follower.Init exposing (..)
 
 import Player
 import Html exposing (Html, div, text, button)
@@ -29,16 +29,7 @@ update msg model =
             model ! []
 
         FollowerJoined raw ->
-            let
-                followerMessageDecoder =
-                    JD.map Player.Model (field "name" JD.string)
-            in
-                case JD.decodeValue followerMessageDecoder raw of
-                    Ok player ->
-                        { model | players = player :: model.players } ! []
-
-                    Err error ->
-                        ( model, Cmd.none )
+            model ! []
 
 
 view : Model -> Html Msg

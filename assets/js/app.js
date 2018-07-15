@@ -20,10 +20,17 @@ import "phoenix_html"
 
 // import socket from "./socket"
 
-import Elm from './leader';
+import ElmLeader from './leader';
+import ElmFollower from './follower';
 
-const elmDiv = document.querySelector('#elm_leader_target');
+const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
-if (elmDiv) {
-  Elm.Leader.embed(elmDiv, { gameId: elmDiv.dataset.gameId });
+if (elmLeaderDiv) {
+  ElmLeader.Leader.embed(elmLeaderDiv, { gameId: elmLeaderDiv.dataset.gameId });
+}
+
+const elmFollowerDiv = document.querySelector('#elm_follower_target');
+
+if (elmFollowerDiv) {
+  ElmFollower.Follower.embed(elmFollowerDiv, { gameId: elmFollowerDiv.dataset.gameId, playerId: elmFollowerDiv.dataset.playerId });
 }
