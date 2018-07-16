@@ -4,8 +4,8 @@ defmodule PlaygroundWeb.GameController do
   alias Playground.Mafia
   alias Playground.Repo
 
-  def create(conn, _params) do
-    case Mafia.create_game() do
+  def create(conn, %{ "game" => game_params }) do
+    case Mafia.create_game(game_params) do
       {:ok, game} ->
         conn
         |> redirect(to: game_path(conn, :show, game))

@@ -2,13 +2,23 @@ module Leader.Game.Finished exposing (..)
 
 import Player
 import Html exposing (Html, div, text)
+import Json.Decode as JD exposing (field)
 import Leader.Game.Finished.State exposing (State)
 import Leader.Game.Model exposing (..)
 
 
-init : List Player.Model -> Model
-init players =
-    Finished (State players)
+decode raw defaultModel =
+    case JD.decodeValue decoder raw of
+        Ok state ->
+            Finished state
+
+        Err error ->
+            defaultModel
+
+
+decoder =
+    JD.map State
+        (field "players" (JD.list Player.decoder))
 
 
 type Msg

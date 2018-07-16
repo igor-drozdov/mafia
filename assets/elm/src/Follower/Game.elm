@@ -1,18 +1,17 @@
-module Leader.Game exposing (..)
+module Follower.Game exposing (..)
 
 import Html exposing (Html, div, text)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Player
-import Leader.Game.Init as Init
-import Leader.Game.Current as Current
-import Leader.Game.Finished as Finished
-import Leader.Game.Model exposing (..)
-import Debug exposing (log)
+import Follower.Game.Init as Init
+import Follower.Game.Current as Current
+import Follower.Game.Finished as Finished
+import Follower.Game.Model exposing (..)
 
 
 type alias Model =
-    Leader.Game.Model.Model
+    Follower.Game.Model.Model
 
 
 type Msg
@@ -31,17 +30,17 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         ( LoadGame raw, Loading ) ->
-            case JD.decodeValue (field "state" JD.string) raw of
-                Ok state ->
+            case JD.decodeValue decoder raw of
+                Ok { state, players } ->
                     case state of
                         "init" ->
-                            Init.decode raw model ! []
+                            Init.init players ! []
 
                         "current" ->
-                            Current.decode raw model ! []
+                            Current.init players ! []
 
                         "finished" ->
-                            Finished.decode raw model ! []
+                            Finished.init players ! []
 
                         _ ->
                             model ! []
@@ -75,6 +74,12 @@ update msg model =
 
         _ ->
             model ! []
+
+
+decoder =
+    JD.map2 (\state players -> { state = state, players = players })
+        (field "state" JD.string)
+        (field "players" (JD.list Player.decoder))
 
 
 view : Model -> Html Msg

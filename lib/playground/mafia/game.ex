@@ -1,12 +1,14 @@
 defmodule Playground.Mafia.Game do
   use Ecto.Schema
+  import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}
-  @derive {Poison.Encoder, only: [:id, :state, :players]}
+  @derive {Poison.Encoder, only: [:id, :state, :total, :players]}
 
   schema "games" do
     field :state, :string
+    field :total, :integer
 
     has_many :players, Playground.Mafia.Player
 
@@ -14,7 +16,8 @@ defmodule Playground.Mafia.Game do
   end
 
   @doc false
-  def changeset(game, _attrs) do
+  def changeset(game, attrs) do
     game
+    |> cast(attrs, [:total])
   end
 end

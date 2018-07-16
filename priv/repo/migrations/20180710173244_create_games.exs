@@ -7,6 +7,7 @@ defmodule Playground.Repo.Migrations.CreateGames do
     create table(:games, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :state, :game_state, default: "init"
+      add :total, :integer
 
       timestamps()
     end
