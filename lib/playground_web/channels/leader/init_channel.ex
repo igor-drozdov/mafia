@@ -4,7 +4,7 @@ defmodule PlaygroundWeb.Leader.InitChannel do
   alias Playground.Mafia
   alias Playground.Repo
 
-  def join("rooms:leader:init" <> id, _payload, socket) do
+  def join("rooms:leader:init:" <> id, _payload, socket) do
     game =
       Mafia.get_game!(id)
       |> Repo.preload(:players)

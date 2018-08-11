@@ -1,1 +1,1 @@
-<div id="elm_follower_target" data-game-id="<%= @game_id %>" data-player-id="<%= @player_id %>"></div>
+<div id="elm_follower_target" data-game-id="<%= @game.id %>" data-player-id="<%= @player_id %>" data-game-state="<%= @game.state %>"></div>

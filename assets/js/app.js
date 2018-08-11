@@ -28,7 +28,7 @@ const elmLeaderDiv = document.querySelector('#elm_leader_target');
 if (elmLeaderDiv) {
   ElmLeader.Leader.embed(elmLeaderDiv, {
     gameId: elmLeaderDiv.dataset.gameId,
-    state: elmLeaderDiv.dataset.state
+    state: elmLeaderDiv.dataset.gameState
   });
 }
 
@@ -37,7 +37,7 @@ const elmFollowerDiv = document.querySelector('#elm_follower_target');
 if (elmFollowerDiv) {
   ElmFollower.Follower.embed(elmFollowerDiv, {
     gameId: elmFollowerDiv.dataset.gameId,
-    state: elmFollowerDiv.dataset.state,
+    state: elmFollowerDiv.dataset.gameState,
     playerId: elmFollowerDiv.dataset.playerId
   });
 }

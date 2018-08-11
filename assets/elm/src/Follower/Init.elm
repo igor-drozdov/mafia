@@ -1,15 +1,14 @@
-module Leader.Init exposing (..)
+module Follower.Init exposing (..)
 
 import Player
 import Html exposing (Html, div, text, button)
-import Json.Decode as JD exposing (field)
+import Json.Encode as JE
 import Phoenix.Channel
 import Phoenix.Socket
-import Leader.Init.State as InitState exposing (State)
-import Leader.Model exposing (..)
+import Follower.Init.State as InitState exposing (State)
+import Follower.Model exposing (..)
 import Array exposing (Array)
-import List.Extra exposing (find)
-import Leader.Init.Msg exposing (..)
+import Follower.Init.Msg exposing (..)
 
 
 -- CONSTANTS
@@ -21,17 +20,18 @@ socketServer =
 
 
 type alias Msg =
-    Leader.Init.Msg.Msg
+    Follower.Init.Msg.Msg
 
 
-init : String -> ( Model, Cmd Msg )
-init gameId =
+init : String -> String -> ( Model, Cmd Msg )
+init gameId playerId =
     let
         channelName =
-            ("rooms:leader:init:" ++ gameId)
+            ("rooms:followers:init:" ++ gameId)
 
         channel =
             Phoenix.Channel.init channelName
+                |> Phoenix.Channel.withPayload (JE.object [ ( "player_id", JE.string playerId ) ])
                 |> Phoenix.Channel.onJoin LoadGame
 
         initPhxSocket =
@@ -44,7 +44,6 @@ init gameId =
         phxSocketWithListener : Phoenix.Socket.Socket Msg
         phxSocketWithListener =
             phxSocket
-                |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
     in
         ( Init (InitState.init phxSocketWithListener)
         , Cmd.map PhoenixMsg phxCmd
@@ -63,25 +62,8 @@ update msg state =
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
-        LoadGame raw ->
-            Init (InitState.decode raw state) ! []
-
-        FollowerJoined raw ->
-            case JD.decodeValue Player.decoder raw of
-                Ok player ->
-                    let
-                        foundModel =
-                            find (\p -> p.id == player.id) (Array.toList state.players)
-                    in
-                        case foundModel of
-                            Just _ ->
-                                Init state ! []
-
-                            Nothing ->
-                                Init { state | players = Array.push player state.players } ! []
-
-                Err error ->
-                    Init state ! []
+        LoadGame _ ->
+            Init state ! []
 
 
 subscriptions : State -> Sub Msg
@@ -92,9 +74,7 @@ subscriptions state =
 view : State -> Html Msg
 view { players, total } =
     div []
-        [ div [] [ text "Share the current link with other players" ]
-        , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
-        , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
+        [ div [] [ text "Waiting other users to connect..." ]
         ]
 
 

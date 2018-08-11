@@ -7,9 +7,6 @@ import Platform.Cmd
 import Leader.Init as Init
 import Leader.Current as Current
 import Leader.Finished as Finished
-import Leader.Init.State as InitState
-import Leader.Current.State as CurrentState
-import Leader.Finished.State as FinishedState
 import Leader.Model exposing (..)
 
 
@@ -77,7 +74,12 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    case model of
+        Init state ->
+            Sub.map InitMsg <| Init.subscriptions state
+
+        _ ->
+            Sub.none
 
 
 

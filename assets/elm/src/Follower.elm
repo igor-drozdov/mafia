@@ -4,10 +4,10 @@ module Follower exposing (..)
 
 import Html exposing (Html, div, text)
 import Platform.Cmd
-import Phoenix.Socket
-import Phoenix.Channel
-import Json.Encode as JE
-import Follower.Game as Game
+import Follower.Init as Init
+import Follower.Current as Current
+import Follower.Finished as Finished
+import Follower.Model exposing (..)
 
 
 -- MAIN
@@ -16,6 +16,7 @@ import Follower.Game as Game
 type alias Flags =
     { gameId : String
     , playerId : String
+    , state : String
     }
 
 
@@ -43,43 +44,34 @@ socketServer =
 
 
 type Msg
-    = GameMsg Game.Msg
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
-
-
-type alias Model =
-    { game : Game.Model
-    , phxSocket : Phoenix.Socket.Socket Msg
-    }
+    = InitMsg Init.Msg
+    | CurrentMsg Current.Msg
+    | FinishedMsg Finished.Msg
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { gameId, playerId } =
-    let
-        channel =
-            Phoenix.Channel.init ("rooms:followers:" ++ gameId)
-                |> Phoenix.Channel.withPayload (JE.object [ ( "player_id", JE.string playerId ) ])
+init { gameId, playerId, state } =
+    case state of
+        "current" ->
+            let
+                ( model, subMsg ) =
+                    Current.init gameId
+            in
+                ( model, Cmd.map CurrentMsg subMsg )
 
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
+        "finished" ->
+            let
+                ( model, subMsg ) =
+                    Finished.init gameId
+            in
+                ( model, Cmd.map FinishedMsg subMsg )
 
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        phxSocketWithListener : Phoenix.Socket.Socket Msg
-        phxSocketWithListener =
-            phxSocket
-
-        initModel : Model
-        initModel =
-            { game = Game.init
-            , phxSocket = phxSocketWithListener
-            }
-    in
-        ( initModel
-        , Cmd.map PhoenixMsg phxCmd
-        )
+        _ ->
+            let
+                ( model, subMsg ) =
+                    Init.init gameId playerId
+            in
+                ( model, Cmd.map InitMsg subMsg )
 
 
 
@@ -88,7 +80,12 @@ init { gameId, playerId } =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    case model of
+        Init state ->
+            Sub.map InitMsg <| Init.subscriptions state
+
+        _ ->
+            Sub.none
 
 
 
@@ -97,23 +94,33 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        PhoenixMsg msg ->
+    case ( msg, model ) of
+        ( InitMsg m, Init state ) ->
             let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
+                ( newModel, subCmd ) =
+                    Init.update m state
             in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
+                newModel
+                    ! [ Cmd.map InitMsg subCmd ]
 
-        GameMsg m ->
+        ( CurrentMsg m, Current state ) ->
             let
-                ( subMdl, subMsg ) =
-                    Game.update m model.game
+                ( newModel, subCmd ) =
+                    Current.update m state
             in
-                { model | game = subMdl }
-                    ! [ Cmd.map GameMsg subMsg ]
+                newModel
+                    ! [ Cmd.map CurrentMsg subCmd ]
+
+        ( FinishedMsg m, Finished state ) ->
+            let
+                ( newModel, subCmd ) =
+                    Finished.update m state
+            in
+                newModel
+                    ! [ Cmd.map FinishedMsg subCmd ]
+
+        _ ->
+            model ! []
 
 
 
@@ -122,4 +129,12 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Html.map GameMsg <| Game.view model.game
+    case model of
+        Init state ->
+            Html.map InitMsg <| Init.view state
+
+        Current state ->
+            Html.map CurrentMsg <| Current.view state
+
+        Finished state ->
+            Html.map FinishedMsg <| Finished.view state

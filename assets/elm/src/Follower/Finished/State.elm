@@ -1,4 +1,4 @@
-module Follower.Game.Current.State exposing (..)
+module Follower.Finished.State exposing (..)
 
 import Player
 

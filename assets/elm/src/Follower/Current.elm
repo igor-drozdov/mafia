@@ -1,20 +1,21 @@
-module Follower.Game.Current exposing (..)
+module Follower.Current exposing (..)
 
-import Player
 import Html exposing (Html, div, text)
+import Array exposing (fromList)
 import Json.Encode as JE
-import Follower.Game.Current.State exposing (State)
-import Follower.Game.Model exposing (..)
-
-
-init : List Player.Model -> Model
-init players =
-    Current (State players)
+import Json.Decode as JD exposing (field)
+import Follower.Current.State exposing (State)
+import Follower.Model exposing (..)
 
 
 type Msg
     = NoOp
     | Agree JE.Value
+
+
+init : String -> ( Model, Cmd Msg )
+init gameId =
+    Current (State (fromList [])) ! []
 
 
 update : Msg -> State -> ( Model, Cmd Msg )
