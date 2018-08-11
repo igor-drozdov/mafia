@@ -1,11 +1,11 @@
 module Leader.Current exposing (..)
 
-import Player
 import Html exposing (Html, div, text)
+import Array exposing (fromList)
 import Json.Encode as JE
 import Json.Decode as JD exposing (field)
 import Leader.Current.State exposing (State)
-import Leader exposing (Model)
+import Leader.Model exposing (..)
 
 
 type Msg
@@ -13,9 +13,9 @@ type Msg
     | Agree JE.Value
 
 
-init : String -> Model
+init : String -> ( Model, Cmd Msg )
 init gameId =
-    Current (State [])
+    Current (State (fromList [])) ! []
 
 
 update : Msg -> State -> ( Model, Cmd Msg )
@@ -31,12 +31,3 @@ update msg model =
 view : State -> Html Msg
 view model =
     div [] []
-
-
-decode raw defaultModel =
-    case JD.decodeValue Leader.Current.State.decoder raw of
-        Ok state ->
-            Current state
-
-        Err error ->
-            defaultModel

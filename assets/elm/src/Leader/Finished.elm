@@ -1,18 +1,11 @@
 module Leader.Finished exposing (..)
 
-import Player
 import Html exposing (Html, div, text)
+import Array exposing (fromList)
 import Json.Decode as JD exposing (field)
 import Leader.Finished.State exposing (State)
-
-
-decode raw defaultModel =
-    case JD.decodeValue decoder raw of
-        Ok state ->
-            Finished state
-
-        Err error ->
-            defaultModel
+import Leader.Model exposing (..)
+import Player
 
 
 decoder =
@@ -24,9 +17,9 @@ type Msg
     = NoOp
 
 
-init : String -> Model
+init : String -> ( Model, Cmd Msg )
 init gameId =
-    Current (State [])
+    Finished (State []) ! []
 
 
 update : Msg -> State -> ( Model, Cmd Msg )

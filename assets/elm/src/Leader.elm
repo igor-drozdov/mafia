@@ -7,6 +7,10 @@ import Platform.Cmd
 import Leader.Init as Init
 import Leader.Current as Current
 import Leader.Finished as Finished
+import Leader.Init.State as InitState
+import Leader.Current.State as CurrentState
+import Leader.Finished.State as FinishedState
+import Leader.Model exposing (..)
 
 
 -- MAIN
@@ -23,15 +27,6 @@ main =
 
 
 
--- CONSTANTS
-
-
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
-
-
-
 -- INIT
 
 
@@ -41,17 +36,29 @@ type alias Flags =
     }
 
 
-init : Flags -> Model
+init : Flags -> ( Model, Cmd Msg )
 init { gameId, state } =
     case state of
         "current" ->
-            Current.init gameId
+            let
+                ( model, subMsg ) =
+                    Current.init gameId
+            in
+                ( model, Cmd.map CurrentMsg subMsg )
 
         "finished" ->
-            Finished.init gameId
+            let
+                ( model, subMsg ) =
+                    Finished.init gameId
+            in
+                ( model, Cmd.map FinishedMsg subMsg )
 
         _ ->
-            Init.init gameId
+            let
+                ( model, subMsg ) =
+                    Init.init gameId
+            in
+                ( model, Cmd.map InitMsg subMsg )
 
 
 
@@ -62,12 +69,6 @@ type Msg
     = InitMsg Init.Msg
     | CurrentMsg Current.Msg
     | FinishedMsg Finished.Msg
-
-
-type Model
-    = Init InitState.State
-    | Current CurrentState.State
-    | Finished FinishedState.State
 
 
 

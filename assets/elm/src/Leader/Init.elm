@@ -3,22 +3,28 @@ module Leader.Init exposing (..)
 import Player
 import Html exposing (Html, div, text, button)
 import Json.Decode as JD exposing (field)
-import Json.Encode as JE
 import Phoenix.Channel
 import Phoenix.Socket
-import Leader.Init.State exposing (State)
-import Leader.Current.State as Current
-import Leader exposing (Model)
+import Leader.Init.State as InitState exposing (State)
+import Leader.Model exposing (..)
 import Array exposing (Array)
 import List.Extra exposing (find)
+import Leader.Init.Msg exposing (..)
 
 
-type Msg
-    = FollowerJoined JE.Value
-    | LoadGame JE.Value
+-- CONSTANTS
 
 
-init : String -> Model
+socketServer : String
+socketServer =
+    "ws://localhost:4000/socket/websocket"
+
+
+type alias Msg =
+    Leader.Init.Msg.Msg
+
+
+init : String -> ( Model, Cmd Msg )
 init gameId =
     let
         channelName =
@@ -39,14 +45,8 @@ init gameId =
         phxSocketWithListener =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
-
-        initModel : Model
-        initModel =
-            { game = Game.init
-            , phxSocket = phxSocketWithListener
-            }
     in
-        ( initModel
+        ( Init (InitState.init phxSocketWithListener)
         , Cmd.map PhoenixMsg phxCmd
         )
 
@@ -54,6 +54,18 @@ init gameId =
 update : Msg -> State -> ( Model, Cmd Msg )
 update msg state =
     case msg of
+        PhoenixMsg msg ->
+            let
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.update msg state.phxSocket
+            in
+                ( Init { state | phxSocket = phxSocket }
+                , Cmd.map PhoenixMsg phxCmd
+                )
+
+        LoadGame _ ->
+            Init state ! []
+
         FollowerJoined raw ->
             case JD.decodeValue Player.decoder raw of
                 Ok player ->
@@ -66,14 +78,7 @@ update msg state =
                                 Init state ! []
 
                             Nothing ->
-                                let
-                                    newPlayers =
-                                        Array.push player state.players
-                                in
-                                    if Array.length newPlayers == state.total then
-                                        Current (Current.State newPlayers) ! []
-                                    else
-                                        Init { state | players = newPlayers } ! []
+                                Init { state | players = Array.push player state.players } ! []
 
                 Err error ->
                     Init state ! []
@@ -100,12 +105,3 @@ viewPlayer players position =
         Nothing ->
             div []
                 [ div [] [ text "Slot for a user" ] ]
-
-
-decode raw defaultModel =
-    case JD.decodeValue Leader.Init.State.decoder raw of
-        Ok state ->
-            Init state
-
-        Err error ->
-            defaultModel
