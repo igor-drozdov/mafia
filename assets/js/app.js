@@ -26,11 +26,18 @@ import ElmFollower from './follower';
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
 if (elmLeaderDiv) {
-  ElmLeader.Leader.embed(elmLeaderDiv, { gameId: elmLeaderDiv.dataset.gameId });
+  ElmLeader.Leader.embed(elmLeaderDiv, {
+    gameId: elmLeaderDiv.dataset.gameId,
+    state: elmLeaderDiv.dataset.state
+  });
 }
 
 const elmFollowerDiv = document.querySelector('#elm_follower_target');
 
 if (elmFollowerDiv) {
-  ElmFollower.Follower.embed(elmFollowerDiv, { gameId: elmFollowerDiv.dataset.gameId, playerId: elmFollowerDiv.dataset.playerId });
+  ElmFollower.Follower.embed(elmFollowerDiv, {
+    gameId: elmFollowerDiv.dataset.gameId,
+    state: elmFollowerDiv.dataset.state,
+    playerId: elmFollowerDiv.dataset.playerId
+  });
 }

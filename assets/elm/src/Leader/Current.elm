@@ -1,11 +1,11 @@
-module Leader.Game.Current exposing (..)
+module Leader.Current exposing (..)
 
 import Player
 import Html exposing (Html, div, text)
 import Json.Encode as JE
 import Json.Decode as JD exposing (field)
-import Leader.Game.Current.State exposing (State)
-import Leader.Game.Model exposing (..)
+import Leader.Current.State exposing (State)
+import Leader.Model exposing (..)
 
 
 type Msg
@@ -29,7 +29,7 @@ view model =
 
 
 decode raw defaultModel =
-    case JD.decodeValue Leader.Game.Current.State.decoder raw of
+    case JD.decodeValue Leader.Current.State.decoder raw of
         Ok state ->
             Current state
 

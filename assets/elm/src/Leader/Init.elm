@@ -1,12 +1,12 @@
-module Leader.Game.Init exposing (..)
+module Leader.Init exposing (..)
 
 import Player
 import Html exposing (Html, div, text, button)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Leader.Game.Init.State exposing (State)
-import Leader.Game.Current.State as Current
-import Leader.Game.Model exposing (..)
+import Leader.Init.State exposing (State)
+import Leader.Current.State as Current
+import Leader.Model exposing (..)
 import Array exposing (Array)
 import List.Extra exposing (find)
 
@@ -67,7 +67,7 @@ viewPlayer players position =
 
 
 decode raw defaultModel =
-    case JD.decodeValue Leader.Game.Init.State.decoder raw of
+    case JD.decodeValue Leader.Init.State.decoder raw of
         Ok state ->
             Init state
 

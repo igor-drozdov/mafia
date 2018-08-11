@@ -4,19 +4,12 @@ module Leader exposing (..)
 
 import Html exposing (Html)
 import Platform.Cmd
-import Phoenix.Socket
-import Phoenix.Channel
-import Leader.Game as Game
-import Leader.Game.Init as Init
-import Leader.Game.Current as Current
+import Leader.Init as Init
+import Leader.Current as Current
+import Leader.Finished as Finished
 
 
 -- MAIN
-
-
-type alias Flags =
-    { gameId : String
-    }
 
 
 main : Program Flags Model Msg
@@ -39,49 +32,42 @@ socketServer =
 
 
 
+-- INIT
+
+
+type alias Flags =
+    { gameId : String
+    , state : String
+    }
+
+
+init : Flags -> Model
+init { gameId, state } =
+    case state of
+        "current" ->
+            Current.init gameId
+
+        "finished" ->
+            Finished.init gameId
+
+        _ ->
+            Init.init gameId
+
+
+
 -- MODEL
 
 
 type Msg
-    = GameMsg Game.Msg
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    = InitMsg Init.Msg
+    | CurrentMsg Current.Msg
+    | FinishedMsg Finished.Msg
 
 
-type alias Model =
-    { game : Game.Model
-    , phxSocket : Phoenix.Socket.Socket Msg
-    }
-
-
-init : Flags -> ( Model, Cmd Msg )
-init { gameId } =
-    let
-        channel =
-            Phoenix.Channel.init ("rooms:leader:" ++ gameId)
-                |> Phoenix.Channel.onJoin (Game.LoadGame >> GameMsg)
-
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
-
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        phxSocketWithListener : Phoenix.Socket.Socket Msg
-        phxSocketWithListener =
-            phxSocket
-                |> Phoenix.Socket.on "follower_joined" ("rooms:leader:" ++ gameId) (Init.FollowerJoined >> Game.InitMsg >> GameMsg)
-                |> Phoenix.Socket.on "follower_left" ("rooms:leader:" ++ gameId) (Current.Agree >> Game.CurrentMsg >> GameMsg)
-
-        initModel : Model
-        initModel =
-            { game = Game.init
-            , phxSocket = phxSocketWithListener
-            }
-    in
-        ( initModel
-        , Cmd.map PhoenixMsg phxCmd
-        )
+type Model
+    = Init InitState.State
+    | Current CurrentState.State
+    | Finished FinishedState.State
 
 
 
@@ -90,7 +76,7 @@ init { gameId } =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Sub.none
 
 
 
@@ -99,23 +85,33 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        PhoenixMsg msg ->
+    case ( msg, model ) of
+        ( InitMsg m, Init state ) ->
             let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
+                ( newModel, subCmd ) =
+                    Init.update m state
             in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
+                newModel
+                    ! [ Cmd.map InitMsg subCmd ]
 
-        GameMsg m ->
+        ( CurrentMsg m, Current state ) ->
             let
-                ( subMdl, subMsg ) =
-                    Game.update m model.game
+                ( newModel, subCmd ) =
+                    Current.update m state
             in
-                { model | game = subMdl }
-                    ! [ Cmd.map GameMsg subMsg ]
+                newModel
+                    ! [ Cmd.map CurrentMsg subCmd ]
+
+        ( FinishedMsg m, Finished state ) ->
+            let
+                ( newModel, subCmd ) =
+                    Finished.update m state
+            in
+                newModel
+                    ! [ Cmd.map FinishedMsg subCmd ]
+
+        _ ->
+            model ! []
 
 
 
@@ -124,4 +120,12 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Html.map GameMsg <| Game.view model.game
+    case model of
+        Init state ->
+            Html.map InitMsg <| Init.view state
+
+        Current state ->
+            Html.map CurrentMsg <| Current.view state
+
+        Finished state ->
+            Html.map FinishedMsg <| Finished.view state

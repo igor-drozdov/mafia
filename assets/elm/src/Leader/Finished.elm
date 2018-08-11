@@ -1,10 +1,10 @@
-module Leader.Game.Finished exposing (..)
+module Leader.Finished exposing (..)
 
 import Player
 import Html exposing (Html, div, text)
 import Json.Decode as JD exposing (field)
-import Leader.Game.Finished.State exposing (State)
-import Leader.Game.Model exposing (..)
+import Leader.Finished.State exposing (State)
+import Leader.Model exposing (..)
 
 
 decode raw defaultModel =

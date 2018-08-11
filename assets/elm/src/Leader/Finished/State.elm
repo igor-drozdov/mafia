@@ -1,4 +1,4 @@
-module Leader.Game.Finished.State exposing (..)
+module Leader.Finished.State exposing (..)
 
 import Player
 
