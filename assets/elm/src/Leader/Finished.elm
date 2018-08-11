@@ -4,7 +4,6 @@ import Player
 import Html exposing (Html, div, text)
 import Json.Decode as JD exposing (field)
 import Leader.Finished.State exposing (State)
-import Leader.Model exposing (..)
 
 
 decode raw defaultModel =
@@ -23,6 +22,11 @@ decoder =
 
 type Msg
     = NoOp
+
+
+init : String -> Model
+init gameId =
+    Current (State [])
 
 
 update : Msg -> State -> ( Model, Cmd Msg )

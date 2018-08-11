@@ -4,15 +4,51 @@ import Player
 import Html exposing (Html, div, text, button)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
+import Phoenix.Channel
+import Phoenix.Socket
 import Leader.Init.State exposing (State)
 import Leader.Current.State as Current
-import Leader.Model exposing (..)
+import Leader exposing (Model)
 import Array exposing (Array)
 import List.Extra exposing (find)
 
 
 type Msg
     = FollowerJoined JE.Value
+    | LoadGame JE.Value
+
+
+init : String -> Model
+init gameId =
+    let
+        channelName =
+            ("rooms:leader:init" ++ gameId)
+
+        channel =
+            Phoenix.Channel.init channelName
+                |> Phoenix.Channel.onJoin LoadGame
+
+        initPhxSocket =
+            Phoenix.Socket.init socketServer
+                |> Phoenix.Socket.withDebug
+
+        ( phxSocket, phxCmd ) =
+            Phoenix.Socket.join channel initPhxSocket
+
+        phxSocketWithListener : Phoenix.Socket.Socket Msg
+        phxSocketWithListener =
+            phxSocket
+                |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
+
+        initModel : Model
+        initModel =
+            { game = Game.init
+            , phxSocket = phxSocketWithListener
+            }
+    in
+        ( initModel
+        , Cmd.map PhoenixMsg phxCmd
+        )
 
 
 update : Msg -> State -> ( Model, Cmd Msg )

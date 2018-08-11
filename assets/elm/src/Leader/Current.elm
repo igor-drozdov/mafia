@@ -5,12 +5,17 @@ import Html exposing (Html, div, text)
 import Json.Encode as JE
 import Json.Decode as JD exposing (field)
 import Leader.Current.State exposing (State)
-import Leader.Model exposing (..)
+import Leader exposing (Model)
 
 
 type Msg
     = NoOp
     | Agree JE.Value
+
+
+init : String -> Model
+init gameId =
+    Current (State [])
 
 
 update : Msg -> State -> ( Model, Cmd Msg )
