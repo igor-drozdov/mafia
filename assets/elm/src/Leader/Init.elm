@@ -5,11 +5,9 @@ import Html exposing (Html, div, text, button)
 import Json.Decode as JD exposing (field)
 import Phoenix.Channel
 import Phoenix.Socket
-import Leader.Init.State as InitState exposing (State)
-import Leader.Model exposing (..)
-import Array exposing (Array)
+import Leader.Init.Model exposing (..)
+import Array exposing (Array, fromList)
 import List.Extra exposing (find)
-import Leader.Init.Msg exposing (..)
 
 
 -- CONSTANTS
@@ -18,10 +16,6 @@ import Leader.Init.Msg exposing (..)
 socketServer : String
 socketServer =
     "ws://localhost:4000/socket/websocket"
-
-
-type alias Msg =
-    Leader.Init.Msg.Msg
 
 
 init : String -> ( Model, Cmd Msg )
@@ -46,12 +40,12 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
     in
-        ( Init (InitState.init phxSocketWithListener)
+        ( { players = fromList [], total = 0, phxSocket = phxSocketWithListener }
         , Cmd.map PhoenixMsg phxCmd
         )
 
 
-update : Msg -> State -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg state =
     case msg of
         PhoenixMsg msg ->
@@ -59,12 +53,12 @@ update msg state =
                 ( phxSocket, phxCmd ) =
                     Phoenix.Socket.update msg state.phxSocket
             in
-                ( Init { state | phxSocket = phxSocket }
+                ( { state | phxSocket = phxSocket }
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
         LoadGame raw ->
-            Init (InitState.decode raw state) ! []
+            decode raw state ! []
 
         FollowerJoined raw ->
             case JD.decodeValue Player.decoder raw of
@@ -75,21 +69,21 @@ update msg state =
                     in
                         case foundModel of
                             Just _ ->
-                                Init state ! []
+                                state ! []
 
                             Nothing ->
-                                Init { state | players = Array.push player state.players } ! []
+                                { state | players = Array.push player state.players } ! []
 
                 Err error ->
-                    Init state ! []
+                    state ! []
 
 
-subscriptions : State -> Sub Msg
+subscriptions : Model -> Sub Msg
 subscriptions state =
     Phoenix.Socket.listen state.phxSocket PhoenixMsg
 
 
-view : State -> Html Msg
+view : Model -> Html Msg
 view { players, total } =
     div []
         [ div [] [ text "Share the current link with other players" ]

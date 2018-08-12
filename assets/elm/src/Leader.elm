@@ -4,10 +4,12 @@ module Leader exposing (..)
 
 import Html exposing (Html)
 import Platform.Cmd
-import Leader.Init as Init
-import Leader.Current as Current
-import Leader.Finished as Finished
-import Leader.Model exposing (..)
+import Leader.Init as InitWidget
+import Leader.Current as CurrentWidget
+import Leader.Finished as FinishedWidget
+import Leader.Init.Model as Init
+import Leader.Current.Model as Current
+import Leader.Finished.Model as Finished
 
 
 -- MAIN
@@ -39,27 +41,33 @@ init { gameId, state } =
         "current" ->
             let
                 ( model, subMsg ) =
-                    Current.init gameId
+                    CurrentWidget.init gameId
             in
-                ( model, Cmd.map CurrentMsg subMsg )
+                ( CurrentModel model, Cmd.map CurrentMsg subMsg )
 
         "finished" ->
             let
                 ( model, subMsg ) =
-                    Finished.init gameId
+                    FinishedWidget.init gameId
             in
-                ( model, Cmd.map FinishedMsg subMsg )
+                ( FinishedModel model, Cmd.map FinishedMsg subMsg )
 
         _ ->
             let
                 ( model, subMsg ) =
-                    Init.init gameId
+                    InitWidget.init gameId
             in
-                ( model, Cmd.map InitMsg subMsg )
+                ( InitModel model, Cmd.map InitMsg subMsg )
 
 
 
 -- MODEL
+
+
+type Model
+    = InitModel Init.Model
+    | CurrentModel Current.Model
+    | FinishedModel Finished.Model
 
 
 type Msg
@@ -75,8 +83,8 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model of
-        Init state ->
-            Sub.map InitMsg <| Init.subscriptions state
+        InitModel state ->
+            Sub.map InitMsg <| InitWidget.subscriptions state
 
         _ ->
             Sub.none
@@ -89,28 +97,28 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
-        ( InitMsg m, Init state ) ->
+        ( InitMsg m, InitModel state ) ->
             let
                 ( newModel, subCmd ) =
-                    Init.update m state
+                    InitWidget.update m state
             in
-                newModel
+                InitModel newModel
                     ! [ Cmd.map InitMsg subCmd ]
 
-        ( CurrentMsg m, Current state ) ->
+        ( CurrentMsg m, CurrentModel state ) ->
             let
                 ( newModel, subCmd ) =
-                    Current.update m state
+                    CurrentWidget.update m state
             in
-                newModel
+                CurrentModel newModel
                     ! [ Cmd.map CurrentMsg subCmd ]
 
-        ( FinishedMsg m, Finished state ) ->
+        ( FinishedMsg m, FinishedModel state ) ->
             let
                 ( newModel, subCmd ) =
-                    Finished.update m state
+                    FinishedWidget.update m state
             in
-                newModel
+                FinishedModel newModel
                     ! [ Cmd.map FinishedMsg subCmd ]
 
         _ ->
@@ -124,11 +132,11 @@ update msg model =
 view : Model -> Html Msg
 view model =
     case model of
-        Init state ->
-            Html.map InitMsg <| Init.view state
+        InitModel state ->
+            Html.map InitMsg <| InitWidget.view state
 
-        Current state ->
-            Html.map CurrentMsg <| Current.view state
+        CurrentModel state ->
+            Html.map CurrentMsg <| CurrentWidget.view state
 
-        Finished state ->
-            Html.map FinishedMsg <| Finished.view state
+        FinishedModel state ->
+            Html.map FinishedMsg <| FinishedWidget.view state
