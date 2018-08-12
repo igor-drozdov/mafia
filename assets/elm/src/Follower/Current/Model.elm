@@ -1,15 +1,21 @@
-module Follower.Current.State exposing (..)
+module Follower.Current.Model exposing (..)
 
 import Player
 import Json.Decode as JD exposing (field)
+import Json.Encode as JE
 import Array exposing (Array)
 
 
-type alias State =
+type alias Model =
     { players : Array Player.Model }
 
 
-decoder : JD.Decoder State
+type Msg
+    = NoOp
+    | Agree JE.Value
+
+
+decoder : JD.Decoder Model
 decoder =
-    JD.map State
+    JD.map Model
         (field "players" (JD.array Player.decoder))

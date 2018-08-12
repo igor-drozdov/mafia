@@ -5,5 +5,6 @@ import Phoenix.Socket
 
 
 type Msg
-    = LoadGame JE.Value
+    = FollowerJoined JE.Value
+    | LoadGame JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
