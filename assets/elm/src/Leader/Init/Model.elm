@@ -18,14 +18,16 @@ type Msg
     = FollowerJoined JE.Value
     | LoadGame JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | Transition JE.Value
 
 
-type alias WithSocket a =
-    { a | phxSocket : Phoenix.Socket.Socket Msg }
+type alias WithSocket state =
+    { state | phxSocket : Phoenix.Socket.Socket Msg }
 
 
-type alias Model =
-    WithSocket State
+type Model
+    = Loading (WithSocket {})
+    | Wait (WithSocket State)
 
 
 decoder : JD.Decoder State

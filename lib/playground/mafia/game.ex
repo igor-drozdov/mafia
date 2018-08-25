@@ -18,6 +18,6 @@ defmodule Playground.Mafia.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:total])
+    |> cast(attrs, [:total, :state])
   end
 end

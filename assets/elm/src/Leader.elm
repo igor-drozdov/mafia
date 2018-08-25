@@ -4,6 +4,7 @@ module Leader exposing (..)
 
 import Html exposing (Html)
 import Platform.Cmd
+import Json.Decode as JD exposing (field)
 import Leader.Init as InitWidget
 import Leader.Current as CurrentWidget
 import Leader.Finished as FinishedWidget
@@ -94,9 +95,24 @@ subscriptions model =
 -- UPDATE
 
 
+decoder : JD.Decoder Flags
+decoder =
+    JD.map2 Flags
+        (field "gameId" JD.string)
+        (field "state" JD.string)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
+        ( InitMsg (Init.Transition raw), _ ) ->
+            case JD.decodeValue decoder raw of
+                Ok flags ->
+                    init flags
+
+                Err _ ->
+                    model ! []
+
         ( InitMsg m, InitModel state ) ->
             let
                 ( newModel, subCmd ) =

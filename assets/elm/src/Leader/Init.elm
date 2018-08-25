@@ -8,6 +8,7 @@ import Phoenix.Socket
 import Leader.Init.Model exposing (..)
 import Array exposing (Array, fromList)
 import List.Extra exposing (find)
+import Debug exposing (log)
 
 
 -- CONSTANTS
@@ -40,56 +41,62 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
     in
-        ( { players = fromList [], total = 0, phxSocket = phxSocketWithListener }
+        ( Loading { phxSocket = phxSocketWithListener }
         , Cmd.map PhoenixMsg phxCmd
         )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg state =
+update msg model =
     case msg of
         PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg state.phxSocket
+                    Phoenix.Socket.update msg model.phxSocket
             in
-                ( { state | phxSocket = phxSocket }
+                ( { model | phxSocket = phxSocket }
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
         LoadGame raw ->
-            decode raw state ! []
+            decode raw model ! []
 
         FollowerJoined raw ->
             case JD.decodeValue Player.decoder raw of
                 Ok player ->
                     let
                         foundModel =
-                            find (\p -> p.id == player.id) (Array.toList state.players)
+                            find (\p -> p.id == player.id) (Array.toList model.players)
                     in
                         case foundModel of
                             Just _ ->
-                                state ! []
+                                model ! []
 
                             Nothing ->
-                                { state | players = Array.push player state.players } ! []
+                                { model | players = Array.push player model.players } ! []
 
                 Err error ->
-                    state ! []
+                    model ! []
+
+        _ ->
+            model ! []
 
 
 subscriptions : Model -> Sub Msg
-subscriptions state =
-    Phoenix.Socket.listen state.phxSocket PhoenixMsg
+subscriptions model =
+    Phoenix.Socket.listen model.phxSocket PhoenixMsg
 
 
 view : Model -> Html Msg
 view { players, total } =
-    div []
-        [ div [] [ text "Share the current link with other players" ]
-        , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
-        , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
-        ]
+    if (Array.length players) == total then
+        div [] [ text "All the players joined!" ]
+    else
+        div []
+            [ div [] [ text "Share the current link with other players" ]
+            , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
+            , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
+            ]
 
 
 viewPlayer : Array Player.Model -> Int -> Html Msg
