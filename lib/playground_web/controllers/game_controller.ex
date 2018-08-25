@@ -1,12 +1,13 @@
 defmodule PlaygroundWeb.GameController do
   use PlaygroundWeb, :controller
 
-  alias Playground.Mafia
-  alias Playground.Repo
+  alias Playground.{Mafia, Repo, Mafia.GamesSupervisor}
 
   def create(conn, %{ "game" => game_params }) do
     case Mafia.create_game(game_params) do
       {:ok, game} ->
+        GamesSupervisor.start_child(game.id)
+
         conn
         |> redirect(to: game_path(conn, :show, game))
       {:error, _changeset} ->

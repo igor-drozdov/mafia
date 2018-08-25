@@ -6,9 +6,9 @@ defmodule Playground.MafiaTest do
   describe "games" do
     alias Playground.Mafia.Game
 
-    @valid_attrs %{state: "some state"}
-    @update_attrs %{state: "some updated state"}
-    @invalid_attrs %{state: nil}
+    @valid_attrs %{state: 0}
+    @update_attrs %{state: 1}
+    @invalid_attrs %{state: "state"}
 
     def game_fixture(attrs \\ %{}) do
       {:ok, game} =
@@ -31,7 +31,7 @@ defmodule Playground.MafiaTest do
 
     test "create_game/1 with valid data creates a game" do
       assert {:ok, %Game{} = game} = Mafia.create_game(@valid_attrs)
-      assert game.state == "some state"
+      assert game.state == :init
     end
 
     test "create_game/1 with invalid data returns error changeset" do
@@ -42,7 +42,7 @@ defmodule Playground.MafiaTest do
       game = game_fixture()
       assert {:ok, game} = Mafia.update_game(game, @update_attrs)
       assert %Game{} = game
-      assert game.state == "some updated state"
+      assert game.state == :current
     end
 
     test "update_game/2 with invalid data returns error changeset" do
@@ -66,8 +66,8 @@ defmodule Playground.MafiaTest do
   describe "players" do
     alias Playground.Mafia.Player
 
-    @valid_attrs %{name: "some name"}
-    @update_attrs %{name: "some updated name"}
+    @valid_attrs %{name: "some name", state: 0}
+    @update_attrs %{name: "some updated name", state: 1}
     @invalid_attrs %{name: nil}
 
     def player_fixture(attrs \\ %{}) do

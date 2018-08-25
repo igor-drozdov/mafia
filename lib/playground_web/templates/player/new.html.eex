@@ -1,3 +1,5 @@
+<h3> Connect to the Game </h3>
+
 <%= form_for @changeset, game_player_path(@conn, :create, @game), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">

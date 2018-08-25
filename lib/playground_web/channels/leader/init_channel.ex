@@ -1,8 +1,7 @@
 defmodule PlaygroundWeb.Leader.InitChannel do
   use PlaygroundWeb, :channel
 
-  alias Playground.Mafia
-  alias Playground.Repo
+  alias Playground.{Mafia, Repo}
 
   def join("rooms:leader:init:" <> id, _payload, socket) do
     game =

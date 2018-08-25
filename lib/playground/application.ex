@@ -8,13 +8,10 @@ defmodule Playground.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the Ecto repository
       supervisor(Playground.Repo, []),
-      # Start the endpoint when the application starts
       supervisor(PlaygroundWeb.Endpoint, []),
+      supervisor(Playground.Mafia.GamesSupervisor, []),
       worker(Registry, [[name: Playground.Mafia.Registry, keys: :unique]])
-      # Start your own worker by calling: Playground.Worker.start_link(arg1, arg2, arg3)
-      # worker(Playground.Worker, [arg1, arg2, arg3]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

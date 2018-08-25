@@ -8,7 +8,8 @@ defmodule Playground.Mafia.Player do
 
   schema "players" do
     field :name, :string
-    field :state, :string
+    field :state, PlayerStateEnum
+    field :role, RoleEnum
 
     belongs_to :game, Playground.Mafia.Game, type: :binary_id
 

@@ -7,7 +7,7 @@ defmodule Playground.Mafia.Game do
   @derive {Poison.Encoder, only: [:id, :state, :total, :players]}
 
   schema "games" do
-    field :state, :string
+    field :state, GameStateEnum
     field :total, :integer
 
     has_many :players, Playground.Mafia.Player
