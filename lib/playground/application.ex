@@ -12,6 +12,7 @@ defmodule Playground.Application do
       supervisor(Playground.Repo, []),
       # Start the endpoint when the application starts
       supervisor(PlaygroundWeb.Endpoint, []),
+      worker(Registry, [[name: Playground.Mafia.Registry, keys: :unique]])
       # Start your own worker by calling: Playground.Worker.start_link(arg1, arg2, arg3)
       # worker(Playground.Worker, [arg1, arg2, arg3]),
     ]
