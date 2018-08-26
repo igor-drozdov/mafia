@@ -4,7 +4,7 @@ defmodule PlaygroundWeb.Followers.InitChannel do
   alias PlaygroundWeb.Endpoint
   alias Playground.{Mafia, Repo}
 
-  def join("rooms:followers:init:" <> ids, _payload, socket) do
+  def join("followers:init:" <> ids, _payload, socket) do
     [game_id, player_id] = String.split(ids, ":")
 
     game = Mafia.get_game!(game_id) |> Repo.preload(:players)
@@ -14,7 +14,7 @@ defmodule PlaygroundWeb.Followers.InitChannel do
       |> Enum.find(& &1.id == player_id)
       |> Map.take([:id, :name, :state])
 
-    Endpoint.broadcast "rooms:leader:init:#{game_id}", "follower_joined", player
+    Endpoint.broadcast "leader:init:#{game_id}", "follower_joined", player
 
     if enough_players_connected?(game), do: handout_roles!(game)
 

@@ -32,7 +32,7 @@ defmodule Playground.HandoutRolesTest do
       sockets = Enum.map(player_uuids, fn player_uuid ->
         {:ok, _, socket} =
           socket("user_id", %{some: :assign})
-          |> join(InitChannel, "rooms:followers:init:#{game_uuid}:#{player_uuid}") 
+          |> join(InitChannel, "followers:init:#{game_uuid}:#{player_uuid}")
 
         socket
       end)
@@ -43,7 +43,7 @@ defmodule Playground.HandoutRolesTest do
         uuids = "#{game_uuid}:#{player.id}"
         assert_receive %Phoenix.Socket.Message{
           event: "role_received", join_ref: nil, payload: %{role: :mafia},
-          ref: nil, topic: "rooms:followers:init:" <> ^uuids
+          ref: nil, topic: "followers:init:" <> ^uuids
         }
       end)
 
@@ -51,7 +51,7 @@ defmodule Playground.HandoutRolesTest do
         uuids = "#{game_uuid}:#{player.id}"
         assert_receive %Phoenix.Socket.Message{
           event: "role_received", join_ref: nil, payload: %{role: :innocent},
-          ref: nil, topic: "rooms:followers:init:" <> ^uuids
+          ref: nil, topic: "followers:init:" <> ^uuids
         }
       end)
 

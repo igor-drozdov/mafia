@@ -11,7 +11,7 @@ defmodule Playground.Mafia.Chapters.DiscussionBegins do
     player_uuids =
       Repo.all(
         from p in Player,
-        where: [game_id: ^game_uuid, state: "current"],
+        where: [game_id: ^game_uuid, state: "incity"],
         select: map(p, [:id])
       ) |> Enum.map(& &1.id)
 

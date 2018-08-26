@@ -5,11 +5,13 @@ import Phoenix.Socket
 
 
 type alias State =
-    {}
+    { role : Maybe String
+    }
 
 
 type Msg
     = LoadGame JE.Value
+    | RoleReceived JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
 

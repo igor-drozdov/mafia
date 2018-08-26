@@ -8,7 +8,7 @@ import Phoenix.Socket
 import Leader.Init.Model exposing (..)
 import Array exposing (Array, fromList)
 import List.Extra exposing (find)
-import Debug exposing (log)
+import Ports.Audio exposing (playAudio)
 
 
 -- CONSTANTS
@@ -23,7 +23,7 @@ init : String -> ( Model, Cmd Msg )
 init gameId =
     let
         channelName =
-            ("rooms:leader:init:" ++ gameId)
+            ("leader:init:" ++ gameId)
 
         channel =
             Phoenix.Channel.init channelName
@@ -40,8 +40,9 @@ init gameId =
         phxSocketWithListener =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
+                |> Phoenix.Socket.on "roles_assigned" channelName RolesAssigned
     in
-        ( Loading { phxSocket = phxSocketWithListener }
+        ( { phxSocket = phxSocketWithListener, players = Array.fromList [], total = 0 }
         , Cmd.map PhoenixMsg phxCmd
         )
 
@@ -60,6 +61,9 @@ update msg model =
 
         LoadGame raw ->
             decode raw model ! []
+
+        RolesAssigned raw ->
+            model ! [ playAudio raw ]
 
         FollowerJoined raw ->
             case JD.decodeValue Player.decoder raw of

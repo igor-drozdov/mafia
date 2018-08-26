@@ -26,9 +26,14 @@ import ElmFollower from './follower';
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
 if (elmLeaderDiv) {
-  ElmLeader.Leader.embed(elmLeaderDiv, {
+  var app = ElmLeader.Leader.embed(elmLeaderDiv, {
     gameId: elmLeaderDiv.dataset.gameId,
     state: elmLeaderDiv.dataset.gameState
+  });
+
+  app.ports.play.subscribe(function(audioPath) {
+    var audio = new Audio(audioPath);
+    audio.play();
   });
 }
 

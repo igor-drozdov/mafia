@@ -10,7 +10,7 @@ defmodule PlaygroundWeb.Leader.InitChannelTest do
 
     {:ok, ^game, socket} =
       socket("user_id", %{some: :assign})
-      |> join(InitChannel, "rooms:leader:init:#{game.id}")
+      |> join(InitChannel, "leader:init:#{game.id}")
 
     assert socket.assigns.game == game
   end

@@ -9,11 +9,11 @@ defmodule PlaygroundWeb.Followers.InitChannelTest do
     game_uuid = insert(:game).id
     player = insert(:player, game_id: game_uuid)
 
-    @endpoint.subscribe("rooms:leader:init:#{game_uuid}")
+    @endpoint.subscribe("leader:init:#{game_uuid}")
 
     {:ok, _, _} =
       socket("user_id", %{some: :assign})
-      |> join(InitChannel, "rooms:followers:init:#{game_uuid}:#{player.id}")
+      |> join(InitChannel, "followers:init:#{game_uuid}:#{player.id}")
 
     {:ok, player: player}
   end
