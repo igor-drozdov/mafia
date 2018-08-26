@@ -16,7 +16,6 @@ defmodule Playground.Mafia.Player do
     belongs_to :game, Game, type: :binary_id
 
     has_many :player_rounds, PlayerRound
-    has_many :rounds, through: [:player_rounds, :round]
     has_many :player_statuses, through: [:player_rounds, :player_statuses]
 
     timestamps()

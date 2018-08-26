@@ -1,6 +1,7 @@
 defmodule Playground.Mafia.Game do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Playground.Mafia.{Player, Round}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}
@@ -10,7 +11,8 @@ defmodule Playground.Mafia.Game do
     field :state, GameStateEnum
     field :total, :integer
 
-    has_many :players, Playground.Mafia.Player
+    has_many :players, Player
+    has_many :rounds, Round
 
     timestamps()
   end

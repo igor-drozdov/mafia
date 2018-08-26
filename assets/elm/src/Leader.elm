@@ -98,7 +98,7 @@ subscriptions model =
 decoder : JD.Decoder Flags
 decoder =
     JD.map2 Flags
-        (field "gameId" JD.string)
+        (field "game_id" JD.string)
         (field "state" JD.string)
 
 

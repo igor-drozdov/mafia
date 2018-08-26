@@ -16,6 +16,7 @@ defmodule Playground.Mafia.Chapters.HandoutRoles do
 
     handout_roles(game_uuid, player_uuids)
     notify_leader(game_uuid)
+    notify_round_begins(game_uuid)
     start_round()
 
     {:continue, game_uuid}
@@ -37,6 +38,11 @@ defmodule Playground.Mafia.Chapters.HandoutRoles do
 
   def notify_leader(game_uuid) do
     Endpoint.broadcast("leader:init:#{game_uuid}", "roles_assigned", %{audio: "roles_assigned"})
+  end
+
+  def notify_round_begins(game_uuid) do
+    payload = %{game_id: game_uuid, state: "current"}
+    Endpoint.broadcast("leader:init:#{game_uuid}", "round_begins", payload)
   end
 
   def start_round do

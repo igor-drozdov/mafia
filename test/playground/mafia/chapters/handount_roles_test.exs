@@ -59,4 +59,20 @@ defmodule Playground.HandoutRolesTest do
       Enum.map sockets, & leave(&1)
     end
   end
+
+  describe "#notify_leader" do
+    test "broadcast roles assigned", %{game_uuid: game_uuid} do
+      @endpoint.subscribe("leader:init:#{game_uuid}")
+      HandoutRoles.notify_leader(game_uuid)
+      assert_broadcast "roles_assigned", %{audio: "roles_assigned"}
+    end
+  end
+
+  describe "#notify_round_begins" do
+    test "broadcast round begins", %{game_uuid: game_uuid} do
+      @endpoint.subscribe("leader:init:#{game_uuid}")
+      HandoutRoles.notify_round_begins(game_uuid)
+      assert_broadcast "round_begins", %{game_id: game_uuid, state: "current"}
+    end
+  end
 end

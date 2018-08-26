@@ -41,6 +41,7 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
                 |> Phoenix.Socket.on "roles_assigned" channelName RolesAssigned
+                |> Phoenix.Socket.on "round_begins" channelName Transition
     in
         ( { phxSocket = phxSocketWithListener, players = Array.fromList [], total = 0 }
         , Cmd.map PhoenixMsg phxCmd

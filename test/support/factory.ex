@@ -18,4 +18,17 @@ defmodule Playground.Factory do
       game: build(:game)
     }
   end
+
+  def player_round_factory do
+    %Playground.Mafia.PlayerRound{
+      round: build(:round),
+      player: build(:player)
+    }
+  end
+
+  def player_status_factory do
+    %Playground.Mafia.PlayerStatus{
+      player_round: build(:player_round)
+    }
+  end
 end
