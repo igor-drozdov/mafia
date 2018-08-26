@@ -3,7 +3,7 @@ defmodule Playground.Mafia.Player do
 
   import Ecto.Changeset
 
-  alias Playground.Mafia.{Game, Round}
+  alias Playground.Mafia.{Game, PlayerRound}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}
@@ -14,7 +14,10 @@ defmodule Playground.Mafia.Player do
     field :role, RoleEnum
 
     belongs_to :game, Game, type: :binary_id
-    many_to_many :rounds, Round, join_through: "player_rounds"
+
+    has_many :player_rounds, PlayerRound
+    has_many :rounds, through: [:player_rounds, :round]
+    has_many :player_statuses, through: [:player_rounds, :player_statuses]
 
     timestamps()
   end
