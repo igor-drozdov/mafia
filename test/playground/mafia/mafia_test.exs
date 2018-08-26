@@ -122,4 +122,54 @@ defmodule Playground.MafiaTest do
       assert %Ecto.Changeset{} = Mafia.change_player(player)
     end
   end
+
+  describe "rounds" do
+    alias Playground.Mafia.Round
+    alias Playground.Repo
+
+    import Playground.Factory
+
+    @update_attrs %{}
+    @invalid_attrs %{game_id: nil}
+
+    setup do
+      round = insert(:round)
+      {:ok, round: round}
+    end
+
+    test "list_rounds/0 returns all rounds", %{round: round} do
+      assert Repo.preload(Mafia.list_rounds(), :game) == [round]
+    end
+
+    test "get_round!/1 returns the round with given id", %{round: round} do
+      assert Repo.preload(Mafia.get_round!(round.id), :game) == round
+    end
+
+    test "create_round/1 with valid data creates a round" do
+      assert {:ok, %Round{} = round} = Mafia.create_round(%{game_id: insert(:game).id})
+    end
+
+    test "create_round/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Mafia.create_round(@invalid_attrs)
+    end
+
+    test "update_round/2 with valid data updates the round", %{round: round} do
+      assert {:ok, round} = Mafia.update_round(round, @update_attrs)
+      assert %Round{} = round
+    end
+
+    test "update_round/2 with invalid data returns error changeset", %{round: round} do
+      assert {:error, %Ecto.Changeset{}} = Mafia.update_round(round, @invalid_attrs)
+      assert round == Repo.preload(Mafia.get_round!(round.id), :game)
+    end
+
+    test "delete_round/1 deletes the round", %{round: round} do
+      assert {:ok, %Round{}} = Mafia.delete_round(round)
+      assert_raise Ecto.NoResultsError, fn -> Mafia.get_round!(round.id) end
+    end
+
+    test "change_round/1 returns a round changeset", %{round: round} do
+      assert %Ecto.Changeset{} = Mafia.change_round(round)
+    end
+  end
 end

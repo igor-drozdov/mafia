@@ -4,11 +4,10 @@ defmodule Playground.Mafia.Player do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}
-  @derive {Poison.Encoder, only: [:id, :name, :state]}
+  @derive {Poison.Encoder, only: [:id, :name]}
 
   schema "players" do
     field :name, :string
-    field :state, PlayerStateEnum
     field :role, RoleEnum
 
     belongs_to :game, Playground.Mafia.Game, type: :binary_id
@@ -19,7 +18,7 @@ defmodule Playground.Mafia.Player do
   @doc false
   def changeset(player, attrs) do
     player
-    |> cast(attrs, [:name, :state, :game_id])
+    |> cast(attrs, [:name, :game_id])
     |> validate_required([:name])
   end
 end

@@ -9,8 +9,13 @@ defmodule Playground.Factory do
 
   def player_factory do
     %Playground.Mafia.Player{
-      state: 0,
       name: sequence(:name, & "player-#{&1}")
+    }
+  end
+
+  def round_factory do
+    %Playground.Mafia.Round{
+      game: build(:game)
     }
   end
 end

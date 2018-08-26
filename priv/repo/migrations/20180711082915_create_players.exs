@@ -5,7 +5,6 @@ defmodule Playground.Repo.Migrations.CreatePlayers do
     create table(:players, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :name, :string
-      add :state, :integer, default: 0
       add :role, :integer
       add :game_id, references(:games, on_delete: :delete_all, type: :uuid)
 
