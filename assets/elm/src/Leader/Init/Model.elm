@@ -7,10 +7,15 @@ import Json.Encode as JE
 import Phoenix.Socket
 
 
-type alias State =
+type alias WaitState =
     { players : Array Player.Model
     , total : Int
     }
+
+
+type State
+    = Loading
+    | Wait WaitState
 
 
 type Msg
@@ -21,26 +26,25 @@ type Msg
     | Transition JE.Value
 
 
-type alias WithSocket state =
-    { state | phxSocket : Phoenix.Socket.Socket Msg }
-
-
 type alias Model =
-    WithSocket State
+    { phxSocket : Phoenix.Socket.Socket Msg
+    , state : State
+    }
 
 
 decoder : JD.Decoder State
 decoder =
-    JD.map2 State
-        (field "players" (JD.array Player.decoder))
-        (field "total" (JD.int))
+    JD.map Wait <|
+        JD.map2 WaitState
+            (field "players" (JD.array Player.decoder))
+            (field "total" (JD.int))
 
 
 decode : JD.Value -> Model -> Model
 decode raw model =
     case JD.decodeValue decoder raw of
         Ok state ->
-            { model | total = state.total, players = state.players }
+            { model | state = state }
 
         Err error ->
             model

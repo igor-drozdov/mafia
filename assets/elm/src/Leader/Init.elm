@@ -43,15 +43,15 @@ init gameId =
                 |> Phoenix.Socket.on "roles_assigned" channelName RolesAssigned
                 |> Phoenix.Socket.on "round_begins" channelName Transition
     in
-        ( { phxSocket = phxSocketWithListener, players = Array.fromList [], total = 0 }
+        ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd
         )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        PhoenixMsg msg ->
+    case ( msg, model.state ) of
+        ( PhoenixMsg msg, _ ) ->
             let
                 ( phxSocket, phxCmd ) =
                     Phoenix.Socket.update msg model.phxSocket
@@ -60,25 +60,28 @@ update msg model =
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
-        LoadGame raw ->
+        ( LoadGame raw, Loading ) ->
             decode raw model ! []
 
-        RolesAssigned raw ->
+        ( RolesAssigned raw, _ ) ->
             model ! [ playAudio raw ]
 
-        FollowerJoined raw ->
+        ( FollowerJoined raw, Wait state ) ->
             case JD.decodeValue Player.decoder raw of
                 Ok player ->
                     let
                         foundModel =
-                            find (\p -> p.id == player.id) (Array.toList model.players)
+                            find (\p -> p.id == player.id) (Array.toList state.players)
+
+                        newState =
+                            Wait { state | players = Array.push player state.players }
                     in
                         case foundModel of
                             Just _ ->
                                 model ! []
 
                             Nothing ->
-                                { model | players = Array.push player model.players } ! []
+                                { model | state = newState } ! []
 
                 Err error ->
                     model ! []
@@ -93,15 +96,20 @@ subscriptions model =
 
 
 view : Model -> Html Msg
-view { players, total } =
-    if (Array.length players) == total then
-        div [] [ text "All the players joined!" ]
-    else
-        div []
-            [ div [] [ text "Share the current link with other players" ]
-            , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
-            , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
-            ]
+view model =
+    case model.state of
+        Loading ->
+            div [] [ text "Loading..." ]
+
+        Wait { total, players } ->
+            if (Array.length players) == total then
+                div [] [ text "All the players joined!" ]
+            else
+                div []
+                    [ div [] [ text "Share the current link with other players" ]
+                    , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
+                    , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
+                    ]
 
 
 viewPlayer : Array Player.Model -> Int -> Html Msg
