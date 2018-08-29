@@ -6,23 +6,22 @@ defmodule Playground.Mafia.Chapters.RoundBegins do
 
   import Ecto.Query
 
-  defp handle_run(game_uuid) do
-    create_round(game_uuid)
+  defp handle_run(%{game_uuid: game_uuid}) do
     update_game(game_uuid)
+    round = create_round(game_uuid)
 
-    CitySleeps.run(game_uuid)
+    CitySleeps.run(game_uuid, %{round_id: round.id})
+
+    {:stop, :shutdown, game_uuid}
   end
 
   def create_round(game_uuid) do
     {:ok, round} = Mafia.create_round(%{game_id: game_uuid})
 
     incity_players =
-      Player
-      |> join(:left, [p], s in assoc(p, :player_statuses))
-      |> where([p, s], p.game_id == ^game_uuid and (is_nil(s.player_round_id) or s.type != ^:runout))
+      Player.incity(game_uuid)
       |> select([p], map(p, [:id]))
       |> Repo.all
-
 
     player_rounds =
       Enum.map incity_players, & %{
@@ -33,6 +32,8 @@ defmodule Playground.Mafia.Chapters.RoundBegins do
       }
 
     Repo.insert_all(PlayerRound, player_rounds)
+
+    round
   end
 
   def update_game(game_uuid) do

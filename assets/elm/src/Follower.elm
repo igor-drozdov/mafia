@@ -103,6 +103,14 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
+        ( InitMsg (Init.Transition raw), _ ) ->
+            case JD.decodeValue decoder raw of
+                Ok flags ->
+                    init flags
+
+                Err _ ->
+                    model ! []
+
         ( InitMsg m, InitModel state ) ->
             let
                 ( newModel, subCmd ) =

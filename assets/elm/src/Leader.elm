@@ -87,6 +87,9 @@ subscriptions model =
         InitModel state ->
             Sub.map InitMsg <| InitWidget.subscriptions state
 
+        CurrentModel state ->
+            Sub.map CurrentMsg <| CurrentWidget.subscriptions state
+
         _ ->
             Sub.none
 

@@ -6,18 +6,15 @@ defmodule Playground.Mafia.Chapters.RoundBeginsTest do
 
   import Playground.Factory
 
-  setup do
-    game = insert(:game)
-
-    {:ok, game: game}
-  end
-
   describe "#create_round" do
-    test "create rounds and player rounds", %{game: game} do
+    test "create rounds and player rounds" do
+      player_status =
+        insert(:player_status, type: :runout)
+        |> Repo.preload(player_round: [player: :game])
+
+      game = player_status.player_round.player.game
       game_uuid = game.id
-      players = insert_list(7, :player, game_id: game_uuid) 
-      runout_player_round = insert(:player_round, player: List.last(players))
-      insert(:player_status, player_round: runout_player_round, type: :runout)
+      players = insert_list(6, :player, game_id: game_uuid)
 
       RoundBegins.create_round(game_uuid)
 
@@ -30,7 +27,8 @@ defmodule Playground.Mafia.Chapters.RoundBeginsTest do
   end
 
   describe "#update_game" do
-    test "updates state of the game", %{game: game} do
+    test "updates state of the game" do
+      game = insert(:game)
       RoundBegins.update_game(game.id)
       assert Mafia.get_game!(game.id).state == :current
     end

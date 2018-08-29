@@ -20,9 +20,10 @@ defmodule Playground.Factory do
   end
 
   def player_round_factory do
+    round = build(:round)
     %Playground.Mafia.PlayerRound{
-      round: build(:round),
-      player: build(:player)
+      round: round,
+      player: build(:player, game: round.game)
     }
   end
 

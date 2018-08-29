@@ -3,7 +3,9 @@ defmodule PlaygroundWeb.UserSocket do
 
   ## Channels
   channel "leader:init:*", PlaygroundWeb.Leader.InitChannel
+  channel "leader:current:*", PlaygroundWeb.Leader.CurrentChannel
   channel "followers:init*", PlaygroundWeb.Followers.InitChannel
+  channel "followers:current*", PlaygroundWeb.Followers.CurrentChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
