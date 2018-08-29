@@ -5,11 +5,7 @@ import Phoenix.Channel
 import Phoenix.Socket
 import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
-
-
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
+import Socket exposing (socketServer)
 
 
 init : String -> ( Model, Cmd Msg )

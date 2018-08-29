@@ -9,14 +9,7 @@ import Leader.Init.Model exposing (..)
 import Array exposing (Array, fromList)
 import List.Extra exposing (find)
 import Ports.Audio exposing (playAudio)
-
-
--- CONSTANTS
-
-
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
+import Socket exposing (socketServer)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -41,7 +34,7 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
                 |> Phoenix.Socket.on "roles_assigned" channelName RolesAssigned
-                |> Phoenix.Socket.on "round_begins" channelName Transition
+                |> Phoenix.Socket.on "start_game" channelName Transition
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd

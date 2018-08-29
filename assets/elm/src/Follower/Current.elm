@@ -1,10 +1,10 @@
 module Follower.Current exposing (..)
 
 import Html exposing (Html, div, text)
-import Array exposing (fromList)
 import Phoenix.Channel
 import Phoenix.Socket
 import Follower.Current.Model exposing (..)
+import Socket exposing (socketServer)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -27,7 +27,7 @@ init gameId =
         phxSocketWithListener : Phoenix.Socket.Socket Msg
         phxSocketWithListener =
             phxSocket
-                |> Phoenix.Socket.on "play_audio" channelName AudioReceived
+                |> Phoenix.Socket.on "candidates_received" channelName CandidatesReceived
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd
@@ -36,14 +36,28 @@ init gameId =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        Agree raw ->
-            model ! []
+    case ( msg, model.state ) of
+        ( PhoenixMsg msg, _ ) ->
+            let
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.update msg model.phxSocket
+            in
+                ( { model | phxSocket = phxSocket }
+                , Cmd.map PhoenixMsg phxCmd
+                )
 
-        NoOp ->
+        ( LoadGame raw, Loading ) ->
+            decode raw model ! []
+
+        _ ->
             model ! []
 
 
 view : Model -> Html Msg
 view model =
-    div [] []
+    case model.state of
+        Loading ->
+            div [] [ text "Loading..." ]
+
+        Playing state ->
+            div [] [ text (toString (List.length state.players)) ]

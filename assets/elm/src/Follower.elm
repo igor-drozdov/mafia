@@ -10,6 +10,7 @@ import Follower.Finished as FinishedWidget
 import Follower.Init.Model as Init
 import Follower.Current.Model as Current
 import Follower.Finished.Model as Finished
+import Json.Decode as JD exposing (field)
 
 
 -- MAIN
@@ -30,15 +31,6 @@ main =
         , view = view
         , subscriptions = subscriptions
         }
-
-
-
--- CONSTANTS
-
-
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
 
 
 
@@ -98,6 +90,14 @@ subscriptions model =
 
 
 -- UPDATE
+
+
+decoder : JD.Decoder Flags
+decoder =
+    JD.map3 Flags
+        (field "game_id" JD.string)
+        (field "player_id" JD.string)
+        (field "state" JD.string)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

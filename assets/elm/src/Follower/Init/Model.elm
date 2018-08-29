@@ -13,6 +13,7 @@ type Msg
     = LoadGame JE.Value
     | RoleReceived JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | Transition JE.Value
 
 
 type alias WithSocket a =

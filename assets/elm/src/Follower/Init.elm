@@ -2,17 +2,11 @@ module Follower.Init exposing (..)
 
 import Html exposing (Html, div, text, button, img)
 import Html.Attributes exposing (src)
-import Json.Encode as JE
-import Json.Decode as JD
 import Json.Decode as JD exposing (field)
 import Phoenix.Channel
 import Phoenix.Socket
 import Follower.Init.Model exposing (..)
-
-
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
+import Socket exposing (socketServer)
 
 
 init : String -> String -> ( Model, Cmd Msg )
@@ -36,6 +30,7 @@ init gameId playerId =
         phxSocketWithListener =
             phxSocket
                 |> Phoenix.Socket.on "role_received" channelName RoleReceived
+                |> Phoenix.Socket.on "start_game" channelName Transition
     in
         ( { phxSocket = phxSocketWithListener, role = Nothing }
         , Cmd.map PhoenixMsg phxCmd
@@ -63,6 +58,9 @@ update msg model =
                     model ! []
 
         LoadGame _ ->
+            model ! []
+
+        _ ->
             model ! []
 
 
