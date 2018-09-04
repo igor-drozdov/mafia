@@ -23,7 +23,7 @@ defmodule Playground.MafiaWakesTest do
         |> join(PlaygroundWeb.Leader.CurrentChannel,
                 "leader:current:#{game_uuid}")
 
-      MafiaWakes.notify_mafia_wakes(game_uuid)
+      MafiaWakes.handle_run(%{game_uuid: game_uuid})
 
       assert_receive %Phoenix.Socket.Message{
         event: "play_audio", join_ref: nil,

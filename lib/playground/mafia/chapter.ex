@@ -3,8 +3,8 @@ defmodule Playground.Mafia.Chapter do
     quote location: :keep do
       use GenServer
 
-      def start_link(game_uuid) do
-        GenServer.start_link(__MODULE__, game_uuid, name: via(game_uuid))
+      def start_link(%{game_uuid: game_uuid} = state) do
+        GenServer.start_link(__MODULE__, state, name: via(game_uuid))
       end
 
       def via(game_uuid) do
@@ -35,6 +35,8 @@ defmodule Playground.Mafia.Chapter do
         Logger.info __MODULE__
 
         case handle_run(state) do
+          {:noreply, new_state} ->
+            {:noreply, new_state}
           {:stop, :shutdown, new_state} ->
             {:stop, :shutdown, new_state}
           _ ->

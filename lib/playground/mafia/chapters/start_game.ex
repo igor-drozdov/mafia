@@ -6,6 +6,7 @@ defmodule Playground.Mafia.Chapters.StartGame do
 
   defp handle_run(%{game_uuid: game_uuid}) do
     notify_leader(game_uuid)
+    start_round()
   end
 
   def notify_leader(game_uuid) do

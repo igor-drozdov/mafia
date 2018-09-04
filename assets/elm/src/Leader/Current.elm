@@ -3,6 +3,7 @@ module Leader.Current exposing (..)
 import Html exposing (Html, div, text)
 import Phoenix.Channel
 import Phoenix.Socket
+import Json.Decode as JD exposing (field)
 import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
 import Socket exposing (socketServer)
@@ -29,6 +30,7 @@ init gameId =
         phxSocketWithListener =
             phxSocket
                 |> Phoenix.Socket.on "play_audio" channelName AudioReceived
+                |> Phoenix.Socket.on "city_wakes" channelName CityWakes
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd
@@ -48,10 +50,23 @@ update msg model =
                 )
 
         ( LoadGame raw, Loading ) ->
-            decode raw model ! []
+            case JD.decodeValue decoder raw of
+                Ok state ->
+                    { model | state = Playing state } ! []
+
+                Err error ->
+                    model ! []
 
         ( AudioReceived raw, _ ) ->
             model ! [ Audio.playAudio raw ]
+
+        ( CityWakes raw, _ ) ->
+            case JD.decodeValue decoder raw of
+                Ok state ->
+                    { model | state = CityAwaken state } ! []
+
+                Err error ->
+                    model ! []
 
         _ ->
             model ! []
@@ -70,3 +85,11 @@ view model =
 
         Playing state ->
             div [] [ text ((toString (List.length state.players)) ++ " players") ]
+
+        CityAwaken state ->
+            div []
+                [ div [] [ text "The following players runs out of city:" ]
+                , div []
+                    [ text (String.join ", " (List.map .name state.players))
+                    ]
+                ]

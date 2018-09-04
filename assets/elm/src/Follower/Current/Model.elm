@@ -14,31 +14,25 @@ type alias PlayingState =
 type State
     = Loading
     | Playing PlayingState
+    | MafiaAwaken PlayingState
 
 
 type Msg
     = LoadGame JE.Value
     | CandidatesReceived JE.Value
+    | PlayerChosen JE.Value
+    | ChooseCandidate String
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
 
 type alias Model =
     { phxSocket : Phoenix.Socket.Socket Msg
+    , channelName : String
     , state : State
     }
 
 
-decoder : JD.Decoder State
+decoder : JD.Decoder PlayingState
 decoder =
-    JD.map (Playing << PlayingState)
+    JD.map PlayingState
         (field "players" (JD.list Player.decoder))
-
-
-decode : JD.Value -> Model -> Model
-decode raw model =
-    case JD.decodeValue decoder raw of
-        Ok state ->
-            { model | state = state }
-
-        Err error ->
-            model

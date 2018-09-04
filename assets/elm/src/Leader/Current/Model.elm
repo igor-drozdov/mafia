@@ -14,10 +14,12 @@ type alias PlayingState =
 type State
     = Loading
     | Playing PlayingState
+    | CityAwaken PlayingState
 
 
 type Msg
     = AudioReceived JE.Value
+    | CityWakes JE.Value
     | LoadGame JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
@@ -28,17 +30,7 @@ type alias Model =
     }
 
 
-decoder : JD.Decoder State
+decoder : JD.Decoder PlayingState
 decoder =
-    JD.map (Playing << PlayingState)
+    JD.map PlayingState
         (field "players" (JD.list Player.decoder))
-
-
-decode : JD.Value -> Model -> Model
-decode raw model =
-    case JD.decodeValue decoder raw of
-        Ok state ->
-            { model | state = state }
-
-        Err error ->
-            model

@@ -55,7 +55,7 @@ init { gameId, playerId, state } =
         "current" ->
             let
                 ( model, subMsg ) =
-                    CurrentWidget.init gameId
+                    CurrentWidget.init gameId playerId
             in
                 ( CurrentModel model, Cmd.map CurrentMsg subMsg )
 
@@ -83,6 +83,9 @@ subscriptions model =
     case model of
         InitModel state ->
             Sub.map InitMsg <| InitWidget.subscriptions state
+
+        CurrentModel state ->
+            Sub.map CurrentMsg <| CurrentWidget.subscriptions state
 
         _ ->
             Sub.none

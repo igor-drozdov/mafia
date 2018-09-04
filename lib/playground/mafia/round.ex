@@ -9,6 +9,7 @@ defmodule Playground.Mafia.Round do
 
     has_many :player_rounds, PlayerRound
     has_many :players, through: [:player_rounds, :player]
+    has_many :player_statuses, through: [:player_rounds, :player_statuses]
 
     timestamps()
   end
