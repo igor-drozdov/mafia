@@ -1,20 +1,18 @@
 defmodule Playground.Mafia.Chapters.SelectionBegins do
   use Playground.Mafia.Chapter
 
-  alias Playground.Mafia.Player
-  alias Playground.Repo
   alias Playground.Mafia.Players.Chapters.PlayerChooses
+  alias PlaygroundWeb.Endpoint
 
-  import Ecto.Query, only: [from: 2]
+  defp handle_run(%{game_uuid: game_uuid, players: players} = state) do
+    notify_leader(game_uuid)
 
-  defp handle_run(game_uuid) do
-    player_uuids =
-      Repo.all(
-        from p in Player,
-        where: [game_id: ^game_uuid, state: "incity"],
-        select: map(p, [:id])
-      ) |> Enum.map(& &1.id)
+    PlayerChooses.run(game_uuid, players, state)
 
-    PlayerChooses.run(game_uuid, player_uuids)
+    {:stop, :shutdown, state}
+  end
+
+  def notify_leader(game_uuid) do
+    Endpoint.broadcast("leader:current:#{game_uuid}", "selection_begins", %{})
   end
 end
