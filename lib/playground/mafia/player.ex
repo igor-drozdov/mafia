@@ -33,6 +33,6 @@ defmodule Playground.Mafia.Player do
     Playground.Mafia.Player
     |> join(:left, [p], s in assoc(p, :player_statuses))
     |> where([p, s], p.game_id == ^game_uuid)
-    |> where([p, s], is_nil(s.player_round_id) or s.type != ^:runout)
+    |> where([p, s], is_nil(s.player_round_id) or s.type != ^:ostracized)
   end
 end
