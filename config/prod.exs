@@ -62,3 +62,8 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
 import_config "prod.secret.exs"
+
+config :playground, :period,
+  short: 7000,
+  medium: 25000,
+  long: 45000

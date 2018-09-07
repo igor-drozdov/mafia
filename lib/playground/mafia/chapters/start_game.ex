@@ -4,6 +4,8 @@ defmodule Playground.Mafia.Chapters.StartGame do
   alias Playground.Repo
   alias PlaygroundWeb.Endpoint
 
+  @period Application.get_env(:playground, :period) |> Keyword.fetch(:medium)
+
   defp handle_run(%{game_uuid: game_uuid} = state) do
     players = Repo.all(Player.incity(game_uuid))
 
@@ -30,7 +32,7 @@ defmodule Playground.Mafia.Chapters.StartGame do
   end
 
   def start_round do
-    Process.send_after(self(), :transition, 5000)
+    Process.send_after(self(), :transition, @period)
   end
 
   def handle_info(:transition, %{game_uuid: game_uuid, players: players} = state) do

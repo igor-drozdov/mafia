@@ -56,3 +56,8 @@ config :playground, Playground.Repo,
   database: "playground_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :playground, :period,
+  short: 1500,
+  medium: 1500,
+  long: 1500

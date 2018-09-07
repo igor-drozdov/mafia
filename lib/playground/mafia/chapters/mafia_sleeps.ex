@@ -3,9 +3,11 @@ defmodule Playground.Mafia.Chapters.MafiaSleeps do
   alias Playground.Mafia.Chapters.CityWakes
   alias PlaygroundWeb.Endpoint
 
+  @period Application.get_env(:playground, :period) |> Keyword.fetch(:short)
+
   defp handle_run(%{game_uuid: game_uuid}) do
     notify_leader(game_uuid)
-    Process.send_after(self(), :transition, 5000)
+    Process.send_after(self(), :transition, @period)
   end
 
   def notify_leader(game_uuid) do

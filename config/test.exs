@@ -17,3 +17,8 @@ config :playground, Playground.Repo,
   database: "playground_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :playground, :period,
+  short: 0,
+  medium: 0,
+  long: 0
