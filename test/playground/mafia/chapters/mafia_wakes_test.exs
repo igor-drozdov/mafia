@@ -1,4 +1,4 @@
-defmodule Playground.MafiaWakesTest do
+defmodule Playground.Mafia.Chapters.MafiaWakesTest do
   use PlaygroundWeb.ChannelCase
 
   alias Playground.Mafia.{Chapters.MafiaWakes, Player}
@@ -23,7 +23,7 @@ defmodule Playground.MafiaWakesTest do
         |> join(PlaygroundWeb.Leader.CurrentChannel,
                 "leader:current:#{game_uuid}")
 
-      MafiaWakes.handle_run(%{game_uuid: game_uuid})
+      MafiaWakes.handle_run(%{game_uuid: game_uuid, players: [mafia, innocent]})
 
       assert_receive %Phoenix.Socket.Message{
         event: "play_audio", join_ref: nil,
@@ -44,13 +44,13 @@ defmodule Playground.MafiaWakesTest do
     end
   end
 
-  describe "#runout_player" do
-    test "creates runout status for a player" do
+  describe "#ostracize_player" do
+    test "creates ostracized status for a player" do
       player_round = insert(:player_round)
       game_uuid = player_round.round.game_id
       incity = insert(:player, game_id: game_uuid, role: :innocent)
 
-      MafiaWakes.runout_player(player_round.round_id, player_round.player_id)
+      MafiaWakes.ostracize_player(player_round.round_id, player_round.player_id)
 
       assert Repo.all(Player.incity(game_uuid)) == [incity]
     end

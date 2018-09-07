@@ -1,4 +1,4 @@
-defmodule Playground.StartGameTest do
+defmodule Playground.Mafia.Chapters.StartGameTest do
   use PlaygroundWeb.ChannelCase
 
   alias Playground.Mafia.Chapters.StartGame
@@ -20,9 +20,12 @@ defmodule Playground.StartGameTest do
 
   describe "#notify_followers" do
     test "broadcast game started", %{game_uuid: game_uuid} do
-      player_uuid = insert(:player, game_id: game_uuid).id
+      player = insert(:player, game_id: game_uuid)
+      player_uuid = player.id
       @endpoint.subscribe("followers:init:#{game_uuid}:#{player_uuid}")
-      StartGame.notify_followers(game_uuid)
+
+      StartGame.notify_followers(game_uuid, [player])
+
       assert_broadcast "start_game", %{
         game_id: ^game_uuid, state: "current", player_id: ^player_uuid
       }
