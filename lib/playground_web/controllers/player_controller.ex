@@ -22,6 +22,7 @@ defmodule PlaygroundWeb.PlayerController do
         |> put_session(:game_id, game_id)
         |> put_session(:player_id, player.id)
         |> redirect(to: game_player_path(conn, :show, game, player))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset, game: game)
     end

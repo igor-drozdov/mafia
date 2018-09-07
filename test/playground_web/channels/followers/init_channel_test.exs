@@ -20,6 +20,6 @@ defmodule PlaygroundWeb.Followers.InitChannelTest do
 
   test "ping replies with status ok", %{player: player} do
     player_params = Map.take(player, [:id, :name, :state])
-    assert_broadcast "follower_joined", ^player_params
+    assert_broadcast("follower_joined", ^player_params)
   end
 end

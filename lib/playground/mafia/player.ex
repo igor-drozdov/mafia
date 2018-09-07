@@ -11,13 +11,13 @@ defmodule Playground.Mafia.Player do
   @derive {Poison.Encoder, only: [:id, :name]}
 
   schema "players" do
-    field :name, :string
-    field :role, RoleEnum
+    field(:name, :string)
+    field(:role, RoleEnum)
 
-    belongs_to :game, Game, type: :binary_id
+    belongs_to(:game, Game, type: :binary_id)
 
-    has_many :player_rounds, PlayerRound
-    has_many :player_statuses, through: [:player_rounds, :player_statuses]
+    has_many(:player_rounds, PlayerRound)
+    has_many(:player_statuses, through: [:player_rounds, :player_statuses])
 
     timestamps()
   end

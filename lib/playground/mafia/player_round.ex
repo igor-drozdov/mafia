@@ -7,9 +7,9 @@ defmodule Playground.Mafia.PlayerRound do
   import Ecto.Query
 
   schema "player_rounds" do
-    belongs_to :player, Player, type: :binary_id
-    belongs_to :round, Round
-    has_many :player_statuses, PlayerStatus
+    belongs_to(:player, Player, type: :binary_id)
+    belongs_to(:round, Round)
+    has_many(:player_statuses, PlayerStatus)
 
     timestamps()
   end
@@ -18,7 +18,7 @@ defmodule Playground.Mafia.PlayerRound do
     PlayerRound
     |> where(player_id: ^player_uuid, round_id: ^round_id)
     |> Repo.one()
-    |> Ecto.build_assoc(:player_statuses, %{ type: type })
+    |> Ecto.build_assoc(:player_statuses, %{type: type})
     |> Repo.insert()
   end
 end

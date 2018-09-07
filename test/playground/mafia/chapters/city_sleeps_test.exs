@@ -12,7 +12,7 @@ defmodule Playground.Mafia.Chapters.CitySleepsTest do
 
       CitySleeps.notify_leader(game.id)
 
-      assert_broadcast "play_audio", %{audio: "city_sleeps"}
+      assert_broadcast("play_audio", %{audio: "city_sleeps"})
     end
   end
 end

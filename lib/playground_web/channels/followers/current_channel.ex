@@ -1,12 +1,10 @@
 defmodule PlaygroundWeb.Followers.CurrentChannel do
   use PlaygroundWeb, :channel
 
-  alias PlaygroundWeb.Endpoint
   alias Playground.{Mafia, Repo}
-  alias Playground.Mafia.Chapters.MafiaWakes
 
   def join("followers:current:" <> ids, _payload, socket) do
-    [game_id, player_id] = String.split(ids, ":")
+    [game_id, _player_id] = String.split(ids, ":")
     game = Mafia.get_game!(game_id) |> Repo.preload(:players)
 
     {:ok, game, assign(socket, :game, game)}

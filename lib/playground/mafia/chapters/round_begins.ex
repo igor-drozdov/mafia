@@ -19,12 +19,15 @@ defmodule Playground.Mafia.Chapters.RoundBegins do
     {:ok, round} = Mafia.create_round(%{game_id: game_uuid})
 
     player_rounds =
-      Enum.map players, & %{
-        round_id: round.id,
-        player_id: &1.id,
-        inserted_at: DateTime.utc_now,
-        updated_at: DateTime.utc_now
-      }
+      Enum.map(
+        players,
+        &%{
+          round_id: round.id,
+          player_id: &1.id,
+          inserted_at: DateTime.utc_now(),
+          updated_at: DateTime.utc_now()
+        }
+      )
 
     Repo.insert_all(PlayerRound, player_rounds)
 
@@ -33,6 +36,6 @@ defmodule Playground.Mafia.Chapters.RoundBegins do
 
   def update_game(game_uuid) do
     from(Game, where: [id: ^game_uuid])
-    |> Repo.update_all([set: [state: :current]])
+    |> Repo.update_all(set: [state: :current])
   end
 end

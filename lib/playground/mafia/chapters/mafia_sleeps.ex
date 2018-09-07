@@ -11,7 +11,7 @@ defmodule Playground.Mafia.Chapters.MafiaSleeps do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{ audio: "mafia_sleeps" })
+    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "mafia_sleeps"})
   end
 
   def handle_info(:transition, %{game_uuid: game_uuid} = state) do

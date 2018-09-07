@@ -16,7 +16,7 @@ defmodule Playground.Mafia.Chapters.CityWakesTest do
     test "broadcast mafia sleeps", %{game_uuid: game_uuid} do
       CityWakes.notify_leader(game_uuid)
 
-      assert_broadcast "play_audio", %{audio: "city_wakes"}
+      assert_broadcast("play_audio", %{audio: "city_wakes"})
     end
   end
 
@@ -29,7 +29,7 @@ defmodule Playground.Mafia.Chapters.CityWakesTest do
 
       CityWakes.send_night_results(game_uuid, player_round.round_id)
 
-      assert_broadcast "city_wakes", %{players: [^ostracized_player]}
+      assert_broadcast("city_wakes", %{players: [^ostracized_player]})
     end
   end
 end

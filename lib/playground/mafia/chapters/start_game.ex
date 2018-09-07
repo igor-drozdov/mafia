@@ -23,12 +23,14 @@ defmodule Playground.Mafia.Chapters.StartGame do
   def notify_followers(game_uuid, players) do
     players
     |> Enum.each(fn player ->
-         payload = %{
-           game_id: game_uuid, state: "current", player_id: player.id
-         }
-         Endpoint.broadcast(
-           "followers:init:#{game_uuid}:#{player.id}", "start_game", payload)
-       end)
+      payload = %{
+        game_id: game_uuid,
+        state: "current",
+        player_id: player.id
+      }
+
+      Endpoint.broadcast("followers:init:#{game_uuid}:#{player.id}", "start_game", payload)
+    end)
   end
 
   def start_round do

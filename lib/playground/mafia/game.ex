@@ -8,11 +8,11 @@ defmodule Playground.Mafia.Game do
   @derive {Poison.Encoder, only: [:id, :state, :total, :players]}
 
   schema "games" do
-    field :state, GameStateEnum
-    field :total, :integer
+    field(:state, GameStateEnum)
+    field(:total, :integer)
 
-    has_many :players, Player
-    has_many :rounds, Round
+    has_many(:players, Player)
+    has_many(:rounds, Round)
 
     timestamps()
   end

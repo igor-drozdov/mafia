@@ -5,7 +5,7 @@ defmodule Playground.Mafia.Chapters.MafiaWakes do
   alias PlaygroundWeb.Endpoint
 
   def handle_run(%{game_uuid: game_uuid, players: players} = state) do
-    {mafias, innocents} = Enum.split_with(players, & &1.role == :mafia)
+    {mafias, innocents} = Enum.split_with(players, &(&1.role == :mafia))
 
     notify_leader(game_uuid)
     notify_candidates_received(game_uuid, mafias, innocents)
@@ -14,19 +14,21 @@ defmodule Playground.Mafia.Chapters.MafiaWakes do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{ audio: "mafia_wakes" })
+    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "mafia_wakes"})
   end
 
   def notify_candidates_received(game_uuid, mafias, innocents) do
     payload = %{
       players: Enum.map(innocents, &Map.take(&1, [:id, :name, :state]))
     }
+
     notify_mafia_players(game_uuid, mafias, "candidates_received", payload)
   end
 
-  def handle_cast({:choose_candidate, player_uuid},
-    %{game_uuid: game_uuid, round_id: round_id, mafias: mafias} = state) do
-
+  def handle_cast(
+        {:choose_candidate, player_uuid},
+        %{game_uuid: game_uuid, round_id: round_id, mafias: mafias} = state
+      ) do
     ostracize_player(round_id, player_uuid)
     notify_mafia_players(game_uuid, mafias, "player_chosen")
 
@@ -40,8 +42,8 @@ defmodule Playground.Mafia.Chapters.MafiaWakes do
   end
 
   def notify_mafia_players(game_uuid, mafias, msg, payload \\ %{}) do
-    Enum.each mafias, fn mafia ->
+    Enum.each(mafias, fn mafia ->
       Endpoint.broadcast("followers:current:#{game_uuid}:#{mafia.id}", msg, payload)
-    end
+    end)
   end
 end

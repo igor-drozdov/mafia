@@ -15,7 +15,10 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChooses do
     |> GenServer.cast({:run, other_players})
   end
 
-  defp handle_run(other_players, %{game_uuid: game_uuid, player: player, players: players} = state) do
+  defp handle_run(
+         other_players,
+         %{game_uuid: game_uuid, player: player, players: players} = state
+       ) do
     notify_player(game_uuid, player, players)
 
     {:noreply, Map.put(state, :other_players, other_players)}
@@ -23,12 +26,17 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChooses do
 
   def notify_player(game_uuid, player, players) do
     candidates = List.delete(players, player)
-    Endpoint.broadcast("followers:current:#{game_uuid}:#{player.id}", "candidates_received", %{ players: candidates })
+
+    Endpoint.broadcast("followers:current:#{game_uuid}:#{player.id}", "candidates_received", %{
+      players: candidates
+    })
   end
 
-  def handle_cast({:choose_candidate, player_uuid},
-    %{game_uuid: game_uuid, round_id: round_id, player: player, other_players: other_players} = state) do
-
+  def handle_cast(
+        {:choose_candidate, player_uuid},
+        %{game_uuid: game_uuid, round_id: round_id, player: player, other_players: other_players} =
+          state
+      ) do
     nominate_player(round_id, player_uuid)
     notify_player_chosen(game_uuid, player.id)
 

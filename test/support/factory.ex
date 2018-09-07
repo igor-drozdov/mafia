@@ -9,7 +9,7 @@ defmodule Playground.Factory do
 
   def player_factory do
     %Playground.Mafia.Player{
-      name: sequence(:name, & "player-#{&1}")
+      name: sequence(:name, &"player-#{&1}")
     }
   end
 
@@ -21,6 +21,7 @@ defmodule Playground.Factory do
 
   def player_round_factory do
     round = build(:round)
+
     %Playground.Mafia.PlayerRound{
       round: round,
       player: build(:player, game: round.game)

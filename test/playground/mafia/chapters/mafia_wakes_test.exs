@@ -15,32 +15,41 @@ defmodule Playground.Mafia.Chapters.MafiaWakesTest do
 
       {:ok, _, socket} =
         socket("user_id", %{some: :assign})
-        |> join(PlaygroundWeb.Followers.CurrentChannel,
-                "followers:current:#{game_uuid}:#{mafia.id}")
+        |> join(
+          PlaygroundWeb.Followers.CurrentChannel,
+          "followers:current:#{game_uuid}:#{mafia.id}"
+        )
 
       {:ok, _, leader_socket} =
         socket("user_id", %{some: :assign})
-        |> join(PlaygroundWeb.Leader.CurrentChannel,
-                "leader:current:#{game_uuid}")
+        |> join(
+          PlaygroundWeb.Leader.CurrentChannel,
+          "leader:current:#{game_uuid}"
+        )
 
       MafiaWakes.handle_run(%{game_uuid: game_uuid, players: [mafia, innocent]})
 
       assert_receive %Phoenix.Socket.Message{
-        event: "play_audio", join_ref: nil,
-        payload: %{ audio: "mafia_wakes" },
-        ref: nil, topic: "leader:current:" <> game_uuid
+        event: "play_audio",
+        join_ref: nil,
+        payload: %{audio: "mafia_wakes"},
+        ref: nil,
+        topic: "leader:current:" <> game_uuid
       }
 
       uuids = "#{game_uuid}:#{mafia.id}"
       payload = %{players: [%{id: innocent.id, name: innocent.name}]}
+
       assert_receive %Phoenix.Socket.Message{
-        event: "candidates_received", join_ref: nil,
+        event: "candidates_received",
+        join_ref: nil,
         payload: ^payload,
-        ref: nil, topic: "followers:current:" <> ^uuids
+        ref: nil,
+        topic: "followers:current:" <> ^uuids
       }
 
-      leave socket
-      leave leader_socket
+      leave(socket)
+      leave(leader_socket)
     end
   end
 

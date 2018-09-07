@@ -19,13 +19,13 @@ defmodule Playground.Mafia.Chapters.CityWakes do
       Playground.Repo.get!(Playground.Mafia.Round, round_id)
       |> Ecto.assoc(:players)
       |> join(:inner, [p], ps in assoc(p, :player_statuses), ps.type == ^:ostracized)
-      |> Playground.Repo.all
+      |> Playground.Repo.all()
 
-    Endpoint.broadcast("leader:current:#{game_uuid}", "city_wakes", %{ players: players })
+    Endpoint.broadcast("leader:current:#{game_uuid}", "city_wakes", %{players: players})
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{ audio: "city_wakes" })
+    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "city_wakes"})
   end
 
   def handle_info(:transition, %{game_uuid: game_uuid} = state) do

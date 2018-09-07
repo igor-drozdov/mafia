@@ -2,11 +2,10 @@ defmodule Playground.Mafia.PlayerStatus do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "player_statuses" do
-    field :type, PlayerStateEnum
+    field(:type, PlayerStateEnum)
 
-    belongs_to :player_round, Playground.Mafia.PlayerRound
+    belongs_to(:player_round, Playground.Mafia.PlayerRound)
 
     timestamps()
   end

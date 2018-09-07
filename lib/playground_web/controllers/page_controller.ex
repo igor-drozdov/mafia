@@ -9,6 +9,6 @@ defmodule PlaygroundWeb.PageController do
     game = game_id && Mafia.get_game(game_id)
     changeset = Mafia.change_game(%Game{})
 
-    render conn, "index.html", game: game, changeset: changeset
+    render(conn, "index.html", game: game, changeset: changeset)
   end
 end

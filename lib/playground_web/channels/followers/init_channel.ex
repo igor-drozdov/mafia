@@ -11,10 +11,10 @@ defmodule PlaygroundWeb.Followers.InitChannel do
 
     player =
       game.players
-      |> Enum.find(& &1.id == player_id)
+      |> Enum.find(&(&1.id == player_id))
       |> Map.take([:id, :name, :state])
 
-    Endpoint.broadcast "leader:init:#{game_id}", "follower_joined", player
+    Endpoint.broadcast("leader:init:#{game_id}", "follower_joined", player)
 
     if enough_players_connected?(game), do: handout_roles!(game)
 

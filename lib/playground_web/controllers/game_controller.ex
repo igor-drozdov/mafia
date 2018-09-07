@@ -3,13 +3,14 @@ defmodule PlaygroundWeb.GameController do
 
   alias Playground.{Mafia, Repo, Mafia.GamesSupervisor}
 
-  def create(conn, %{ "game" => game_params }) do
+  def create(conn, %{"game" => game_params}) do
     case Mafia.create_game(game_params) do
       {:ok, game} ->
         GamesSupervisor.start_child(game.id)
 
         conn
         |> redirect(to: game_path(conn, :show, game))
+
       {:error, _changeset} ->
         conn
         |> redirect(to: page_path(conn, :index))
@@ -37,7 +38,9 @@ defmodule PlaygroundWeb.GameController do
 
   def player_from_session(conn, game) do
     case get_session(conn, :player_id) do
-      nil -> nil
+      nil ->
+        nil
+
       player_id ->
         Repo.get_by(Mafia.Player, game_id: game.id, id: player_id)
     end

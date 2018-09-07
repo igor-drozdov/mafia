@@ -12,7 +12,7 @@ defmodule Playground.Mafia.Chapters.SelectionBeginsTest do
 
       SelectionBegins.notify_leader(game.id)
 
-      assert_broadcast "selection_begins", %{}
+      assert_broadcast("selection_begins", %{})
     end
   end
 end

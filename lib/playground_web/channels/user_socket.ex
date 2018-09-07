@@ -2,13 +2,13 @@ defmodule PlaygroundWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "leader:init:*", PlaygroundWeb.Leader.InitChannel
-  channel "leader:current:*", PlaygroundWeb.Leader.CurrentChannel
-  channel "followers:init*", PlaygroundWeb.Followers.InitChannel
-  channel "followers:current*", PlaygroundWeb.Followers.CurrentChannel
+  channel("leader:init:*", PlaygroundWeb.Leader.InitChannel)
+  channel("leader:current:*", PlaygroundWeb.Leader.CurrentChannel)
+  channel("followers:init*", PlaygroundWeb.Followers.InitChannel)
+  channel("followers:current*", PlaygroundWeb.Followers.CurrentChannel)
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
+  transport(:websocket, Phoenix.Transports.WebSocket)
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can

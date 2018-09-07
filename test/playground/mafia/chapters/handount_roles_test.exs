@@ -10,7 +10,7 @@ defmodule Playground.Mafia.Chapters.HandoutRolesTest do
   def run(game_uuid, player_uuids) do
     HandoutRoles.handout_roles(game_uuid, player_uuids)
 
-    Enum.split_with(Repo.all(Player), & &1.role == :mafia)
+    Enum.split_with(Repo.all(Player), &(&1.role == :mafia))
   end
 
   setup do
@@ -29,34 +29,42 @@ defmodule Playground.Mafia.Chapters.HandoutRolesTest do
     end
 
     test "broadcast roles to players", %{game_uuid: game_uuid, player_uuids: player_uuids} do
-      sockets = Enum.map(player_uuids, fn player_uuid ->
-        {:ok, _, socket} =
-          socket("user_id", %{some: :assign})
-          |> join(InitChannel, "followers:init:#{game_uuid}:#{player_uuid}")
+      sockets =
+        Enum.map(player_uuids, fn player_uuid ->
+          {:ok, _, socket} =
+            socket("user_id", %{some: :assign})
+            |> join(InitChannel, "followers:init:#{game_uuid}:#{player_uuid}")
 
-        socket
-      end)
+          socket
+        end)
 
       {mafias, innocents} = run(game_uuid, player_uuids)
 
       Enum.each(mafias, fn player ->
         uuids = "#{game_uuid}:#{player.id}"
+
         assert_receive %Phoenix.Socket.Message{
-          event: "role_received", join_ref: nil, payload: %{role: :mafia},
-          ref: nil, topic: "followers:init:" <> ^uuids
+          event: "role_received",
+          join_ref: nil,
+          payload: %{role: :mafia},
+          ref: nil,
+          topic: "followers:init:" <> ^uuids
         }
       end)
 
       Enum.each(innocents, fn player ->
         uuids = "#{game_uuid}:#{player.id}"
+
         assert_receive %Phoenix.Socket.Message{
-          event: "role_received", join_ref: nil, payload: %{role: :innocent},
-          ref: nil, topic: "followers:init:" <> ^uuids
+          event: "role_received",
+          join_ref: nil,
+          payload: %{role: :innocent},
+          ref: nil,
+          topic: "followers:init:" <> ^uuids
         }
       end)
 
-
-      Enum.map sockets, & leave(&1)
+      Enum.map(sockets, &leave(&1))
     end
   end
 
@@ -64,7 +72,7 @@ defmodule Playground.Mafia.Chapters.HandoutRolesTest do
     test "broadcast roles assigned", %{game_uuid: game_uuid} do
       @endpoint.subscribe("leader:init:#{game_uuid}")
       HandoutRoles.notify_leader(game_uuid)
-      assert_broadcast "roles_assigned", %{audio: "roles_assigned"}
+      assert_broadcast("roles_assigned", %{audio: "roles_assigned"})
     end
   end
 end

@@ -8,7 +8,7 @@ defmodule Playground.Mafia.Chapter do
       end
 
       def via(game_uuid) do
-        {:via, Registry, { Playground.Mafia.Registry, { __MODULE__, game_uuid }}}
+        {:via, Registry, {Playground.Mafia.Registry, {__MODULE__, game_uuid}}}
       end
 
       def init(state) do
@@ -32,13 +32,15 @@ defmodule Playground.Mafia.Chapter do
         Registry.register(Playground.Mafia.Registry, {:current, game_uuid}, via(game_uuid))
 
         require Logger
-        Logger.info __MODULE__
+        Logger.info(__MODULE__)
 
         case handle_run(state) do
           {:noreply, new_state} ->
             {:noreply, new_state}
+
           {:stop, :shutdown, new_state} ->
             {:stop, :shutdown, new_state}
+
           _ ->
             {:noreply, state}
         end

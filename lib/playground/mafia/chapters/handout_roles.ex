@@ -21,15 +21,16 @@ defmodule Playground.Mafia.Chapters.HandoutRoles do
 
   def handout_roles(game_uuid, player_uuids) do
     number_of_mafias = div(length(player_uuids), 3)
-    {mafias, innocents} = player_uuids |> Enum.shuffle |> Enum.split(number_of_mafias)
+    {mafias, innocents} = player_uuids |> Enum.shuffle() |> Enum.split(number_of_mafias)
 
     Enum.each([mafia: mafias, innocent: innocents], fn {role, players} ->
-			from(p in Player, where: p.id in ^players)
-			|> Repo.update_all(set: [role: role])
+      from(p in Player, where: p.id in ^players)
+      |> Repo.update_all(set: [role: role])
 
-      Enum.each players, &
-        Endpoint.broadcast(
-          "followers:init:#{game_uuid}:#{&1}", "role_received", %{role: role})
+      Enum.each(
+        players,
+        &Endpoint.broadcast("followers:init:#{game_uuid}:#{&1}", "role_received", %{role: role})
+      )
     end)
   end
 

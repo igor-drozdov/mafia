@@ -13,17 +13,17 @@ defmodule PlaygroundWeb.GameControllerTest do
 
   describe "create game" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post conn, game_path(conn, :create), game: @create_attrs
+      conn = post(conn, game_path(conn, :create), game: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == game_path(conn, :show, id)
 
-      conn = get conn, game_path(conn, :show, id)
+      conn = get(conn, game_path(conn, :show, id))
       assert html_response(conn, 200) =~ id
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, game_path(conn, :create), game: @invalid_attrs
+      conn = post(conn, game_path(conn, :create), game: @invalid_attrs)
       assert redirected_to(conn) == page_path(conn, :index)
     end
   end

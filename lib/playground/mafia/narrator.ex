@@ -10,7 +10,7 @@ defmodule Playground.Mafia.Narrator do
   end
 
   def via(game_uuid) do
-    {:via, Registry, { Playground.Mafia.Registry, { __MODULE__, game_uuid}}}
+    {:via, Registry, {Playground.Mafia.Registry, {__MODULE__, game_uuid}}}
   end
 
   @impl true
