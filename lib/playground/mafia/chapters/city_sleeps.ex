@@ -5,11 +5,11 @@ defmodule Playground.Mafia.Chapters.CitySleeps do
   alias PlaygroundWeb.Endpoint
 
   defp handle_run(%{game_uuid: game_uuid}) do
-    notify_city_sleeps(game_uuid)
+    notify_leader(game_uuid)
     wake_mafia()
   end
 
-  def notify_city_sleeps(game_uuid) do
+  def notify_leader(game_uuid) do
     Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "city_sleeps"})
   end
 
