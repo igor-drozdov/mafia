@@ -62,14 +62,14 @@ update msg model =
                     model ! []
 
         ( CandidatesReceived raw, Playing state ) ->
-            case Debug.log "value : " (JD.decodeValue decoder (Debug.log "raw" raw)) of
+            case JD.decodeValue decoder raw of
                 Ok state ->
-                    { model | state = MafiaAwaken state } ! []
+                    { model | state = PlayerChoosing state } ! []
 
                 Err error ->
                     model ! []
 
-        ( ChooseCandidate playerId, MafiaAwaken state ) ->
+        ( ChooseCandidate playerId, PlayerChoosing state ) ->
             let
                 payload =
                     JE.object [ ( "player_id", JE.string playerId ) ]
@@ -84,7 +84,7 @@ update msg model =
                 { model | phxSocket = phxSocket }
                     ! [ Cmd.map PhoenixMsg phxCmd ]
 
-        ( PlayerChosen _, MafiaAwaken state ) ->
+        ( PlayerChosen _, PlayerChoosing state ) ->
             { model | state = Playing state } ! []
 
         _ ->
@@ -105,7 +105,7 @@ view model =
         Playing state ->
             div [] [ text (toString (List.length state.players)) ]
 
-        MafiaAwaken state ->
+        PlayerChoosing state ->
             div [] (List.map viewCandidate state.players)
 
 

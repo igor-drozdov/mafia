@@ -13,7 +13,8 @@ defmodule PlaygroundWeb.Followers.CurrentChannel do
   end
 
   def handle_in("choose_candidate", %{"player_id" => player_id}, socket) do
-    GenServer.cast(MafiaWakes.via(socket.assigns.game.id), {:choose_candidate, player_id})
+    [{pid, _}] = Registry.lookup(Playground.Mafia.Registry, {:current, socket.assigns.game.id})
+    GenServer.cast(pid, {:choose_candidate, player_id})
 
     {:noreply, socket}
   end

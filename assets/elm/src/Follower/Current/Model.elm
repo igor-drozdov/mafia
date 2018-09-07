@@ -14,7 +14,7 @@ type alias PlayingState =
 type State
     = Loading
     | Playing PlayingState
-    | MafiaAwaken PlayingState
+    | PlayerChoosing PlayingState
 
 
 type Msg
