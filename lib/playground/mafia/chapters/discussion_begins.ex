@@ -5,12 +5,11 @@ defmodule Playground.Mafia.Chapters.DiscussionBegins do
   alias Playground.Repo
   alias Playground.Mafia.Players.Chapters.PlayerSpeaks
 
-  defp handle_run(%{game_uuid: game_uuid}) do
-    player_uuids =
-      Player.incity(game_uuid)
-      |> Repo.all()
-      |> Enum.map(& &1.id)
+  defp handle_run(%{game_uuid: game_uuid} = state) do
+    players = Repo.all(Player.incity(game_uuid))
 
-    PlayerSpeaks.run(game_uuid, player_uuids)
+    PlayerSpeaks.run(game_uuid, players, Map.put(state, :players, players))
+
+    {:stop, :shutdown, state}
   end
 end
