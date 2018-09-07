@@ -3,14 +3,16 @@ defmodule Playground.Mafia.Players.Chapter do
     quote location: :keep do
       use GenServer
 
-      def start_link({ game_uuid, player_uuid } = state) do
-        GenServer.start_link(__MODULE__, state, name: via(game_uuid, player_uuid))
+      def start_link(%{game_uuid: game_uuid, player: player} = state) do
+        GenServer.start_link(__MODULE__, state, name: via(game_uuid, player.id))
       end
 
-      def start(game_uuid, player_uuid) do
+      def start(game_uuid, player, state) do
+        initial_state = Map.merge(state, %{game_uuid: game_uuid, player: player})
+
         spec = %{
           id: __MODULE__,
-          start: {__MODULE__, :start_link, [{game_uuid, player_uuid}]},
+          start: {__MODULE__, :start_link, [initial_state]},
           restart: :transient
         }
 
@@ -27,17 +29,19 @@ defmodule Playground.Mafia.Players.Chapter do
         {:ok, state}
       end
 
-      def handle_cast({:run, other_players}, { game_uuid, player_uuid } = state) do
-        Registry.register(Playground.Mafia.Registry, {:current, game_uuid}, via(game_uuid, player_uuid))
+      def handle_cast({:run, other_players}, %{game_uuid: game_uuid, player: player} = state) do
+        Registry.register(Playground.Mafia.Registry, {:current, game_uuid}, via(game_uuid, player.id))
 
         require Logger
         Logger.info __MODULE__
 
-        case handle_run(game_uuid, player_uuid, other_players) do
-          {:continue, state} ->
-            {:noreply, state}
+        case handle_run(other_players, state) do
+          {:noreply, new_state} ->
+            {:noreply, new_state}
+          {:stop, :shutdown, new_state} ->
+            {:stop, :shutdown, new_state}
           _ ->
-            {:stop, :shutdown, state}
+            {:noreply, state}
         end
       end
     end

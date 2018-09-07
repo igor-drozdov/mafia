@@ -7,6 +7,7 @@ import Json.Decode as JD exposing (field)
 import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
 import Socket exposing (socketServer)
+import Player
 
 
 init : String -> ( Model, Cmd Msg )
@@ -31,6 +32,8 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "play_audio" channelName AudioReceived
                 |> Phoenix.Socket.on "city_wakes" channelName CityWakes
+                |> Phoenix.Socket.on "player_speaks" channelName PlayerSpeaks
+                |> Phoenix.Socket.on "selection_begins" channelName SelectionBegins
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd
@@ -68,6 +71,17 @@ update msg model =
                 Err error ->
                     model ! []
 
+        ( PlayerSpeaks raw, _ ) ->
+            case JD.decodeValue (field "player" Player.decoder) raw of
+                Ok state ->
+                    { model | state = PlayerSpeaking state } ! []
+
+                Err error ->
+                    model ! []
+
+        ( SelectionBegins _, _ ) ->
+            { model | state = Loading } ! []
+
         _ ->
             model ! []
 
@@ -91,5 +105,13 @@ view model =
                 [ div [] [ text "The following players runs out of city:" ]
                 , div []
                     [ text (String.join ", " (List.map .name state.players))
+                    ]
+                ]
+
+        PlayerSpeaking player ->
+            div []
+                [ div [] [ text "The following player speaks:" ]
+                , div []
+                    [ text player.name
                     ]
                 ]

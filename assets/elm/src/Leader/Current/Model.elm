@@ -15,12 +15,15 @@ type State
     = Loading
     | Playing PlayingState
     | CityAwaken PlayingState
+    | PlayerSpeaking Player.Model
 
 
 type Msg
     = AudioReceived JE.Value
     | CityWakes JE.Value
     | LoadGame JE.Value
+    | PlayerSpeaks JE.Value
+    | SelectionBegins JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
 
