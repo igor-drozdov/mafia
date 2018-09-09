@@ -22,6 +22,7 @@ defmodule Playground.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Playground.DataCase
+      import Playground.Factory
     end
   end
 

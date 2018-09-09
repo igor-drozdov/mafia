@@ -26,6 +26,7 @@ defmodule Playground.PlayerTest do
 
     PlayerRound.create_status(round.id, ostricized_player.id, :ostracized)
     PlayerRound.create_status(round.id, nominated_player.id, :nominated)
+    PlayerRound.create_status(round.id, nominated_player.id, :nominated)
     PlayerRound.create_status(round.id, deprecated_player.id, :nominated)
     PlayerRound.create_status(round.id, deprecated_player.id, :deprecated)
     PlayerRound.create_status(round.id, deprecated_and_ostricized_player.id, :deprecated)
@@ -63,7 +64,7 @@ defmodule Playground.PlayerTest do
       nominated_players =
         Player.by_status(round.id, :nominated) |> Repo.all() |> Repo.preload(:game)
 
-      assert nominated_players == [deprecated_player, nominated_player]
+      assert nominated_players == [nominated_player, deprecated_player]
     end
 
     test "returns only deprecated players", %{
@@ -74,7 +75,7 @@ defmodule Playground.PlayerTest do
       deprecated_players =
         Player.by_status(round.id, :deprecated) |> Repo.all() |> Repo.preload(:game)
 
-      assert deprecated_players == [deprecated_and_ostricized_player, deprecated_player]
+      assert deprecated_players == [deprecated_player, deprecated_and_ostricized_player]
     end
 
     test "returns only ostracized players", %{
@@ -85,7 +86,7 @@ defmodule Playground.PlayerTest do
       ostricized_players =
         Player.by_status(round.id, :ostracized) |> Repo.all() |> Repo.preload(:game)
 
-      assert ostricized_players == [deprecated_and_ostricized_player, ostricized_player]
+      assert ostricized_players == [ostricized_player, deprecated_and_ostricized_player]
     end
   end
 end

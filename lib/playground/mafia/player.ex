@@ -44,5 +44,6 @@ defmodule Playground.Mafia.Player do
     Player
     |> join(:inner, [p], pr in assoc(p, :player_rounds), pr.round_id == ^round_id)
     |> join(:inner, [p, pr], ps in assoc(pr, :player_statuses), ps.type == ^type)
+    |> distinct([p], asc: p.inserted_at)
   end
 end

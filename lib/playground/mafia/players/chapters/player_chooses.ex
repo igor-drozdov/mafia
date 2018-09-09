@@ -19,9 +19,14 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChooses do
          other_players,
          %{game_uuid: game_uuid, player: player, players: players} = state
        ) do
+    notify_leader(game_uuid, player)
     notify_player(game_uuid, player, players)
 
     {:noreply, Map.put(state, :other_players, other_players)}
+  end
+
+  def notify_leader(game_uuid, player) do
+    Endpoint.broadcast("leader:current:#{game_uuid}", "player_speaks", %{player: player})
   end
 
   def notify_player(game_uuid, player, players) do

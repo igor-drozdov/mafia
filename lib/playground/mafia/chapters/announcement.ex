@@ -17,14 +17,17 @@ defmodule Playground.Mafia.Chapters.Announcement do
   end
 
   def ostracize_deprecated_player(round_id) do
-    most_deprecated_player =
+    {most_deprecated_player, _} =
       Player.by_status(round_id, :deprecated)
       |> group_by([p, pr, ps], [ps.player_round_id, p.id])
       |> order_by([p, pr, ps], desc: count(ps.id))
       |> limit(1)
+      |> select([p, pr, ps], {p, count(ps.id)})
       |> Repo.one()
 
     PlayerRound.create_status(round_id, most_deprecated_player.id, :ostracized)
+
+    most_deprecated_player
   end
 
   def notify_leader(game_uuid, player) do

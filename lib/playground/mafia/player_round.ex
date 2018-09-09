@@ -19,6 +19,6 @@ defmodule Playground.Mafia.PlayerRound do
     |> where(player_id: ^target_player_uuid, round_id: ^round_id)
     |> Repo.one()
     |> Ecto.build_assoc(:player_statuses, %{type: type, created_by_id: created_by_id})
-    |> Repo.insert()
+    |> Repo.insert!()
   end
 end
