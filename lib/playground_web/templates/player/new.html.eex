@@ -1,19 +1,7 @@
 <h3> Connect to the Game </h3>
 
-<%= form_for @changeset, game_player_path(@conn, :create, @game), fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
+<%= form_for @changeset, game_player_path(@conn, :create, @game), [class: "pure-form"], fn f -> %>
+  <%= text_input f, :name, class: "pure-input-1-2 black", placeholder: "Enter the name" %>
 
-  <div class="form-group">
-    <%= label f, :name, class: "control-label" %>
-    <%= text_input f, :name, class: "form-control" %>
-    <%= error_tag f, :name %>
-  </div>
-
-  <div class="form-group">
-    <%= submit "Play", class: "btn btn-primary" %>
-  </div>
+  <%= submit "Play", class: "btn btn-danger pure-input-1-2" %>
 <% end %>

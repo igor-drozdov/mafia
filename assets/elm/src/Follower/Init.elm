@@ -74,7 +74,7 @@ view { role } =
     case role of
         Nothing ->
             div []
-                [ div [] [ text "Waiting other users to connect..." ]
+                [ div [] [ text "Waiting other players to connect..." ]
                 ]
 
         Just role ->

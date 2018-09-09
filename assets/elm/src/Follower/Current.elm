@@ -2,6 +2,7 @@ module Follower.Current exposing (..)
 
 import Html exposing (Html, div, text, button)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (class)
 import Phoenix.Channel
 import Json.Decode as JD
 import Json.Encode as JE
@@ -106,13 +107,13 @@ view model =
             div [] [ text (toString (List.length state.players)) ]
 
         PlayerChoosing state ->
-            div [] (List.map viewCandidate state.players)
+            div [ class "pure-form" ] (List.map viewCandidate state.players)
 
 
 viewCandidate : Player.Model -> Html Msg
 viewCandidate player =
     div []
-        [ button [ onClick (ChooseCandidate player.id) ]
+        [ button [ class "btn btn-danger pure-input-1-2", onClick (ChooseCandidate player.id) ]
             [ text player.name
             ]
         ]

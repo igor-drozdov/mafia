@@ -99,8 +99,7 @@ view model =
                 div [] [ text "All the players joined!" ]
             else
                 div []
-                    [ div [] [ text "Share the current link with other players" ]
-                    , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect") ]
+                    [ div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect...") ]
                     , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
                     ]
 
@@ -110,10 +109,9 @@ viewPlayer players position =
     case Array.get position players of
         Just player ->
             div []
-                [ div [] [ text player.name ]
-                , div [] [ text player.id ]
+                [ div [] [ text (player.name ++ " has joined the game") ]
                 ]
 
         Nothing ->
             div []
-                [ div [] [ text "Slot for a user" ] ]
+                [ div [] [ text "Wait for a user" ] ]

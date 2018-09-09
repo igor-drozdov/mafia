@@ -1,8 +1,9 @@
 <%= if @game do %>
   You are in the <%= link "game", to: game_path(@conn, :show, @game) %>
 <% else %>
-  <%= form_for @changeset, game_path(@conn, :create), fn f -> %>
-    <%= number_input f, :total %>
-    <%= submit "Create Game", class: "btn btn-info" %>
+  <%= form_for @changeset, game_path(@conn, :create), [class: "pure-form"], fn f -> %>
+    <%= number_input f, :total, class: "pure-input-1-2 black", placeholder: "Number of players" %>
+
+    <%= submit "Create Game", class: "btn btn-danger pure-input-1-2" %>
   <% end %>
 <% end %>

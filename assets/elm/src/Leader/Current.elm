@@ -102,7 +102,7 @@ view model =
 
         CityAwaken state ->
             div []
-                [ div [] [ text "The following players runs out of city:" ]
+                [ div [] [ text "The following players is ostracized from city:" ]
                 , div []
                     [ text (String.join ", " (List.map .name state.players))
                     ]
