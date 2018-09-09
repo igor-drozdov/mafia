@@ -14,11 +14,11 @@ defmodule Playground.Mafia.PlayerRound do
     timestamps()
   end
 
-  def create_status(round_id, player_uuid, type) do
+  def create_status(round_id, target_player_uuid, type, created_by_id \\ nil) do
     PlayerRound
-    |> where(player_id: ^player_uuid, round_id: ^round_id)
+    |> where(player_id: ^target_player_uuid, round_id: ^round_id)
     |> Repo.one()
-    |> Ecto.build_assoc(:player_statuses, %{type: type})
+    |> Ecto.build_assoc(:player_statuses, %{type: type, created_by_id: created_by_id})
     |> Repo.insert()
   end
 end

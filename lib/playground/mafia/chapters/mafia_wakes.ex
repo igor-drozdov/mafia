@@ -26,10 +26,10 @@ defmodule Playground.Mafia.Chapters.MafiaWakes do
   end
 
   def handle_cast(
-        {:choose_candidate, player_uuid},
+        {:choose_candidate, target_player_uuid, _},
         %{game_uuid: game_uuid, round_id: round_id, mafias: mafias} = state
       ) do
-    ostracize_player(round_id, player_uuid)
+    ostracize_player(round_id, target_player_uuid)
     notify_mafia_players(game_uuid, mafias, "player_chosen")
 
     MafiaSleeps.run(game_uuid, state)

@@ -32,14 +32,17 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChoosesTest do
     assert_broadcast("player_chosen", %{})
   end
 
-  test "#nominate_player", %{player: player} do
+  test "#nominate_player", %{game: game, player: player} do
+    nominated_by = insert(:player, game: game)
     round = insert(:round)
     player_round = insert(:player_round, round: round, player: player)
 
-    PlayerChooses.nominate_player(round.id, player.id)
+    PlayerChooses.nominate_player(round.id, player.id, nominated_by.id)
 
-    player_status = Ecto.assoc(player_round, :player_statuses) |> Repo.one()
+    player_status =
+      Ecto.assoc(player_round, :player_statuses) |> Repo.one() |> Repo.preload(created_by: :game)
 
     assert player_status.type == :nominated
+    assert player_status.created_by == nominated_by
   end
 end

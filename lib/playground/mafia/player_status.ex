@@ -6,6 +6,7 @@ defmodule Playground.Mafia.PlayerStatus do
     field(:type, PlayerStateEnum)
 
     belongs_to(:player_round, Playground.Mafia.PlayerRound)
+    belongs_to(:created_by, Playground.Mafia.Player, type: :binary_id)
 
     timestamps()
   end
