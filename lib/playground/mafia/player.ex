@@ -4,7 +4,8 @@ defmodule Playground.Mafia.Player do
   import Ecto.Changeset
   import Ecto.Query
 
-  alias Playground.Mafia.{Game, PlayerRound}
+  alias Playground.Mafia.{Game, PlayerRound, Player, Round}
+  alias Playground.Repo
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}
@@ -30,9 +31,18 @@ defmodule Playground.Mafia.Player do
   end
 
   def incity(game_uuid) do
-    Playground.Mafia.Player
-    |> join(:left, [p], s in assoc(p, :player_statuses))
-    |> where([p, s], p.game_id == ^game_uuid)
-    |> where([p, s], is_nil(s.player_round_id) or s.type != ^:ostracized)
+    ostricized_player_ids =
+      Player
+      |> join(:inner, [p], ps in assoc(p, :player_statuses), ps.type == ^:ostracized)
+      |> select([p], p.id)
+      |> Repo.all()
+
+    Player |> where([p], p.game_id == ^game_uuid and p.id not in ^ostricized_player_ids)
+  end
+
+  def by_status(round_id, type) do
+    Player
+    |> join(:inner, [p], pr in assoc(p, :player_rounds), pr.round_id == ^round_id)
+    |> join(:inner, [p, pr], ps in assoc(pr, :player_statuses), ps.type == ^type)
   end
 end
