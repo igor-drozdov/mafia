@@ -13,6 +13,11 @@ defmodule Playground.Mafia.Narrator do
     {:via, Registry, {Playground.Mafia.Registry, {__MODULE__, game_uuid}}}
   end
 
+  def current(game_uuid) do
+    {_, pid, _, _} = DynamicSupervisor.which_children(via(game_uuid)) |> List.last()
+    pid
+  end
+
   @impl true
   def init(_) do
     DynamicSupervisor.init(strategy: :one_for_one)
