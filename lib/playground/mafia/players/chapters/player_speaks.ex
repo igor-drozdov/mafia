@@ -5,7 +5,7 @@ defmodule Playground.Mafia.Players.Chapters.PlayerSpeaks do
   alias Playground.Mafia.Chapters.SelectionBegins
   alias PlaygroundWeb.Endpoint
 
-  @period Application.get_env(:playground, :period) |> Keyword.fetch(:long)
+  @period Application.get_env(:playground, :period) |> Keyword.fetch!(:long)
 
   def run(game_uuid, [], state) do
     SelectionBegins.run(game_uuid, Map.delete(state, :player))

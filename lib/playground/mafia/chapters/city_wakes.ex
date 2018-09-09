@@ -5,7 +5,7 @@ defmodule Playground.Mafia.Chapters.CityWakes do
 
   import Ecto.Query
 
-  @period Application.get_env(:playground, :period) |> Keyword.fetch(:short)
+  @period Application.get_env(:playground, :period) |> Keyword.fetch!(:short)
 
   defp handle_run(%{game_uuid: game_uuid, round_id: round_id}) do
     notify_leader(game_uuid)
