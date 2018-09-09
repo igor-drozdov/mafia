@@ -5,9 +5,7 @@ defmodule Playground.Mafia.Chapters.DiscussionBegins do
   alias Playground.Repo
   alias Playground.Mafia.Players.Chapters.PlayerSpeaks
 
-  defp handle_run(%{game_uuid: game_uuid} = state) do
-    players = Repo.all(Player.incity(game_uuid))
-
+  defp handle_run(%{game_uuid: game_uuid, players: players} = state) do
     PlayerSpeaks.run(game_uuid, players, Map.put(state, :players, players))
 
     {:stop, :shutdown, state}

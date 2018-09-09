@@ -23,13 +23,10 @@ defmodule Playground.Mafia.Chapters.CityWakesTest do
   describe "#send_night_results" do
     test "broadcast night results", %{game_uuid: game_uuid} do
       players = insert_list(3, :player, game_id: game_uuid)
-      ostracized_player = List.last(players)
-      player_round = insert(:player_round, player: ostracized_player)
-      insert(:player_status, player_round: player_round, type: :ostracized)
 
-      CityWakes.send_night_results(game_uuid, player_round.round_id)
+      CityWakes.send_night_results(game_uuid, players)
 
-      assert_broadcast("city_wakes", %{players: [^ostracized_player]})
+      assert_broadcast("city_wakes", %{players: ^players})
     end
   end
 end
