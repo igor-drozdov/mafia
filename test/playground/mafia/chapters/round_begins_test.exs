@@ -2,7 +2,7 @@ defmodule Playground.Mafia.Chapters.RoundBeginsTest do
   use PlaygroundWeb.ChannelCase
 
   alias Playground.Mafia.Chapters.RoundBegins
-  alias Playground.{Mafia, Repo}
+  alias Playground.{Repo, Mafia}
 
   import Playground.Factory
 
@@ -23,14 +23,6 @@ defmodule Playground.Mafia.Chapters.RoundBeginsTest do
 
       assert round.game == game
       assert Enum.map(round.players, & &1.id) == round_players
-    end
-  end
-
-  describe "#update_game" do
-    test "updates state of the game" do
-      game = insert(:game)
-      RoundBegins.update_game(game.id)
-      assert Mafia.get_game!(game.id).state == :current
     end
   end
 end

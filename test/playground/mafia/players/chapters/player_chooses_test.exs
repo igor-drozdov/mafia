@@ -21,7 +21,7 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChoosesTest do
 
     PlayerChooses.notify_player(game.id, player, players)
 
-    assert_broadcast("candidates_received", %{players: other_players})
+    assert_broadcast("candidates_received", %{players: ^other_players})
   end
 
   test "#notify_player_chosen", %{game: game, player: player} do

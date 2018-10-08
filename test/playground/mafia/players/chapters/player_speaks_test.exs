@@ -13,7 +13,7 @@ defmodule Playground.Mafia.Players.Chapters.PlayerSpeaksTest do
 
       PlayerSpeaks.notify_leader(game.id, player)
 
-      assert_broadcast("player_speaks", %{player: player})
+      assert_broadcast("player_speaks", %{player: ^player})
     end
   end
 end

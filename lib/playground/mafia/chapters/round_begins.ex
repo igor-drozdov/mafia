@@ -1,16 +1,23 @@
 defmodule Playground.Mafia.Chapters.RoundBegins do
   use Playground.Mafia.Chapter
 
-  alias Playground.Mafia.{Chapters.CitySleeps, PlayerRound, Game}
+  alias Playground.Mafia.{Chapters.CitySleeps, Chapters.DiscussionBegins, PlayerRound, Round}
   alias Playground.{Repo, Mafia}
 
   import Ecto.Query
 
   defp handle_run(%{game_uuid: game_uuid, players: players} = state) do
-    update_game(game_uuid)
     round = create_round(game_uuid, players)
+    new_state = Map.put(state, :round_id, round.id)
 
-    CitySleeps.run(game_uuid, Map.put(state, :round_id, round.id))
+    number_of_rounds =
+      from(r in Round, where: [game_id: ^game_uuid], select: count(r.id))
+      |> Repo.one
+
+    case number_of_rounds do
+      1 -> DiscussionBegins.run(game_uuid, new_state)
+      _ -> CitySleeps.run(game_uuid, new_state)
+    end
 
     {:stop, :shutdown, state}
   end
@@ -32,10 +39,5 @@ defmodule Playground.Mafia.Chapters.RoundBegins do
     Repo.insert_all(PlayerRound, player_rounds)
 
     round
-  end
-
-  def update_game(game_uuid) do
-    from(Game, where: [id: ^game_uuid])
-    |> Repo.update_all(set: [state: :current])
   end
 end

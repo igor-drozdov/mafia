@@ -146,7 +146,7 @@ defmodule Playground.MafiaTest do
     end
 
     test "create_round/1 with valid data creates a round" do
-      assert {:ok, %Round{} = round} = Mafia.create_round(%{game_id: insert(:game).id})
+      assert {:ok, %Round{}} = Mafia.create_round(%{game_id: insert(:game).id})
     end
 
     test "create_round/1 with invalid data returns error changeset" do

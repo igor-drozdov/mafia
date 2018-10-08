@@ -1,8 +1,10 @@
 defmodule Playground.Mafia.Chapters.StartGame do
   use Playground.Mafia.Chapter
-  alias Playground.Mafia.{Player, Chapters.RoundBegins}
+  alias Playground.Mafia.{Player, Game, Chapters.RoundBegins}
   alias Playground.Repo
   alias PlaygroundWeb.Endpoint
+
+  import Ecto.Query
 
   @period Application.get_env(:playground, :period) |> Keyword.fetch!(:medium)
 
@@ -39,9 +41,15 @@ defmodule Playground.Mafia.Chapters.StartGame do
 
   def handle_info(:transition, %{game_uuid: game_uuid, players: players} = state) do
     notify_followers(game_uuid, players)
+    update_game(game_uuid)
 
     RoundBegins.run(game_uuid, state)
 
     {:stop, :shutdown, state}
+  end
+
+  def update_game(game_uuid) do
+    from(Game, where: [id: ^game_uuid])
+    |> Repo.update_all(set: [state: :current])
   end
 end
