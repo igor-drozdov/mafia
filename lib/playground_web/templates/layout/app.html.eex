@@ -7,8 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Playground!</title>
+    <title>Mafia</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="icon" type="image/ico" href="<%= static_path(@conn, "/images/favicon.ico") %>">
   </head>
 
   <body>
