@@ -16,6 +16,7 @@ type State
     | Playing PlayingState
     | CityAwaken PlayingState
     | PlayerSpeaking Player.Model
+    | PlayerChoosing Player.Model
 
 
 type Msg
@@ -23,6 +24,7 @@ type Msg
     | CityWakes JE.Value
     | LoadGame JE.Value
     | PlayerSpeaks JE.Value
+    | PlayerChooses JE.Value
     | SelectionBegins JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
 

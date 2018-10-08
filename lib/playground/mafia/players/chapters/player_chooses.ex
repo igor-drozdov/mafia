@@ -26,7 +26,7 @@ defmodule Playground.Mafia.Players.Chapters.PlayerChooses do
   end
 
   def notify_leader(game_uuid, player) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "player_speaks", %{player: player})
+    Endpoint.broadcast("leader:current:#{game_uuid}", "player_chooses", %{player: player})
   end
 
   def notify_player(game_uuid, player, players) do

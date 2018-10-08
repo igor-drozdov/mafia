@@ -21,7 +21,7 @@ defmodule Playground.Mafia.Chapters.AnnouncementTest do
 
       Announcement.notify_leader(game.id, player)
 
-      assert_broadcast("city_wakes", %{players: [player]})
+      assert_broadcast("city_wakes", %{players: [^player]})
     end
   end
 

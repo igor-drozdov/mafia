@@ -33,6 +33,7 @@ init gameId =
                 |> Phoenix.Socket.on "play_audio" channelName AudioReceived
                 |> Phoenix.Socket.on "city_wakes" channelName CityWakes
                 |> Phoenix.Socket.on "player_speaks" channelName PlayerSpeaks
+                |> Phoenix.Socket.on "player_chooses" channelName PlayerChooses
                 |> Phoenix.Socket.on "selection_begins" channelName SelectionBegins
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
@@ -79,6 +80,14 @@ update msg model =
                 Err error ->
                     model ! []
 
+        ( PlayerChooses raw, _ ) ->
+            case JD.decodeValue (field "player" Player.decoder) raw of
+                Ok state ->
+                    { model | state = PlayerChoosing state } ! []
+
+                Err error ->
+                    model ! []
+
         ( SelectionBegins _, _ ) ->
             { model | state = Loading } ! []
 
@@ -111,6 +120,14 @@ view model =
         PlayerSpeaking player ->
             div []
                 [ div [] [ text "The following player speaks:" ]
+                , div []
+                    [ text player.name
+                    ]
+                ]
+
+        PlayerChoosing player ->
+            div []
+                [ div [] [ text "The following player chooses:" ]
                 , div []
                     [ text player.name
                     ]
