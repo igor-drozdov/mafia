@@ -13,6 +13,7 @@ defmodule Playground.Mafia.Game do
 
     has_many(:players, Player)
     has_many(:rounds, Round)
+    has_one(:winner, Winner)
 
     timestamps()
   end

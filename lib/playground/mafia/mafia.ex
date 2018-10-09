@@ -295,4 +295,100 @@ defmodule Playground.Mafia do
   def change_round(%Round{} = round) do
     Round.changeset(round, %{})
   end
+
+  alias Playground.Mafia.Winner
+
+  @doc """
+  Returns the list of winners.
+
+  ## Examples
+
+      iex> list_winners()
+      [%Winner{}, ...]
+
+  """
+  def list_winners do
+    Repo.all(Winner)
+  end
+
+  @doc """
+  Gets a single winner.
+
+  Raises `Ecto.NoResultsError` if the Winner does not exist.
+
+  ## Examples
+
+      iex> get_winner!(123)
+      %Winner{}
+
+      iex> get_winner!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_winner!(id), do: Repo.get!(Winner, id)
+
+  @doc """
+  Creates a winner.
+
+  ## Examples
+
+      iex> create_winner(%{field: value})
+      {:ok, %Winner{}}
+
+      iex> create_winner(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_winner(attrs \\ %{}) do
+    %Winner{}
+    |> Winner.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a winner.
+
+  ## Examples
+
+      iex> update_winner(winner, %{field: new_value})
+      {:ok, %Winner{}}
+
+      iex> update_winner(winner, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_winner(%Winner{} = winner, attrs) do
+    winner
+    |> Winner.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Winner.
+
+  ## Examples
+
+      iex> delete_winner(winner)
+      {:ok, %Winner{}}
+
+      iex> delete_winner(winner)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_winner(%Winner{} = winner) do
+    Repo.delete(winner)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking winner changes.
+
+  ## Examples
+
+      iex> change_winner(winner)
+      %Ecto.Changeset{source: %Winner{}}
+
+  """
+  def change_winner(%Winner{} = winner) do
+    Winner.changeset(winner, %{})
+  end
 end

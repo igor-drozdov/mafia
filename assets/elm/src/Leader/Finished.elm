@@ -66,4 +66,17 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div [] []
+    case model.state of
+        Loading ->
+            div [] [ text "Loading..." ]
+
+        Finishing { state } ->
+            case state of
+                "innocents" ->
+                    div [] [ text "Innocents win" ]
+
+                "mafia" ->
+                    div [] [ text "Mafia wins" ]
+
+                _ ->
+                    div [] [ text "Somebody else wins" ]

@@ -172,4 +172,64 @@ defmodule Playground.MafiaTest do
       assert %Ecto.Changeset{} = Mafia.change_round(round)
     end
   end
+
+  describe "winners" do
+    alias Playground.Mafia.Winner
+
+    @valid_attrs %{state: :innocents}
+    @update_attrs %{state: :mafia}
+    @invalid_attrs %{state: nil}
+
+    def winner_fixture(attrs \\ %{}) do
+      {:ok, winner} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Mafia.create_winner()
+
+      winner
+    end
+
+    test "list_winners/0 returns all winners" do
+      winner = winner_fixture()
+      assert Mafia.list_winners() == [winner]
+    end
+
+    test "get_winner!/1 returns the winner with given id" do
+      winner = winner_fixture()
+      assert Mafia.get_winner!(winner.id) == winner
+    end
+
+    test "create_winner/1 with valid data creates a winner" do
+      assert {:ok, %Winner{} = winner} = Mafia.create_winner(@valid_attrs)
+      assert winner.state == :innocents
+    end
+
+    test "create_winner/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Mafia.create_winner(@invalid_attrs)
+    end
+
+    test "update_winner/2 with valid data updates the winner" do
+      winner = winner_fixture()
+      assert {:ok, winner} = Mafia.update_winner(winner, @update_attrs)
+      assert %Winner{} = winner
+      assert winner.state == :mafia
+    end
+
+    test "update_winner/2 with invalid data returns error changeset" do
+      winner = winner_fixture()
+      assert {:error, %Ecto.Changeset{}} = Mafia.update_winner(winner, @invalid_attrs)
+      assert winner == Mafia.get_winner!(winner.id)
+    end
+
+    test "delete_winner/1 deletes the winner" do
+      winner = winner_fixture()
+      assert {:ok, %Winner{}} = Mafia.delete_winner(winner)
+      assert_raise Ecto.NoResultsError, fn -> Mafia.get_winner!(winner.id) end
+    end
+
+    test "change_winner/1 returns a winner changeset" do
+      winner = winner_fixture()
+      assert %Ecto.Changeset{} = Mafia.change_winner(winner)
+    end
+  end
 end
