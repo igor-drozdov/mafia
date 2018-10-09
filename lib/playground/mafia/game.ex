@@ -1,7 +1,7 @@
 defmodule Playground.Mafia.Game do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Playground.Mafia.{Player, Round}
+  alias Playground.Mafia.{Player, Round, Winner}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :id}

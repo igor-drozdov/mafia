@@ -4,6 +4,7 @@ defmodule PlaygroundWeb.UserSocket do
   ## Channels
   channel("leader:init:*", PlaygroundWeb.Leader.InitChannel)
   channel("leader:current:*", PlaygroundWeb.Leader.CurrentChannel)
+  channel("leader:finished:*", PlaygroundWeb.Leader.FinishedChannel)
   channel("followers:init*", PlaygroundWeb.Followers.InitChannel)
   channel("followers:current*", PlaygroundWeb.Followers.CurrentChannel)
 

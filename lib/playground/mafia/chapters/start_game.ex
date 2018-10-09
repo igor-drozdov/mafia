@@ -18,7 +18,7 @@ defmodule Playground.Mafia.Chapters.StartGame do
   end
 
   def notify_leader(game_uuid) do
-    payload = %{game_id: game_uuid, state: "current"}
+    payload = %{game_id: game_uuid, state: :current}
     Endpoint.broadcast("leader:init:#{game_uuid}", "start_game", payload)
   end
 

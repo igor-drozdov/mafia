@@ -1,7 +1,7 @@
 defmodule Playground.Mafia.Chapters.VotingBegins do
   use Playground.Mafia.Chapter
 
-  alias Playground.Mafia.{Round, PlayerRound, Player}
+  alias Playground.Mafia.{PlayerRound, Player}
   alias Playground.Repo
   alias Playground.Mafia.Chapters.Announcement
   alias PlaygroundWeb.Endpoint
@@ -15,7 +15,10 @@ defmodule Playground.Mafia.Chapters.VotingBegins do
   end
 
   def notify_players(game_uuid, round_id, players) do
-    nominated_players = Player.by_status(round_id, :nominated) |> Repo.all()
+    nominated_players =
+      Player.by_status(round_id, :nominated)
+      |> order_by([p], asc: p.inserted_at)
+      |> Repo.all()
 
     Enum.each(players, fn player ->
       payload = %{players: List.delete(nominated_players, player)}

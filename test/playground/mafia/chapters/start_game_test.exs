@@ -17,7 +17,7 @@ defmodule Playground.Mafia.Chapters.StartGameTest do
 
       @endpoint.subscribe("leader:init:#{game_uuid}")
       StartGame.notify_leader(game_uuid)
-      assert_broadcast("start_game", %{game_id: ^game_uuid, state: "current"})
+      assert_broadcast("start_game", %{game_id: ^game_uuid, state: :current})
     end
   end
 

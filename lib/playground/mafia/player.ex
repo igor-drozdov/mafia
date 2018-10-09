@@ -4,7 +4,7 @@ defmodule Playground.Mafia.Player do
   import Ecto.Changeset
   import Ecto.Query
 
-  alias Playground.Mafia.{Game, PlayerRound, Player, Round}
+  alias Playground.Mafia.{Game, PlayerRound, Player}
   alias Playground.Repo
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -44,6 +44,6 @@ defmodule Playground.Mafia.Player do
     Player
     |> join(:inner, [p], pr in assoc(p, :player_rounds), pr.round_id == ^round_id)
     |> join(:inner, [p, pr], ps in assoc(pr, :player_statuses), ps.type == ^type)
-    |> distinct([p], asc: p.inserted_at)
+    |> distinct(true)
   end
 end

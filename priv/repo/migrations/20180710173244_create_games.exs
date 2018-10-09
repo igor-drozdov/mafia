@@ -1,7 +1,7 @@
 defmodule Playground.Repo.Migrations.CreateGames do
   use Ecto.Migration
 
-  def up do
+  def change do
     create table(:games, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :state, :integer, default: 0
@@ -9,11 +9,5 @@ defmodule Playground.Repo.Migrations.CreateGames do
 
       timestamps()
     end
-  end
-
-  def down do
-    drop table(:games)
-
-    execute("drop TYPE game_state")
   end
 end

@@ -35,6 +35,7 @@ init gameId =
                 |> Phoenix.Socket.on "player_speaks" channelName PlayerSpeaks
                 |> Phoenix.Socket.on "player_chooses" channelName PlayerChooses
                 |> Phoenix.Socket.on "selection_begins" channelName SelectionBegins
+                |> Phoenix.Socket.on "finish_game" channelName Transition
     in
         ( { phxSocket = phxSocketWithListener, state = Loading }
         , Cmd.map PhoenixMsg phxCmd

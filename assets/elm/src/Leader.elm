@@ -90,8 +90,8 @@ subscriptions model =
         CurrentModel state ->
             Sub.map CurrentMsg <| CurrentWidget.subscriptions state
 
-        _ ->
-            Sub.none
+        FinishedModel state ->
+            Sub.map FinishedMsg <| FinishedWidget.subscriptions state
 
 
 
@@ -123,6 +123,14 @@ update msg model =
             in
                 InitModel newModel
                     ! [ Cmd.map InitMsg subCmd ]
+
+        ( CurrentMsg (Current.Transition raw), _ ) ->
+            case JD.decodeValue decoder raw of
+                Ok flags ->
+                    init flags
+
+                Err _ ->
+                    model ! []
 
         ( CurrentMsg m, CurrentModel state ) ->
             let

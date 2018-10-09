@@ -27,6 +27,7 @@ type Msg
     | PlayerChooses JE.Value
     | SelectionBegins JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | Transition JE.Value
 
 
 type alias Model =
