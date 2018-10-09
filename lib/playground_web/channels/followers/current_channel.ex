@@ -19,9 +19,6 @@ defmodule PlaygroundWeb.Followers.CurrentChannel do
     %{game_uuid: game_uuid, player_uuid: current_player_uuid} = socket.assigns
     current_process = Playground.Mafia.Narrator.current(game_uuid)
 
-    require Logger
-    Logger.info(inspect(current_process))
-
     GenServer.cast(current_process, {:choose_candidate, target_player_uuid, current_player_uuid})
 
     {:noreply, socket}

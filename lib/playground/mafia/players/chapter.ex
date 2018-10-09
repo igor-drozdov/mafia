@@ -30,12 +30,6 @@ defmodule Playground.Mafia.Players.Chapter do
       end
 
       def handle_cast({:run, other_players}, %{game_uuid: game_uuid, player: player} = state) do
-        Registry.register(
-          Playground.Mafia.Registry,
-          {:current, game_uuid},
-          via(game_uuid, player.id)
-        )
-
         require Logger
         Logger.info(__MODULE__)
 
