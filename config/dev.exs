@@ -11,8 +11,14 @@ config :playground, PlaygroundWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../assets", __DIR__)]]
+  watchers: [
+    node: [
+      "node_modules/brunch/bin/brunch",
+      "watch",
+      "--stdin",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -58,6 +64,6 @@ config :playground, Playground.Repo,
   pool_size: 10
 
 config :playground, :period,
-  short: 1500,
-  medium: 1500,
-  long: 1500
+  short: 2000,
+  medium: 3000,
+  long: 3000

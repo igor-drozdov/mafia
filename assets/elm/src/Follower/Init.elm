@@ -7,6 +7,7 @@ import Phoenix.Channel
 import Phoenix.Socket
 import Follower.Init.Model exposing (..)
 import Socket exposing (socketServer)
+import Player
 
 
 init : String -> String -> ( Model, Cmd Msg )
@@ -32,7 +33,7 @@ init gameId playerId =
                 |> Phoenix.Socket.on "role_received" channelName RoleReceived
                 |> Phoenix.Socket.on "start_game" channelName Transition
     in
-        ( { phxSocket = phxSocketWithListener, role = Nothing }
+        ( { phxSocket = phxSocketWithListener, role = Nothing, players = [] }
         , Cmd.map PhoenixMsg phxCmd
         )
 
@@ -50,9 +51,9 @@ update msg model =
                 )
 
         RoleReceived raw ->
-            case JD.decodeValue (field "role" JD.string) raw of
-                Ok role ->
-                    { model | role = Just role } ! []
+            case JD.decodeValue decoder raw of
+                Ok { role, players } ->
+                    { model | role = role, players = players } ! []
 
                 Err error ->
                     model ! []
@@ -70,7 +71,7 @@ subscriptions model =
 
 
 view : Model -> Html Msg
-view { role } =
+view { role, players } =
     case role of
         Nothing ->
             div []
@@ -81,4 +82,19 @@ view { role } =
             div []
                 [ div [] [ text ("You are " ++ role) ]
                 , img [ src ("/images/" ++ role ++ ".jpg") ] []
+                , displayOthers players
+                ]
+
+
+displayOthers : List Player.Model -> Html Msg
+displayOthers players =
+    case players of
+        [] ->
+            div [] []
+
+        mafias ->
+            div []
+                [ div []
+                    [ text ("Other players, who are also mafia: " ++ (String.join ", " <| List.map .name mafias))
+                    ]
                 ]
