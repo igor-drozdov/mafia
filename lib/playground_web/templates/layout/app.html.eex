@@ -15,10 +15,6 @@
   <body>
     <div class="pure-g">
       <div role="main" class="pure-u-1-1 text-center">
-        <div class="logo">
-          <img src="<%= static_path(@conn, "/images/logo.svg") %>">
-        </div>
-
         <%= render @view_module, @view_template, assigns %>
       </div>
 

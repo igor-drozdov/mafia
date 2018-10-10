@@ -12,6 +12,7 @@ import Follower.Current.Model exposing (..)
 import Socket exposing (socketServer)
 import Player
 import Debug
+import Views.Logo exposing (logo, animatedLogo)
 
 
 init : String -> String -> ( Model, Cmd Msg )
@@ -101,13 +102,13 @@ view : Model -> Html Msg
 view model =
     case model.state of
         Loading ->
-            div [] [ text "Loading..." ]
+            animatedLogo
 
         Playing state ->
-            div [] [ text (toString (List.length state.players)) ]
+            logo
 
         PlayerChoosing state ->
-            div [ class "pure-form" ] (List.map viewCandidate state.players)
+            div [ class "pure-form" ] <| logo :: (List.map viewCandidate state.players)
 
 
 viewCandidate : Player.Model -> Html Msg

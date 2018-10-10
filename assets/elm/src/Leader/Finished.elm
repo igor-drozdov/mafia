@@ -1,12 +1,13 @@
 module Leader.Finished exposing (..)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, text, img)
+import Html.Attributes exposing (src, style, class)
 import Json.Decode as JD exposing (field)
 import Leader.Finished.Model exposing (..)
 import Socket exposing (socketServer)
 import Phoenix.Channel
 import Phoenix.Socket
-import Player
+import Views.Logo exposing (logo, animatedLogo)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -68,7 +69,7 @@ view : Model -> Html Msg
 view model =
     case model.state of
         Loading ->
-            div [] [ text "Loading..." ]
+            animatedLogo
 
         Finishing { state } ->
             case state of

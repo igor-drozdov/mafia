@@ -10,6 +10,7 @@ import Array exposing (Array, fromList)
 import List.Extra exposing (find)
 import Ports.Audio exposing (playAudio)
 import Socket exposing (socketServer)
+import Views.Logo exposing (logo, animatedLogo)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -92,14 +93,15 @@ view : Model -> Html Msg
 view model =
     case model.state of
         Loading ->
-            div [] [ text "Loading..." ]
+            animatedLogo
 
         Wait { total, players } ->
             if (Array.length players) == total then
-                div [] [ text "All the players joined!" ]
+                div [] [ logo, text "All the players joined!" ]
             else
                 div []
-                    [ div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect...") ]
+                    [ animatedLogo
+                    , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect...") ]
                     , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
                     ]
 

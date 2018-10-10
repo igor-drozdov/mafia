@@ -1,15 +1,8 @@
 module Follower.Finished exposing (..)
 
-import Html exposing (Html, div, text)
-import Array exposing (fromList)
-import Json.Decode as JD exposing (field)
+import Html exposing (Html)
 import Follower.Finished.Model exposing (..)
-import Player
-
-
-decoder =
-    JD.map Model
-        (field "players" (JD.list Player.decoder))
+import Views.Logo exposing (logo)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -26,4 +19,4 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] []
+    logo

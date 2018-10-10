@@ -1,3 +1,5 @@
+<%= render PlaygroundWeb.SharedView, "logo.html", assigns %>
+
 <%= if @game do %>
   You are in the <%= link "game", to: game_path(@conn, :show, @game) %>
 <% else %>

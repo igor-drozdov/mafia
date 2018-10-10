@@ -1,6 +1,7 @@
 module Leader.Current exposing (..)
 
 import Html exposing (Html, div, text)
+import Html.Attributes exposing (class)
 import Phoenix.Channel
 import Phoenix.Socket
 import Json.Decode as JD exposing (field)
@@ -102,23 +103,27 @@ subscriptions model =
 
 
 view : Model -> Html Msg
-view model =
-    case model.state of
+view { state } =
+    case state of
         Loading ->
-            div [] [ text "Loading..." ]
+            animatedLogo
 
         Playing state ->
-            div [] [ text ((toString (List.length state.players)) ++ " players") ]
+            div []
+                [ logo
+                , text ((toString (List.length state.players)) ++ " players")
+                ]
 
         CityAwaken state ->
             div []
-                [ div [] [ text "The following players is ostracized from city:" ]
+                [ logo
+                , div [] [ text "The following players is ostracized from city:" ]
                 , div []
                     [ text (String.join ", " (List.map .name state.players))
                     ]
                 ]
 
-        PlayerSpeaking player ->
+        PlayerSpeaking { player, elapsed } ->
             div []
                 [ div [] [ text "The following player speaks:" ]
                 , div []
@@ -128,7 +133,8 @@ view model =
 
         PlayerChoosing player ->
             div []
-                [ div [] [ text "The following player chooses:" ]
+                [ animatedLogo
+                , div [] [ text "The following player chooses:" ]
                 , div []
                     [ text player.name
                     ]

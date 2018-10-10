@@ -7,6 +7,7 @@ import Phoenix.Channel
 import Phoenix.Socket
 import Follower.Init.Model exposing (..)
 import Socket exposing (socketServer)
+import Views.Logo exposing (logo)
 import Player
 
 
@@ -75,7 +76,8 @@ view { role, players } =
     case role of
         Nothing ->
             div []
-                [ div [] [ text "Waiting other players to connect..." ]
+                [ logo
+                , div [] [ text "Waiting other players to connect..." ]
                 ]
 
         Just role ->

@@ -1,3 +1,5 @@
+<%= render PlaygroundWeb.SharedView, "logo.html", assigns %>
+
 <h3> Connect to the Game </h3>
 
 <%= form_for @changeset, game_player_path(@conn, :create, @game), [class: "pure-form"], fn f -> %>
