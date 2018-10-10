@@ -40,14 +40,13 @@ defmodule Playground.Mafia.Chapters.HandoutRolesTest do
 
       {mafias, innocents} = run(game_uuid)
 
-      Enum.each(mafias, fn player ->
+      Enum.each(Enum.zip(mafias, Enum.reverse(mafias)), fn {player, other_player} ->
         uuids = "#{game_uuid}:#{player.id}"
+        other_player = %{ other_player | role: nil }
 
         assert_receive %Phoenix.Socket.Message{
           event: "role_received",
-          join_ref: nil,
-          payload: %{role: :mafia, players: mafias},
-          ref: nil,
+          payload: %{role: :mafia, players: [^other_player]},
           topic: "followers:init:" <> ^uuids
         }
       end)
@@ -57,9 +56,7 @@ defmodule Playground.Mafia.Chapters.HandoutRolesTest do
 
         assert_receive %Phoenix.Socket.Message{
           event: "role_received",
-          join_ref: nil,
           payload: %{role: :innocent, players: []},
-          ref: nil,
           topic: "followers:init:" <> ^uuids
         }
       end)

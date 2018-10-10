@@ -1,8 +1,6 @@
 defmodule Playground.Mafia.Chapters.RoundEnds do
   use Playground.Mafia.Chapter
 
-  alias Playground.Mafia.Player
-  alias Playground.Repo
   alias Playground.Mafia.Chapters.{InnocentsWin, MafiaWins, RoundBegins}
 
   defp handle_run(%{game_uuid: game_uuid, players: players} = state) do

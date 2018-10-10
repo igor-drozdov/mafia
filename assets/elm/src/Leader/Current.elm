@@ -9,6 +9,8 @@ import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
 import Socket exposing (socketServer)
 import Player
+import Time exposing (Time)
+import Views.Logo exposing (logo, animatedLogo, animatedCircuit)
 
 
 init : String -> ( Model, Cmd Msg )
@@ -75,12 +77,15 @@ update msg model =
                     model ! []
 
         ( PlayerSpeaks raw, _ ) ->
-            case JD.decodeValue (field "player" Player.decoder) raw of
+            case JD.decodeValue playerSpeakingDecoder raw of
                 Ok state ->
                     { model | state = PlayerSpeaking state } ! []
 
                 Err error ->
                     model ! []
+
+        ( Tick _, PlayerSpeaking { player, elapsed } ) ->
+            { model | state = PlayerSpeaking (PlayerSpeakingState player (elapsed - 1)) } ! []
 
         ( PlayerChooses raw, _ ) ->
             case JD.decodeValue (field "player" Player.decoder) raw of
@@ -99,7 +104,10 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Sub.batch
+        [ Phoenix.Socket.listen model.phxSocket PhoenixMsg
+        , Time.every 1000 Tick
+        ]
 
 
 view : Model -> Html Msg
@@ -125,10 +133,8 @@ view { state } =
 
         PlayerSpeaking { player, elapsed } ->
             div []
-                [ div [] [ text "The following player speaks:" ]
-                , div []
-                    [ text player.name
-                    ]
+                [ animatedCircuit (div [ class "elapsed" ] [ text (toString elapsed) ])
+                , div [] [ text ("The following player speaks: " ++ player.name) ]
                 ]
 
         PlayerChoosing player ->

@@ -4,6 +4,7 @@ import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Phoenix.Socket
+import Time exposing (Time)
 
 
 type alias PlayingState =
@@ -11,11 +12,17 @@ type alias PlayingState =
     }
 
 
+type alias PlayerSpeakingState =
+    { player : Player.Model
+    , elapsed : Int
+    }
+
+
 type State
     = Loading
     | Playing PlayingState
     | CityAwaken PlayingState
-    | PlayerSpeaking Player.Model
+    | PlayerSpeaking PlayerSpeakingState
     | PlayerChoosing Player.Model
 
 
@@ -28,6 +35,7 @@ type Msg
     | SelectionBegins JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | Transition JE.Value
+    | Tick Time
 
 
 type alias Model =
@@ -40,3 +48,10 @@ decoder : JD.Decoder PlayingState
 decoder =
     JD.map PlayingState
         (field "players" (JD.list Player.decoder))
+
+
+playerSpeakingDecoder : JD.Decoder PlayerSpeakingState
+playerSpeakingDecoder =
+    JD.map2 PlayerSpeakingState
+        (field "player" Player.decoder)
+        (field "elapsed" JD.int)

@@ -23,7 +23,8 @@ defmodule Playground.Mafia.Players.Chapters.PlayerSpeaks do
   end
 
   def notify_leader(game_uuid, player) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "player_speaks", %{player: player})
+    payload = %{player: player, elapsed: div(@period, 1000)}
+    Endpoint.broadcast("leader:current:#{game_uuid}", "player_speaks", payload)
   end
 
   def handle_info({:transition, other_players}, %{game_uuid: game_uuid} = state) do
