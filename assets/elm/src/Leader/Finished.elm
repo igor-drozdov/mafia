@@ -74,10 +74,12 @@ view model =
         Finishing { state } ->
             case state of
                 "innocents" ->
-                    div [] [ text "Innocents win" ]
+                    div [] [ logo, text "Innocents win" ]
 
                 "mafia" ->
-                    div [] [ text "Mafia wins" ]
+                    div [ class "margin-top" ]
+                        [ img [ src "/images/mafia-wins.gif", style [ ( "width", "70%" ) ] ] []
+                        ]
 
                 _ ->
-                    div [] [ text "Somebody else wins" ]
+                    div [] [ logo, text "Somebody else wins" ]
