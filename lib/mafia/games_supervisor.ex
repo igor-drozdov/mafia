@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.GamesSupervisor do
+defmodule Mafia.GamesSupervisor do
   use DynamicSupervisor
 
-  alias Playground.Mafia.Narrator
+  alias Mafia.Narrator
 
   def start_link do
     DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)

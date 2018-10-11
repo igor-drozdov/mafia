@@ -2,7 +2,7 @@ defmodule Mafia.Round do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Playground.Mafia.{Game, Players.Round}
+  alias Mafia.{Game, Players.Round}
 
   schema "rounds" do
     belongs_to(:game, Game, type: :binary_id)

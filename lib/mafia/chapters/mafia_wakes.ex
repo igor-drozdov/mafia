@@ -1,7 +1,7 @@
 defmodule Mafia.Chapters.MafiaWakes do
   use Mafia.Chapter
 
-  alias Playground.Mafia.{Chapters.MafiaSleeps, Players.Round}
+  alias Mafia.{Chapters.MafiaSleeps, Players.Round}
   alias MafiaWeb.Endpoint
 
   def handle_run(%{game_uuid: game_uuid, players: players} = state) do

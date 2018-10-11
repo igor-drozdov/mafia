@@ -8,7 +8,7 @@ defmodule Mafia.Chapter do
       end
 
       def via(game_uuid) do
-        {:via, Registry, {Playground.Mafia.Registry, {__MODULE__, game_uuid}}}
+        {:via, Registry, {Mafia.Registry, {__MODULE__, game_uuid}}}
       end
 
       def init(state) do
@@ -24,7 +24,7 @@ defmodule Mafia.Chapter do
           restart: :transient
         }
 
-        {:ok, pid} = Playground.Mafia.Narrator.start_child(game_uuid, spec)
+        {:ok, pid} = Mafia.Narrator.start_child(game_uuid, spec)
         GenServer.cast(pid, :run)
       end
 

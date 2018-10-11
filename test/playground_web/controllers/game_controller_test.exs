@@ -1,13 +1,13 @@
 defmodule MafiaWeb.GameControllerTest do
   use MafiaWeb.ConnCase
 
-  alias Playground.Mafia
+  alias Mafia.Games
 
   @create_attrs %{state: 0}
   @invalid_attrs %{state: "ab"}
 
   def fixture(:game) do
-    {:ok, game} = Mafia.create_game(@create_attrs)
+    {:ok, game} = Games.create_game(@create_attrs)
     game
   end
 
