@@ -1,6 +1,7 @@
-defmodule Mafia.Game do
+defmodule Mafia.Games.Game do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Mafia.Games.{Round, Winner}
   alias Mafia.{Players.Player, Round, Winner}
 
   @primary_key {:id, :binary_id, autogenerate: true}

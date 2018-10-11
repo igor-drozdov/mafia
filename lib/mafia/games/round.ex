@@ -1,4 +1,4 @@
-defmodule Mafia.Games.Round do
+defmodule Mafia.Round do
   use Ecto.Schema
   import Ecto.Changeset
 

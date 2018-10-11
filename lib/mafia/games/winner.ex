@@ -1,8 +1,8 @@
-defmodule Mafia.Winner do
+defmodule Mafia.Games.Winner do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Mafia.Game
+  alias Mafia.Games.Game
 
   schema "winners" do
     field(:state, WinnerStateEnum)
