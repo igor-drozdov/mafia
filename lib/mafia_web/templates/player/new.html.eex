@@ -1,4 +1,4 @@
-<%= render PlaygroundWeb.SharedView, "logo.html", assigns %>
+<%= render MafiaWeb.SharedView, "logo.html", assigns %>
 
 <h3> Connect to the Game </h3>
 

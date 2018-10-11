@@ -103,7 +103,7 @@ defmodule Mafia.Games do
     Game.changeset(game, %{})
   end
 
-  alias Mafia.Round
+  alias Mafia.Games.Round
 
   @doc """
   Returns the list of rounds.
@@ -199,7 +199,7 @@ defmodule Mafia.Games do
     Round.changeset(round, %{})
   end
 
-  alias Mafia.Winner
+  alias Mafia.Games.Winner
 
   @doc """
   Returns the list of winners.

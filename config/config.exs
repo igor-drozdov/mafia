@@ -6,11 +6,11 @@
 use Mix.Config
 
 # General application configuration
-config :playground,
+config :mafia,
   ecto_repos: [Mafia.Repo]
 
 # Configures the endpoint
-config :playground, MafiaWeb.Endpoint,
+config :mafia, MafiaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "alfAFmcEjAPGZz9EHxeGWHFSnHCSFlr9CzpmICKXRacsepBDO+9Mo1LiLp64NK5p",
   render_errors: [view: MafiaWeb.ErrorView, accepts: ~w(html json)],

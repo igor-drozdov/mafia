@@ -29,7 +29,7 @@ defmodule MafiaWeb do
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/playground_web/templates",
+        root: "lib/mafia_web/templates",
         namespace: MafiaWeb
 
       # Import convenience functions from controllers

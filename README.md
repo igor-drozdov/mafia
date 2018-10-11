@@ -1,4 +1,4 @@
-# Playground
+# Mafia
 
 To start your Phoenix server:
 

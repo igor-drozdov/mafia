@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.CitySleeps do
   alias Mafia.Chapters.MafiaWakes
   alias MafiaWeb.Endpoint
 
-  @period Application.get_env(:playground, :period) |> Keyword.fetch!(:short)
+  @period Application.get_env(:mafia, :period) |> Keyword.fetch!(:short)
 
   defp handle_run(%{game_uuid: game_uuid}) do
     notify_leader(game_uuid)

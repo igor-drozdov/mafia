@@ -5,7 +5,7 @@ defmodule Mafia.Chapters.HandoutRoles do
 
   alias MafiaWeb.Endpoint
   alias Mafia.Chapters.StartGame
-  alias Mafia.{Games, Players.Player}
+  alias Mafia.{Repo, Games, Players.Player}
 
   defp handle_run(%{game_uuid: game_uuid}) do
     handout_roles(game_uuid)

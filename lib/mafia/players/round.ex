@@ -1,14 +1,14 @@
 defmodule Mafia.Players.Round do
   use Ecto.Schema
 
-  alias Mafia.{Repo, Players, Round}
+  alias Mafia.{Repo, Players, Games.Round}
 
   import Ecto.Query
 
   schema "player_rounds" do
     belongs_to(:player, Players.Player, type: :binary_id)
     belongs_to(:round, Round)
-    has_many(:player_statuses, Players.Status)
+    has_many(:player_statuses, Players.Status, foreign_key: :player_round_id)
 
     timestamps()
   end

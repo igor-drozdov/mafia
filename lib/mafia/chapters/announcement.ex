@@ -8,7 +8,7 @@ defmodule Mafia.Chapters.Announcement do
 
   import Ecto.Query
 
-  @period Application.get_env(:playground, :period) |> Keyword.fetch!(:medium)
+  @period Application.get_env(:mafia, :period) |> Keyword.fetch!(:medium)
 
   defp handle_run(%{game_uuid: game_uuid, round_id: round_id, players: players}) do
     player = ostracize_deprecated_player(round_id)

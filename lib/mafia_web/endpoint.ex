@@ -1,5 +1,5 @@
 defmodule MafiaWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :playground
+  use Phoenix.Endpoint, otp_app: :mafia
 
   socket("/socket", MafiaWeb.UserSocket)
 
@@ -9,7 +9,7 @@ defmodule MafiaWeb.Endpoint do
   # when deploying your static files in production.
   plug(Plug.Static,
     at: "/",
-    from: :playground,
+    from: :mafia,
     gzip: false,
     only: ~w(css fonts images audios js favicon.ico robots.txt)
   )
@@ -38,7 +38,7 @@ defmodule MafiaWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug(Plug.Session,
     store: :cookie,
-    key: "_playground_key",
+    key: "_mafia_key",
     signing_salt: "mIcx9ouF"
   )
 

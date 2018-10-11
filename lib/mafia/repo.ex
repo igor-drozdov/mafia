@@ -1,5 +1,5 @@
 defmodule Mafia.Repo do
-  use Ecto.Repo, otp_app: :playground
+  use Ecto.Repo, otp_app: :mafia
 
   @doc """
   Dynamically loads the repository url from the
