@@ -1,7 +1,7 @@
 defmodule Mafia.Chapters.RoundBegins do
   use Mafia.Chapter
 
-  alias Playground.Mafia.{Chapters.CitySleeps, Chapters.DiscussionBegins, PlayerRound, Round}
+  alias Mafia.Chapters.{CitySleeps, DiscussionBegins}
   alias Mafia.{Players, Round, Repo, Games}
 
   import Ecto.Query

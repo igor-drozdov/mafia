@@ -32,9 +32,9 @@ defmodule Mafia.Chapters.AnnouncementTest do
 
       round = RoundBegins.create_round(game.id, Repo.preload(game, :players).players)
 
-      PlayerRound.create_status(round.id, player.id, :deprecated)
-      PlayerRound.create_status(round.id, player.id, :deprecated)
-      PlayerRound.create_status(round.id, another_player.id, :deprecated)
+      Round.create_status(round.id, player.id, :deprecated)
+      Round.create_status(round.id, player.id, :deprecated)
+      Round.create_status(round.id, another_player.id, :deprecated)
 
       Announcement.ostracize_deprecated_player(round.id)
 

@@ -19,18 +19,18 @@ defmodule Playground.PlayerTest do
 
     previous_round = RoundBegins.create_round(game.id, Repo.preload(game, :players).players)
 
-    PlayerRound.create_status(previous_round.id, previously_nominated_player.id, :nominated)
-    PlayerRound.create_status(previous_round.id, previously_ostricized_player.id, :ostracized)
+    Round.create_status(previous_round.id, previously_nominated_player.id, :nominated)
+    Round.create_status(previous_round.id, previously_ostricized_player.id, :ostracized)
 
     round = RoundBegins.create_round(game.id, Repo.preload(game, :players).players)
 
-    PlayerRound.create_status(round.id, ostricized_player.id, :ostracized)
-    PlayerRound.create_status(round.id, nominated_player.id, :nominated)
-    PlayerRound.create_status(round.id, nominated_player.id, :nominated)
-    PlayerRound.create_status(round.id, deprecated_player.id, :nominated)
-    PlayerRound.create_status(round.id, deprecated_player.id, :deprecated)
-    PlayerRound.create_status(round.id, deprecated_and_ostricized_player.id, :deprecated)
-    PlayerRound.create_status(round.id, deprecated_and_ostricized_player.id, :ostracized)
+    Round.create_status(round.id, ostricized_player.id, :ostracized)
+    Round.create_status(round.id, nominated_player.id, :nominated)
+    Round.create_status(round.id, nominated_player.id, :nominated)
+    Round.create_status(round.id, deprecated_player.id, :nominated)
+    Round.create_status(round.id, deprecated_player.id, :deprecated)
+    Round.create_status(round.id, deprecated_and_ostricized_player.id, :deprecated)
+    Round.create_status(round.id, deprecated_and_ostricized_player.id, :ostracized)
 
     {:ok,
      game: game,

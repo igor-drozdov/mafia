@@ -49,7 +49,7 @@ defmodule Mafia.Chapters.VotingBegins do
   end
 
   def deprecate_player(round_id, player_uuid, deprecated_by_uuid) do
-    PlayerRound.create_status(round_id, player_uuid, :deprecated, deprecated_by_uuid)
+    Round.create_status(round_id, player_uuid, :deprecated, deprecated_by_uuid)
   end
 
   def notify_player_chosen(game_uuid, current_player_uuid) do

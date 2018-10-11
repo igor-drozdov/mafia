@@ -1,7 +1,7 @@
 defmodule Mafia.Chapters.MafiaWakes do
   use Mafia.Chapter
 
-  alias Playground.Mafia.{Chapters.MafiaSleeps, PlayerRound}
+  alias Playground.Mafia.{Chapters.MafiaSleeps, Players.Round}
   alias MafiaWeb.Endpoint
 
   def handle_run(%{game_uuid: game_uuid, players: players} = state) do
@@ -38,7 +38,7 @@ defmodule Mafia.Chapters.MafiaWakes do
   end
 
   def ostracize_player(round_id, player_uuid) do
-    PlayerRound.create_status(round_id, player_uuid, :ostracized)
+    Round.create_status(round_id, player_uuid, :ostracized)
   end
 
   def notify_mafia_players(game_uuid, mafias, msg, payload \\ %{}) do

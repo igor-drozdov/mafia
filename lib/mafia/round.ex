@@ -1,13 +1,13 @@
-defmodule Playground.Mafia.Round do
+defmodule Mafia.Round do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Playground.Mafia.{Game, PlayerRound}
+  alias Playground.Mafia.{Game, Players.Round}
 
   schema "rounds" do
     belongs_to(:game, Game, type: :binary_id)
 
-    has_many(:player_rounds, PlayerRound)
+    has_many(:player_rounds, Round)
     has_many(:players, through: [:player_rounds, :player])
     has_many(:player_statuses, through: [:player_rounds, :player_statuses])
 

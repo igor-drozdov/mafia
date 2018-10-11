@@ -3,8 +3,8 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
 
   alias Mafia.Chapters.VotingBegins
   alias Mafia.Players.Chapters.PlayerChooses
+  alias Mafia.Players.Round
   alias MafiaWeb.Endpoint
-  alias Playground.Mafia.PlayerRound
 
   def run(game_uuid, [], state) do
     VotingBegins.run(game_uuid, Map.delete(state, :other_players))
@@ -50,7 +50,7 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
   end
 
   def nominate_player(round_id, player_uuid, nominated_by_uuid) do
-    PlayerRound.create_status(round_id, player_uuid, :nominated, nominated_by_uuid)
+    Round.create_status(round_id, player_uuid, :nominated, nominated_by_uuid)
   end
 
   def notify_player_chosen(game_uuid, player_uuid) do
