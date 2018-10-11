@@ -1,10 +1,10 @@
-defmodule Playground.Mafia.Chapters.HandoutRoles do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.HandoutRoles do
+  use Mafia.Chapter
 
   import Ecto.Query
 
   alias PlaygroundWeb.Endpoint
-  alias Playground.Mafia.Chapters.StartGame
+  alias Mafia.Chapters.StartGame
   alias Mafia.{Games, Players.Player}
 
   defp handle_run(%{game_uuid: game_uuid}) do

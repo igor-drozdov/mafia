@@ -1,8 +1,8 @@
-defmodule Playground.Mafia.Players.Chapters.PlayerChooses do
-  use Playground.Mafia.Players.Chapter
+defmodule Mafia.Players.Chapters.PlayerChooses do
+  use Mafia.Players.Chapter
 
-  alias Playground.Mafia.Chapters.VotingBegins
-  alias Playground.Mafia.Players.Chapters.PlayerChooses
+  alias Mafia.Chapters.VotingBegins
+  alias Mafia.Players.Chapters.PlayerChooses
   alias PlaygroundWeb.Endpoint
   alias Playground.Mafia.PlayerRound
 

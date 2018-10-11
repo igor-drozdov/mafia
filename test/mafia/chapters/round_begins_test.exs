@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.RoundBeginsTest do
+defmodule Mafia.Chapters.RoundBeginsTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.RoundBegins
+  alias Mafia.Chapters.RoundBegins
   alias Mafia.{Repo, Games}
 
   import Playground.Factory

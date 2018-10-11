@@ -1,8 +1,8 @@
-defmodule Playground.Mafia.Chapters.AnnouncementTest do
+defmodule Mafia.Chapters.AnnouncementTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.Announcement
-  alias Playground.Mafia.Chapters.RoundBegins
+  alias Mafia.Chapters.Announcement
+  alias Mafia.Chapters.RoundBegins
   alias Mafia.Players.{Round, Player}
   alias Playground.Repo
 

@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.RoundEnds do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.RoundEnds do
+  use Mafia.Chapter
 
-  alias Playground.Mafia.Chapters.{InnocentsWin, MafiaWins, RoundBegins}
+  alias Mafia.Chapters.{InnocentsWin, MafiaWins, RoundBegins}
 
   defp handle_run(%{game_uuid: game_uuid, players: players} = state) do
     {mafias, innocents} = Enum.split_with(players, &(&1.role == :mafia))

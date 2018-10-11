@@ -1,5 +1,5 @@
-defmodule Playground.Mafia.Chapters.MafiaWakes do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.MafiaWakes do
+  use Mafia.Chapter
 
   alias Playground.Mafia.{Chapters.MafiaSleeps, PlayerRound}
   alias PlaygroundWeb.Endpoint

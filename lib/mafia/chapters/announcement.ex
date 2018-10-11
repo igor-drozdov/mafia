@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.Announcement do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.Announcement do
+  use Mafia.Chapter
 
-  alias Playground.Mafia.Chapters.RoundEnds
+  alias Mafia.Chapters.RoundEnds
   alias Playground.Mafia.Players.{Round, Player}
   alias Playground.Repo
   alias PlaygroundWeb.Endpoint

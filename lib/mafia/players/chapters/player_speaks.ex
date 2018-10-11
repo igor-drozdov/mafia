@@ -1,8 +1,8 @@
-defmodule Playground.Mafia.Players.Chapters.PlayerSpeaks do
-  use Playground.Mafia.Players.Chapter
+defmodule Mafia.Players.Chapters.PlayerSpeaks do
+  use Mafia.Players.Chapter
 
-  alias Playground.Mafia.Players.Chapters.PlayerSpeaks
-  alias Playground.Mafia.Chapters.SelectionBegins
+  alias Mafia.Players.Chapters.PlayerSpeaks
+  alias Mafia.Chapters.SelectionBegins
   alias PlaygroundWeb.Endpoint
 
   @period Application.get_env(:playground, :period) |> Keyword.fetch!(:long)

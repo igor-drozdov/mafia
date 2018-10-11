@@ -1,4 +1,4 @@
-defmodule Playground.Mafia.Players.Chapter do
+defmodule Mafia.Players.Chapter do
   defmacro __using__(_opts) do
     quote location: :keep do
       use GenServer

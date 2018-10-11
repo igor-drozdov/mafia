@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.SelectionBegins do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.SelectionBegins do
+  use Mafia.Chapter
 
-  alias Playground.Mafia.Players.Chapters.PlayerChooses
+  alias Mafia.Players.Chapters.PlayerChooses
   alias PlaygroundWeb.Endpoint
 
   defp handle_run(%{game_uuid: game_uuid, players: players} = state) do

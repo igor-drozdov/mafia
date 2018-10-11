@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.MafiaSleepsTest do
+defmodule Mafia.Chapters.MafiaSleepsTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.MafiaSleeps
+  alias Mafia.Chapters.MafiaSleeps
 
   import Playground.Factory
 

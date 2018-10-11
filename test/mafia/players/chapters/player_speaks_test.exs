@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Players.Chapters.PlayerSpeaksTest do
+defmodule Mafia.Players.Chapters.PlayerSpeaksTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Players.Chapters.PlayerSpeaks
+  alias Mafia.Players.Chapters.PlayerSpeaks
 
   import Playground.Factory
 

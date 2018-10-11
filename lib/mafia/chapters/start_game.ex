@@ -1,6 +1,6 @@
-defmodule Playground.Mafia.Chapters.StartGame do
-  use Playground.Mafia.Chapter
-  alias Playground.Mafia.Chapters.RoundBegins
+defmodule Mafia.Chapters.StartGame do
+  use Mafia.Chapter
+  alias Mafia.Chapters.RoundBegins
   alias Mafia.{Repo, Players.Player, Games.Game}
   alias PlaygroundWeb.Endpoint
 

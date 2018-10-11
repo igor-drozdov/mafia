@@ -1,5 +1,5 @@
-defmodule Playground.Mafia.Chapters.RoundBegins do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.RoundBegins do
+  use Mafia.Chapter
 
   alias Playground.Mafia.{Chapters.CitySleeps, Chapters.DiscussionBegins, PlayerRound, Round}
   alias Mafia.{Players, Round, Repo, Games}

@@ -3,7 +3,7 @@ defmodule Playground.PlayerTest do
 
   alias Playground.Repo
   alias Mafia.Players.{Player, Round}
-  alias Playground.Mafia.Chapters.RoundBegins
+  alias Mafia.Chapters.RoundBegins
 
   import Playground.Factory
 

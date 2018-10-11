@@ -1,9 +1,9 @@
-defmodule Playground.Mafia.Chapters.VotingBegins do
-  use Playground.Mafia.Chapter
+defmodule Mafia.Chapters.VotingBegins do
+  use Mafia.Chapter
 
   alias Mafia.Players.{Round, Player}
   alias Mafia.Repo
-  alias Playground.Mafia.Chapters.Announcement
+  alias Mafia.Chapters.Announcement
   alias PlaygroundWeb.Endpoint
 
   import Ecto.Query

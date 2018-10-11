@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.SelectionBeginsTest do
+defmodule Mafia.Chapters.SelectionBeginsTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.SelectionBegins
+  alias Mafia.Chapters.SelectionBegins
 
   import Playground.Factory
 

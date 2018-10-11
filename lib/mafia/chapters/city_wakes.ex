@@ -1,6 +1,6 @@
-defmodule Playground.Mafia.Chapters.CityWakes do
-  use Playground.Mafia.Chapter
-  alias Playground.Mafia.Chapters.DiscussionBegins
+defmodule Mafia.Chapters.CityWakes do
+  use Mafia.Chapter
+  alias Mafia.Chapters.DiscussionBegins
   alias PlaygroundWeb.Endpoint
   alias Mafia.{Repo, Games}
 

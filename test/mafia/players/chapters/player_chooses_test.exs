@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Players.Chapters.PlayerChoosesTest do
+defmodule Mafia.Players.Chapters.PlayerChoosesTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Players.Chapters.PlayerChooses
+  alias Mafia.Players.Chapters.PlayerChooses
   alias Playground.Repo
 
   import Playground.Factory

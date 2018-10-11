@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.VotingBeginsTest do
+defmodule Mafia.Chapters.VotingBeginsTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.{VotingBegins, RoundBegins}
+  alias Mafia.Chapters.{VotingBegins, RoundBegins}
   alias Mafia.Players.Round
 
   import Playground.Factory

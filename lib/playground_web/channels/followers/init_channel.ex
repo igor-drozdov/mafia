@@ -26,6 +26,6 @@ defmodule PlaygroundWeb.Followers.InitChannel do
   end
 
   defp handout_roles!(game) do
-    Playground.Mafia.Chapters.HandoutRoles.run(game.id)
+    Mafia.Chapters.HandoutRoles.run(game.id)
   end
 end

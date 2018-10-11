@@ -1,6 +1,6 @@
-defmodule Playground.Mafia.Chapters.MafiaSleeps do
-  use Playground.Mafia.Chapter
-  alias Playground.Mafia.Chapters.CityWakes
+defmodule Mafia.Chapters.MafiaSleeps do
+  use Mafia.Chapter
+  alias Mafia.Chapters.CityWakes
   alias PlaygroundWeb.Endpoint
 
   @period Application.get_env(:playground, :period) |> Keyword.fetch!(:short)

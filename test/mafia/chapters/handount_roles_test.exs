@@ -1,7 +1,7 @@
-defmodule Playground.Mafia.Chapters.HandoutRolesTest do
+defmodule Mafia.Chapters.HandoutRolesTest do
   use PlaygroundWeb.ChannelCase
 
-  alias Playground.Mafia.Chapters.HandoutRoles
+  alias Mafia.Chapters.HandoutRoles
   alias Mafia.{Repo, Players.Player}
   alias PlaygroundWeb.Followers.InitChannel
 
