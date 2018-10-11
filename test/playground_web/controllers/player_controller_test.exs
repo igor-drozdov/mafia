@@ -1,7 +1,7 @@
 defmodule MafiaWeb.PlayerControllerTest do
   use MafiaWeb.ConnCase
 
-  import Playground.Factory
+  import Mafia.Factory
 
   @create_attrs %{name: "some name"}
   @invalid_attrs %{name: nil}

@@ -1,4 +1,4 @@
-defmodule Playground.Repo.Migrations.CreatePlayers do
+defmodule Mafia.Repo.Migrations.CreatePlayers do
   use Ecto.Migration
 
   def change do

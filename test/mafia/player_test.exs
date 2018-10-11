@@ -1,11 +1,11 @@
-defmodule Playground.PlayerTest do
-  use Playground.DataCase
+defmodule Mafia.PlayerTest do
+  use Mafia.DataCase
 
-  alias Playground.Repo
+  alias Mafia.Repo
   alias Mafia.Players.{Player, Round}
   alias Mafia.Chapters.RoundBegins
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

@@ -2,9 +2,9 @@ defmodule Mafia.Players.Chapters.PlayerChoosesTest do
   use MafiaWeb.ChannelCase
 
   alias Mafia.Players.Chapters.PlayerChooses
-  alias Playground.Repo
+  alias Mafia.Repo
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.CityWakesTest do
 
   alias Mafia.Chapters.CityWakes
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

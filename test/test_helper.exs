@@ -2,4 +2,4 @@
 
 ExUnit.start()
 
-Ecto.Adapters.SQL.Sandbox.mode(Playground.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Mafia.Repo, :manual)

@@ -3,7 +3,7 @@ defmodule MafiaWeb.Followers.InitChannelTest do
 
   alias MafiaWeb.Followers.InitChannel
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game_uuid = insert(:game).id

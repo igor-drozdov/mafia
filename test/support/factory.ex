@@ -1,5 +1,5 @@
-defmodule Playground.Factory do
-  use ExMachina.Ecto, repo: Playground.Repo
+defmodule Mafia.Factory do
+  use ExMachina.Ecto, repo: Mafia.Repo
 
   def game_factory do
     %Mafia.Games.Game{

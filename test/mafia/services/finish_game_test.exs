@@ -4,7 +4,7 @@ defmodule Mafia.Services.FinishGameTest do
   alias Mafia.Services.FinishGame
   alias Mafia.{Repo, Games}
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

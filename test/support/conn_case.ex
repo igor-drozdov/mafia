@@ -27,10 +27,10 @@ defmodule MafiaWeb.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Playground.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Mafia.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Playground.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Mafia.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

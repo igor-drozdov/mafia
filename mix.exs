@@ -1,4 +1,4 @@
-defmodule Playground.Mixfile do
+defmodule Mafia.Mixfile do
   use Mix.Project
 
   def project do
@@ -19,7 +19,7 @@ defmodule Playground.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Playground.Application, []},
+      mod: {Mafia.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

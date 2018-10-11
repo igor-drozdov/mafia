@@ -1,4 +1,4 @@
-defmodule Playground.Repo.Migrations.CreateRounds do
+defmodule Mafia.Repo.Migrations.CreateRounds do
   use Ecto.Migration
 
   def change do

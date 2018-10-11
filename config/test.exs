@@ -10,7 +10,7 @@ config :playground, MafiaWeb.Endpoint,
 config :logger, level: :warn
 
 # Configure your database
-config :playground, Playground.Repo,
+config :playground, Mafia.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",

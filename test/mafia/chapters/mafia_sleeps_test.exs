@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.MafiaSleepsTest do
 
   alias Mafia.Chapters.MafiaSleeps
 
-  import Playground.Factory
+  import Mafia.Factory
 
   describe "#notify_leader" do
     test "broadcast mafia sleeps" do

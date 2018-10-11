@@ -5,7 +5,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
   alias Mafia.{Repo, Players.Player}
   alias MafiaWeb.Followers.InitChannel
 
-  import Playground.Factory
+  import Mafia.Factory
 
   def run(game_uuid) do
     HandoutRoles.handout_roles(game_uuid)

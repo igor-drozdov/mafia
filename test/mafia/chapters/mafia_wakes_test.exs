@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.MafiaWakesTest do
   alias Mafia.Chapters.MafiaWakes
   alias Mafia.{Repo, Players.Player}
 
-  import Playground.Factory
+  import Mafia.Factory
 
   describe "#handle_run" do
     test "notity leader and mafia players" do

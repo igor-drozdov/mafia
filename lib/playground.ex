@@ -1,6 +1,6 @@
-defmodule Playground do
+defmodule Mafia do
   @moduledoc """
-  Playground keeps the contexts that define your domain
+  Mafia keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

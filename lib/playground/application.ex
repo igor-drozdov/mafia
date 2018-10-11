@@ -1,4 +1,4 @@
-defmodule Playground.Application do
+defmodule Mafia.Application do
   use Application
 
   # See https://hexdocs.pm/elixir/Application.html
@@ -8,7 +8,7 @@ defmodule Playground.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      supervisor(Playground.Repo, []),
+      supervisor(Mafia.Repo, []),
       supervisor(MafiaWeb.Endpoint, []),
       supervisor(Mafia.GamesSupervisor, []),
       worker(Registry, [[name: Mafia.Registry, keys: :unique]])
@@ -16,7 +16,7 @@ defmodule Playground.Application do
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Playground.Supervisor]
+    opts = [strategy: :one_for_one, name: Mafia.Supervisor]
     Supervisor.start_link(children, opts)
   end
 

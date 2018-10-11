@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.StartGameTest do
   alias Mafia.Chapters.StartGame
   alias Mafia.Games
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

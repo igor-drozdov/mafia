@@ -1,5 +1,5 @@
 defmodule Mafia.GamesTest do
-  use Playground.DataCase
+  use Mafia.DataCase
 
   alias Mafia.Games
 
@@ -67,7 +67,7 @@ defmodule Mafia.GamesTest do
     alias Mafia.Games.Round
     alias Mafia.Repo
 
-    import Playground.Factory
+    import Mafia.Factory
 
     @update_attrs %{}
     @invalid_attrs %{game_id: nil}

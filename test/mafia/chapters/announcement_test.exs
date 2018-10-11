@@ -4,9 +4,9 @@ defmodule Mafia.Chapters.AnnouncementTest do
   alias Mafia.Chapters.Announcement
   alias Mafia.Chapters.RoundBegins
   alias Mafia.Players.{Round, Player}
-  alias Playground.Repo
+  alias Mafia.Repo
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)

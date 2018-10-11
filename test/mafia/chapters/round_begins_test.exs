@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.RoundBeginsTest do
   alias Mafia.Chapters.RoundBegins
   alias Mafia.{Repo, Games}
 
-  import Playground.Factory
+  import Mafia.Factory
 
   describe "#create_round" do
     test "create rounds and player rounds" do

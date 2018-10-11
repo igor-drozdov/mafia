@@ -7,14 +7,14 @@ use Mix.Config
 
 # General application configuration
 config :playground,
-  ecto_repos: [Playground.Repo]
+  ecto_repos: [Mafia.Repo]
 
 # Configures the endpoint
 config :playground, MafiaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "alfAFmcEjAPGZz9EHxeGWHFSnHCSFlr9CzpmICKXRacsepBDO+9Mo1LiLp64NK5p",
   render_errors: [view: MafiaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Playground.PubSub,
+  pubsub: [name: Mafia.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

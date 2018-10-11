@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.SelectionBeginsTest do
 
   alias Mafia.Chapters.SelectionBegins
 
-  import Playground.Factory
+  import Mafia.Factory
 
   describe "#notify_leader" do
     test "broadcast selection begins" do

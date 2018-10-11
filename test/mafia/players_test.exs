@@ -1,5 +1,5 @@
 defmodule Mafia.PlayersTest do
-  use Playground.DataCase
+  use Mafia.DataCase
 
   alias Mafia.Players
 

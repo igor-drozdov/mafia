@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.Announcement do
 
   alias Mafia.Chapters.RoundEnds
   alias Mafia.Players.{Round, Player}
-  alias Playground.Repo
+  alias Mafia.Repo
   alias MafiaWeb.Endpoint
 
   import Ecto.Query

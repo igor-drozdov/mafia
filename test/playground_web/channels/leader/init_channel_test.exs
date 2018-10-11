@@ -3,10 +3,10 @@ defmodule MafiaWeb.Leader.InitChannelTest do
 
   alias MafiaWeb.Leader.InitChannel
 
-  import Playground.Factory
+  import Mafia.Factory
 
   test "ping replies with status ok" do
-    game = insert(:game) |> Playground.Repo.preload(:players)
+    game = insert(:game) |> Mafia.Repo.preload(:players)
 
     {:ok, ^game, socket} =
       socket("user_id", %{some: :assign})

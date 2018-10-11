@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.VotingBeginsTest do
   alias Mafia.Chapters.{VotingBegins, RoundBegins}
   alias Mafia.Players.Round
 
-  import Playground.Factory
+  import Mafia.Factory
 
   setup do
     game = insert(:game)
