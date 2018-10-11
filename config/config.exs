@@ -10,10 +10,10 @@ config :playground,
   ecto_repos: [Playground.Repo]
 
 # Configures the endpoint
-config :playground, PlaygroundWeb.Endpoint,
+config :playground, MafiaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "alfAFmcEjAPGZz9EHxeGWHFSnHCSFlr9CzpmICKXRacsepBDO+9Mo1LiLp64NK5p",
-  render_errors: [view: PlaygroundWeb.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: MafiaWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Playground.PubSub,
            adapter: Phoenix.PubSub.PG2]
 

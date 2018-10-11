@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.RoundBeginsTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.RoundBegins
   alias Mafia.{Repo, Games}

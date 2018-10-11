@@ -4,7 +4,7 @@ defmodule Mafia.Chapters.VotingBegins do
   alias Mafia.Players.{Round, Player}
   alias Mafia.Repo
   alias Mafia.Chapters.Announcement
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   import Ecto.Query
 

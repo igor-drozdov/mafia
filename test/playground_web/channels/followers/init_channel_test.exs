@@ -1,7 +1,7 @@
-defmodule PlaygroundWeb.Followers.InitChannelTest do
-  use PlaygroundWeb.ChannelCase
+defmodule MafiaWeb.Followers.InitChannelTest do
+  use MafiaWeb.ChannelCase
 
-  alias PlaygroundWeb.Followers.InitChannel
+  alias MafiaWeb.Followers.InitChannel
 
   import Playground.Factory
 

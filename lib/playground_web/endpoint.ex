@@ -1,7 +1,7 @@
-defmodule PlaygroundWeb.Endpoint do
+defmodule MafiaWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :playground
 
-  socket("/socket", PlaygroundWeb.UserSocket)
+  socket("/socket", MafiaWeb.UserSocket)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -42,7 +42,7 @@ defmodule PlaygroundWeb.Endpoint do
     signing_salt: "mIcx9ouF"
   )
 
-  plug(PlaygroundWeb.Router)
+  plug(MafiaWeb.Router)
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.

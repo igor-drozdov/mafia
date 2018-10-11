@@ -3,7 +3,7 @@ defmodule Mafia.Players.Chapters.PlayerSpeaks do
 
   alias Mafia.Players.Chapters.PlayerSpeaks
   alias Mafia.Chapters.SelectionBegins
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   @period Application.get_env(:playground, :period) |> Keyword.fetch!(:long)
 

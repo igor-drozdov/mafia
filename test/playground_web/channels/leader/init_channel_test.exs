@@ -1,7 +1,7 @@
-defmodule PlaygroundWeb.Leader.InitChannelTest do
-  use PlaygroundWeb.ChannelCase
+defmodule MafiaWeb.Leader.InitChannelTest do
+  use MafiaWeb.ChannelCase
 
-  alias PlaygroundWeb.Leader.InitChannel
+  alias MafiaWeb.Leader.InitChannel
 
   import Playground.Factory
 

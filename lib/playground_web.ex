@@ -1,12 +1,12 @@
-defmodule PlaygroundWeb do
+defmodule MafiaWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use PlaygroundWeb, :controller
-      use PlaygroundWeb, :view
+      use MafiaWeb, :controller
+      use MafiaWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,10 +19,10 @@ defmodule PlaygroundWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: PlaygroundWeb
+      use Phoenix.Controller, namespace: MafiaWeb
       import Plug.Conn
-      import PlaygroundWeb.Router.Helpers
-      import PlaygroundWeb.Gettext
+      import MafiaWeb.Router.Helpers
+      import MafiaWeb.Gettext
     end
   end
 
@@ -30,7 +30,7 @@ defmodule PlaygroundWeb do
     quote do
       use Phoenix.View,
         root: "lib/playground_web/templates",
-        namespace: PlaygroundWeb
+        namespace: MafiaWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
@@ -38,9 +38,9 @@ defmodule PlaygroundWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import PlaygroundWeb.Router.Helpers
-      import PlaygroundWeb.ErrorHelpers
-      import PlaygroundWeb.Gettext
+      import MafiaWeb.Router.Helpers
+      import MafiaWeb.ErrorHelpers
+      import MafiaWeb.Gettext
     end
   end
 
@@ -55,7 +55,7 @@ defmodule PlaygroundWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import PlaygroundWeb.Gettext
+      import MafiaWeb.Gettext
     end
   end
 

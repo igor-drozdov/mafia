@@ -1,5 +1,5 @@
 defmodule Mafia.Players.Chapters.PlayerChoosesTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Players.Chapters.PlayerChooses
   alias Playground.Repo

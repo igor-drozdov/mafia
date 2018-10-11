@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.MafiaWakesTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.MafiaWakes
   alias Mafia.{Repo, Players.Player}
@@ -16,14 +16,14 @@ defmodule Mafia.Chapters.MafiaWakesTest do
       {:ok, _, socket} =
         socket("user_id", %{some: :assign})
         |> join(
-          PlaygroundWeb.Followers.CurrentChannel,
+          MafiaWeb.Followers.CurrentChannel,
           "followers:current:#{game_uuid}:#{mafia.id}"
         )
 
       {:ok, _, leader_socket} =
         socket("user_id", %{some: :assign})
         |> join(
-          PlaygroundWeb.Leader.CurrentChannel,
+          MafiaWeb.Leader.CurrentChannel,
           "leader:current:#{game_uuid}"
         )
 

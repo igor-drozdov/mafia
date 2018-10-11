@@ -1,6 +1,6 @@
 defmodule Mafia.Services.FinishGame do
   alias Mafia.{Games.Game, Games, Repo}
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   import Ecto.Query
 

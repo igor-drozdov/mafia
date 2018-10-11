@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.HandoutRoles do
 
   import Ecto.Query
 
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
   alias Mafia.Chapters.StartGame
   alias Mafia.{Games, Players.Player}
 

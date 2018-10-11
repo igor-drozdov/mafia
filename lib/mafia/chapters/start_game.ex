@@ -2,7 +2,7 @@ defmodule Mafia.Chapters.StartGame do
   use Mafia.Chapter
   alias Mafia.Chapters.RoundBegins
   alias Mafia.{Repo, Players.Player, Games.Game}
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   import Ecto.Query
 

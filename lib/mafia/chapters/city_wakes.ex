@@ -1,7 +1,7 @@
 defmodule Mafia.Chapters.CityWakes do
   use Mafia.Chapter
   alias Mafia.Chapters.DiscussionBegins
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
   alias Mafia.{Repo, Games}
 
   import Ecto.Query

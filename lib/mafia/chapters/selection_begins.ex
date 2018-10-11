@@ -2,7 +2,7 @@ defmodule Mafia.Chapters.SelectionBegins do
   use Mafia.Chapter
 
   alias Mafia.Players.Chapters.PlayerChooses
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   defp handle_run(%{game_uuid: game_uuid, players: players} = state) do
     notify_leader(game_uuid)

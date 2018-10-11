@@ -1,3 +1,3 @@
-defmodule PlaygroundWeb.GameView do
-  use PlaygroundWeb, :view
+defmodule MafiaWeb.GameView do
+  use MafiaWeb, :view
 end

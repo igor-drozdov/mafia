@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.GameControllerTest do
-  use PlaygroundWeb.ConnCase
+defmodule MafiaWeb.GameControllerTest do
+  use MafiaWeb.ConnCase
 
   alias Playground.Mafia
 

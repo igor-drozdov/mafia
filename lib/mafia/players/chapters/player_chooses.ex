@@ -3,7 +3,7 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
 
   alias Mafia.Chapters.VotingBegins
   alias Mafia.Players.Chapters.PlayerChooses
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
   alias Playground.Mafia.PlayerRound
 
   def run(game_uuid, [], state) do

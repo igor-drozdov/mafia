@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.GameController do
-  use PlaygroundWeb, :controller
+defmodule MafiaWeb.GameController do
+  use MafiaWeb, :controller
 
   alias Mafia.{Games, Repo, GamesSupervisor, Players.Player}
 

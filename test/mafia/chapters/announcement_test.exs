@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.AnnouncementTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.Announcement
   alias Mafia.Chapters.RoundBegins

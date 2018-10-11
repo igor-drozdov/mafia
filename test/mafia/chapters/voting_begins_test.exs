@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.VotingBeginsTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.{VotingBegins, RoundBegins}
   alias Mafia.Players.Round
@@ -24,7 +24,7 @@ defmodule Mafia.Chapters.VotingBeginsTest do
           {:ok, _, socket} =
             socket("user_id", %{})
             |> join(
-              PlaygroundWeb.Followers.CurrentChannel,
+              MafiaWeb.Followers.CurrentChannel,
               "followers:current:#{game_uuid}:#{player.id}"
             )
 

@@ -1,12 +1,12 @@
-defmodule PlaygroundWeb.UserSocket do
+defmodule MafiaWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel("leader:init:*", PlaygroundWeb.Leader.InitChannel)
-  channel("leader:current:*", PlaygroundWeb.Leader.CurrentChannel)
-  channel("leader:finished:*", PlaygroundWeb.Leader.FinishedChannel)
-  channel("followers:init*", PlaygroundWeb.Followers.InitChannel)
-  channel("followers:current*", PlaygroundWeb.Followers.CurrentChannel)
+  channel("leader:init:*", MafiaWeb.Leader.InitChannel)
+  channel("leader:current:*", MafiaWeb.Leader.CurrentChannel)
+  channel("leader:finished:*", MafiaWeb.Leader.FinishedChannel)
+  channel("followers:init*", MafiaWeb.Followers.InitChannel)
+  channel("followers:current*", MafiaWeb.Followers.CurrentChannel)
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket)
@@ -34,7 +34,7 @@ defmodule PlaygroundWeb.UserSocket do
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
   #
-  #     PlaygroundWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
+  #     MafiaWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
   def id(_socket), do: nil

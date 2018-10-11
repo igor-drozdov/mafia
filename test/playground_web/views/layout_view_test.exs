@@ -1,3 +1,3 @@
-defmodule PlaygroundWeb.LayoutViewTest do
-  use PlaygroundWeb.ConnCase, async: true
+defmodule MafiaWeb.LayoutViewTest do
+  use MafiaWeb.ConnCase, async: true
 end

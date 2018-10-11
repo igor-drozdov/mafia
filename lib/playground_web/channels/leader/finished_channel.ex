@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.Leader.FinishedChannel do
-  use PlaygroundWeb, :channel
+defmodule MafiaWeb.Leader.FinishedChannel do
+  use MafiaWeb, :channel
 
   alias Mafia.{Games, Repo}
 

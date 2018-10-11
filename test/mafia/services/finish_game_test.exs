@@ -1,5 +1,5 @@
 defmodule Playground.Mafia.Services.FinishGameTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Services.FinishGame
   alias Mafia.{Repo, Games}

@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.Followers.CurrentChannel do
-  use PlaygroundWeb, :channel
+defmodule MafiaWeb.Followers.CurrentChannel do
+  use MafiaWeb, :channel
 
   alias Mafia.{Games, Repo}
 

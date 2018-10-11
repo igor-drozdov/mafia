@@ -1,7 +1,7 @@
 defmodule Mafia.Chapters.MafiaSleeps do
   use Mafia.Chapter
   alias Mafia.Chapters.CityWakes
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   @period Application.get_env(:playground, :period) |> Keyword.fetch!(:short)
 

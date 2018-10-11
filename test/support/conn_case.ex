@@ -1,4 +1,4 @@
-defmodule PlaygroundWeb.ConnCase do
+defmodule MafiaWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -19,10 +19,10 @@ defmodule PlaygroundWeb.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      import PlaygroundWeb.Router.Helpers
+      import MafiaWeb.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint PlaygroundWeb.Endpoint
+      @endpoint MafiaWeb.Endpoint
     end
   end
 

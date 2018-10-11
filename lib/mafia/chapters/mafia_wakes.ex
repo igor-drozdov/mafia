@@ -2,7 +2,7 @@ defmodule Mafia.Chapters.MafiaWakes do
   use Mafia.Chapter
 
   alias Playground.Mafia.{Chapters.MafiaSleeps, PlayerRound}
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
 
   def handle_run(%{game_uuid: game_uuid, players: players} = state) do
     {mafias, innocents} = Enum.split_with(players, &(&1.role == :mafia))

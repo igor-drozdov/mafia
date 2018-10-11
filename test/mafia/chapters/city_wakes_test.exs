@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.CityWakesTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.CityWakes
 

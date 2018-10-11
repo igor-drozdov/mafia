@@ -1,7 +1,7 @@
-defmodule PlaygroundWeb.Followers.InitChannel do
-  use PlaygroundWeb, :channel
+defmodule MafiaWeb.Followers.InitChannel do
+  use MafiaWeb, :channel
 
-  alias PlaygroundWeb.Endpoint
+  alias MafiaWeb.Endpoint
   alias Mafia.{Games, Repo}
 
   def join("followers:init:" <> ids, _payload, socket) do

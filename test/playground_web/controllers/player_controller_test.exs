@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.PlayerControllerTest do
-  use PlaygroundWeb.ConnCase
+defmodule MafiaWeb.PlayerControllerTest do
+  use MafiaWeb.ConnCase
 
   import Playground.Factory
 

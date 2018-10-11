@@ -9,7 +9,7 @@ defmodule Playground.Application do
     # Define workers and child supervisors to be supervised
     children = [
       supervisor(Playground.Repo, []),
-      supervisor(PlaygroundWeb.Endpoint, []),
+      supervisor(MafiaWeb.Endpoint, []),
       supervisor(Mafia.GamesSupervisor, []),
       worker(Registry, [[name: Mafia.Registry, keys: :unique]])
     ]
@@ -23,7 +23,7 @@ defmodule Playground.Application do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    PlaygroundWeb.Endpoint.config_change(changed, removed)
+    MafiaWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

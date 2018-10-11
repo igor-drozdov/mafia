@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.ErrorView do
-  use PlaygroundWeb, :view
+defmodule MafiaWeb.ErrorView do
+  use MafiaWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

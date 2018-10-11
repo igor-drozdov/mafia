@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.Router do
-  use PlaygroundWeb, :router
+defmodule MafiaWeb.Router do
+  use MafiaWeb, :router
 
   pipeline :browser do
     plug(:accepts, ["html"])
@@ -13,7 +13,7 @@ defmodule PlaygroundWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", PlaygroundWeb do
+  scope "/", MafiaWeb do
     # Use the default browser stack
     pipe_through(:browser)
 
@@ -25,7 +25,7 @@ defmodule PlaygroundWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", PlaygroundWeb do
+  # scope "/api", MafiaWeb do
   #   pipe_through :api
   # end
 end

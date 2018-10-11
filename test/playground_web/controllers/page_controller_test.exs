@@ -1,5 +1,5 @@
-defmodule PlaygroundWeb.PageControllerTest do
-  use PlaygroundWeb.ConnCase
+defmodule MafiaWeb.PageControllerTest do
+  use MafiaWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

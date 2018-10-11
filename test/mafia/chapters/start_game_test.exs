@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.StartGameTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.StartGame
   alias Mafia.Games

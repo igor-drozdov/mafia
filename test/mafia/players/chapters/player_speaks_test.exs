@@ -1,5 +1,5 @@
 defmodule Mafia.Players.Chapters.PlayerSpeaksTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Players.Chapters.PlayerSpeaks
 

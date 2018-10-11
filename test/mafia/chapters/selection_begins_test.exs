@@ -1,5 +1,5 @@
 defmodule Mafia.Chapters.SelectionBeginsTest do
-  use PlaygroundWeb.ChannelCase
+  use MafiaWeb.ChannelCase
 
   alias Mafia.Chapters.SelectionBegins
 
