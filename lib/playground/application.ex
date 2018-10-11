@@ -10,8 +10,8 @@ defmodule Playground.Application do
     children = [
       supervisor(Playground.Repo, []),
       supervisor(PlaygroundWeb.Endpoint, []),
-      supervisor(Playground.Mafia.GamesSupervisor, []),
-      worker(Registry, [[name: Playground.Mafia.Registry, keys: :unique]])
+      supervisor(Mafia.GamesSupervisor, []),
+      worker(Registry, [[name: Mafia.Registry, keys: :unique]])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

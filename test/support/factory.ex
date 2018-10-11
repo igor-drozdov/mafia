@@ -2,19 +2,19 @@ defmodule Playground.Factory do
   use ExMachina.Ecto, repo: Playground.Repo
 
   def game_factory do
-    %Playground.Mafia.Game{
+    %Mafia.Games.Game{
       state: 0
     }
   end
 
   def player_factory do
-    %Playground.Mafia.Player{
+    %Mafia.Players.Player{
       name: sequence(:name, &"player-#{&1}")
     }
   end
 
   def round_factory do
-    %Playground.Mafia.Round{
+    %Mafia.Games.Round{
       game: build(:game)
     }
   end
@@ -22,14 +22,14 @@ defmodule Playground.Factory do
   def player_round_factory do
     round = build(:round)
 
-    %Playground.Mafia.PlayerRound{
+    %Mafia.Players.Round{
       round: round,
       player: build(:player, game: round.game)
     }
   end
 
   def player_status_factory do
-    %Playground.Mafia.PlayerStatus{
+    %Mafia.Players.Status{
       player_round: build(:player_round)
     }
   end

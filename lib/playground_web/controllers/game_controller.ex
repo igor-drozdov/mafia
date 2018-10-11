@@ -1,10 +1,10 @@
 defmodule PlaygroundWeb.GameController do
   use PlaygroundWeb, :controller
 
-  alias Playground.{Mafia, Repo, Mafia.GamesSupervisor}
+  alias Mafia.{Games, Repo, GamesSupervisor, Players.Player}
 
   def create(conn, %{"game" => game_params}) do
-    case Mafia.create_game(game_params) do
+    case Games.create_game(game_params) do
       {:ok, game} ->
         GamesSupervisor.start_child(game.id)
 
@@ -18,15 +18,17 @@ defmodule PlaygroundWeb.GameController do
   end
 
   def show(conn, %{"id" => id}) do
-    game = Mafia.get_game!(id)
+    game = Games.get_game!(id)
     player = player_from_session(conn, game)
     user_agents = get_req_header(conn, "user-agent")
 
     cond do
       player ->
         redirect(conn, to: game_player_path(conn, :show, game, player))
-      Enum.any?(user_agents, & mobile?(&1)) ->
+
+      Enum.any?(user_agents, &mobile?(&1)) ->
         redirect(conn, to: game_player_path(conn, :new, game))
+
       true ->
         render(conn, "show.html", game: game)
     end
@@ -42,7 +44,7 @@ defmodule PlaygroundWeb.GameController do
         nil
 
       player_id ->
-        Repo.get_by(Mafia.Player, game_id: game.id, id: player_id)
+        Repo.get_by(Player, game_id: game.id, id: player_id)
     end
   end
 end

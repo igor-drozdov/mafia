@@ -2,12 +2,12 @@ defmodule PlaygroundWeb.Followers.InitChannel do
   use PlaygroundWeb, :channel
 
   alias PlaygroundWeb.Endpoint
-  alias Playground.{Mafia, Repo}
+  alias Mafia.{Games, Repo}
 
   def join("followers:init:" <> ids, _payload, socket) do
     [game_id, player_id] = String.split(ids, ":")
 
-    game = Mafia.get_game!(game_id) |> Repo.preload(:players)
+    game = Games.get_game!(game_id) |> Repo.preload(:players)
 
     player =
       game.players
