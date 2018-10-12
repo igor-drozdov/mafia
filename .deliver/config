@@ -38,6 +38,8 @@ pre_erlang_clean_compile() {
     # prepare something
     mkdir -p priv/static # required by the phoenix.digest task
 
+    MIX_ENV=prod mix ecto.migrate
+
     cd assets
     npm install
     brunch build --production

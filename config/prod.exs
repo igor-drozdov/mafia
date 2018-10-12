@@ -15,7 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :mafia, MafiaWeb.Endpoint,
   http: [port: 8888],
-  url: [host: "example.com", port: 80],
+  url: [host: "mafia-game.gq", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
