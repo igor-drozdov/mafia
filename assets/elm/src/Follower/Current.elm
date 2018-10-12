@@ -11,7 +11,6 @@ import Phoenix.Push
 import Follower.Current.Model exposing (..)
 import Socket exposing (socketServer)
 import Player
-import Debug
 import Views.Logo exposing (logo, animatedLogo)
 
 
@@ -35,6 +34,7 @@ init gameId playerId =
         phxSocketWithListener : Phoenix.Socket.Socket Msg
         phxSocketWithListener =
             phxSocket
+                |> Phoenix.Socket.on "player_can_speak" channelName PlayerCanSpeak
                 |> Phoenix.Socket.on "candidates_received" channelName CandidatesReceived
                 |> Phoenix.Socket.on "player_chosen" channelName PlayerChosen
     in
@@ -56,12 +56,26 @@ update msg model =
                 )
 
         ( LoadGame raw, Loading ) ->
-            case (Debug.log "value: " (JD.decodeValue decoder (Debug.log "raw: " raw))) of
+            case JD.decodeValue decoder raw of
                 Ok state ->
                     { model | state = Playing state } ! []
 
                 Err error ->
                     model ! []
+
+        ( PlayerCanSpeak raw, Playing state ) ->
+            { model | state = PlayerAbleToSpeak } ! []
+
+        ( PlayerReadyToSpeak, PlayerAbleToSpeak ) ->
+            let
+                push_ =
+                    Phoenix.Push.init "speak" model.channelName
+
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.push push_ model.phxSocket
+            in
+                { model | phxSocket = phxSocket }
+                    ! [ Cmd.map PhoenixMsg phxCmd ]
 
         ( CandidatesReceived raw, Playing state ) ->
             case JD.decodeValue decoder raw of
@@ -106,6 +120,12 @@ view model =
 
         Playing state ->
             logo
+
+        PlayerAbleToSpeak ->
+            div [ class "pure-form" ]
+                [ logo
+                , button [ class "btn btn-danger pure-input-1-2", onClick PlayerReadyToSpeak ] [ text "Speak" ]
+                ]
 
         PlayerChoosing state ->
             div [ class "pure-form" ] <| logo :: (List.map viewCandidate state.players)

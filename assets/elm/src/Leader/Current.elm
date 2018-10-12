@@ -35,6 +35,7 @@ init gameId =
             phxSocket
                 |> Phoenix.Socket.on "play_audio" channelName AudioReceived
                 |> Phoenix.Socket.on "city_wakes" channelName CityWakes
+                |> Phoenix.Socket.on "player_can_speak" channelName PlayerCanSpeak
                 |> Phoenix.Socket.on "player_speaks" channelName PlayerSpeaks
                 |> Phoenix.Socket.on "player_chooses" channelName PlayerChooses
                 |> Phoenix.Socket.on "selection_begins" channelName SelectionBegins
@@ -76,6 +77,14 @@ update msg model =
                 Err error ->
                     model ! []
 
+        ( PlayerCanSpeak raw, _ ) ->
+            case JD.decodeValue playerDecoder raw of
+                Ok state ->
+                    { model | state = PlayerAbleToSpeak state } ! []
+
+                Err error ->
+                    model ! []
+
         ( PlayerSpeaks raw, _ ) ->
             case JD.decodeValue playerSpeakingDecoder raw of
                 Ok state ->
@@ -88,7 +97,7 @@ update msg model =
             { model | state = PlayerSpeaking (PlayerSpeakingState player (elapsed - 1)) } ! []
 
         ( PlayerChooses raw, _ ) ->
-            case JD.decodeValue (field "player" Player.decoder) raw of
+            case JD.decodeValue playerDecoder raw of
                 Ok state ->
                     { model | state = PlayerChoosing state } ! []
 
@@ -131,10 +140,16 @@ view { state } =
                     ]
                 ]
 
+        PlayerAbleToSpeak player ->
+            div []
+                [ logo
+                , div [] [ text (player.name ++ ", speak!") ]
+                ]
+
         PlayerSpeaking { player, elapsed } ->
             div []
                 [ animatedCircuit (div [ class "elapsed" ] [ text (toString elapsed) ])
-                , div [] [ text ("The following player speaks: " ++ player.name) ]
+                , div [] [ text (player.name ++ " speaks!") ]
                 ]
 
         PlayerChoosing player ->

@@ -16,11 +16,21 @@ defmodule MafiaWeb.Followers.CurrentChannel do
   end
 
   def handle_in("choose_candidate", %{"player_id" => target_player_uuid}, socket) do
-    %{game_uuid: game_uuid, player_uuid: current_player_uuid} = socket.assigns
-    current_process = Mafia.Narrator.current(game_uuid)
-
-    GenServer.cast(current_process, {:choose_candidate, target_player_uuid, current_player_uuid})
+    {player_uuid, pid} = current_data(socket.assigns)
+    GenServer.cast(pid, {:choose_candidate, target_player_uuid, player_uuid})
 
     {:noreply, socket}
+  end
+
+  def handle_in("speak", _payload, socket) do
+    {_, pid} = current_data(socket.assigns)
+
+    GenServer.cast(pid, :speak)
+
+    {:noreply, socket}
+  end
+
+  defp current_data(%{game_uuid: game_uuid, player_uuid: current_player_uuid}) do
+    {current_player_uuid, Mafia.Narrator.current(game_uuid)}
   end
 end

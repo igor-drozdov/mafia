@@ -29,11 +29,11 @@ defmodule Mafia.Players.Chapter do
         {:ok, state}
       end
 
-      def handle_cast({:run, other_players}, %{game_uuid: game_uuid, player: player} = state) do
+      def handle_cast(:run, %{game_uuid: game_uuid, player: player} = state) do
         require Logger
         Logger.info(__MODULE__)
 
-        case handle_run(other_players, state) do
+        case handle_run(state) do
           {:noreply, new_state} ->
             {:noreply, new_state}
 

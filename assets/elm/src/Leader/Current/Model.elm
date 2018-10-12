@@ -23,6 +23,7 @@ type State
     | Playing PlayingState
     | CityAwaken PlayingState
     | PlayerSpeaking PlayerSpeakingState
+    | PlayerAbleToSpeak Player.Model
     | PlayerChoosing Player.Model
 
 
@@ -31,6 +32,7 @@ type Msg
     | CityWakes JE.Value
     | LoadGame JE.Value
     | PlayerSpeaks JE.Value
+    | PlayerCanSpeak JE.Value
     | PlayerChooses JE.Value
     | SelectionBegins JE.Value
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
@@ -55,3 +57,8 @@ playerSpeakingDecoder =
     JD.map2 PlayerSpeakingState
         (field "player" Player.decoder)
         (field "elapsed" JD.int)
+
+
+playerDecoder : JD.Decoder Player.Model
+playerDecoder =
+    field "player" Player.decoder

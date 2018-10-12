@@ -7,22 +7,19 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
   alias MafiaWeb.Endpoint
 
   def run(game_uuid, [], state) do
-    VotingBegins.run(game_uuid, Map.delete(state, :other_players))
+    VotingBegins.run(game_uuid, Map.delete(state, [:player, :other_players]))
   end
 
   def run(game_uuid, [player | other_players], state) do
-    PlayerChooses.start(game_uuid, player, state)
-    |> GenServer.cast({:run, other_players})
+    new_state = Map.put(state, :other_players, other_players)
+
+    PlayerChooses.start(game_uuid, player, new_state)
+    |> GenServer.cast(:run)
   end
 
-  defp handle_run(
-         other_players,
-         %{game_uuid: game_uuid, player: player, players: players} = state
-       ) do
+  defp handle_run(%{game_uuid: game_uuid, player: player, players: players}) do
     notify_leader(game_uuid, player)
     notify_player(game_uuid, player, players)
-
-    {:noreply, Map.put(state, :other_players, other_players)}
   end
 
   def notify_leader(game_uuid, player) do

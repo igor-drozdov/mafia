@@ -14,11 +14,14 @@ type alias PlayingState =
 type State
     = Loading
     | Playing PlayingState
+    | PlayerAbleToSpeak
     | PlayerChoosing PlayingState
 
 
 type Msg
     = LoadGame JE.Value
+    | PlayerCanSpeak JE.Value
+    | PlayerReadyToSpeak
     | CandidatesReceived JE.Value
     | PlayerChosen JE.Value
     | ChooseCandidate String
