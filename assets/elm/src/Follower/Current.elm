@@ -127,9 +127,31 @@ update msg model =
             model ! []
 
 
+decoder1 : JD.Decoder Orientation
+decoder1 =
+    JD.map3 Orientation
+        (JD.map floor (JD.field "alpha" JD.float))
+        (JD.map floor (JD.field "beta" JD.float))
+        (JD.map floor (JD.field "gamma" JD.float))
+
+
+decode : JE.Value -> Result String Orientation
+decode =
+    JD.decodeValue decoder1
+
+
+listen : (Result String Orientation -> msg) -> Sub msg
+listen msg =
+    DeviceOrientation.listener (decode >> msg)
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Phoenix.Socket.listen model.phxSocket PhoenixMsg, DeviceOrientation.listen DeviceOrientationChanged ]
+    Sub.batch [ Phoenix.Socket.listen model.phxSocket PhoenixMsg, listen DeviceOrientationChanged ]
+
+
+
+--, DeviceOrientation.listen DeviceOrientationChanged ]
 
 
 view : Model -> Html Msg

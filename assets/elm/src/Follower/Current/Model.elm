@@ -4,7 +4,16 @@ import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Phoenix.Socket
-import Ports.DeviceOrientation exposing (Orientation)
+
+
+-- import Ports.DeviceOrientation exposing (Orientation)
+
+
+type alias Orientation =
+    { alpha : Int
+    , beta : Int
+    , gamma : Int
+    }
 
 
 type alias PlayingState =
