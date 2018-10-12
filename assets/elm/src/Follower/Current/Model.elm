@@ -4,6 +4,7 @@ import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Phoenix.Socket
+import Ports.DeviceOrientation exposing (Orientation)
 
 
 type alias PlayingState =
@@ -22,6 +23,7 @@ type Msg
     = LoadGame JE.Value
     | PlayerCanSpeak JE.Value
     | PlayerReadyToSpeak
+    | DeviceOrientationChanged (Result String Orientation)
     | CandidatesReceived JE.Value
     | PlayerChosen JE.Value
     | ChooseCandidate String

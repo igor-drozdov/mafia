@@ -40,9 +40,13 @@ if (elmLeaderDiv) {
 const elmFollowerDiv = document.querySelector('#elm_follower_target');
 
 if (elmFollowerDiv) {
-  ElmFollower.Follower.embed(elmFollowerDiv, {
+  var app = ElmFollower.Follower.embed(elmFollowerDiv, {
     gameId: elmFollowerDiv.dataset.gameId,
     state: elmFollowerDiv.dataset.gameState,
     playerId: elmFollowerDiv.dataset.playerId
   });
+
+  window.addEventListener("deviceorientation", function(data) {
+    app.ports.listener.send(data);
+  }, true);
 }

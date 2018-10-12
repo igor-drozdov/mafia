@@ -12,6 +12,7 @@ import Follower.Current.Model exposing (..)
 import Socket exposing (socketServer)
 import Player
 import Views.Logo exposing (logo, animatedLogo)
+import Ports.DeviceOrientation as DeviceOrientation
 
 
 init : String -> String -> ( Model, Cmd Msg )
@@ -74,10 +75,29 @@ update msg model =
                 ( phxSocket, phxCmd ) =
                     Phoenix.Socket.push push_ model.phxSocket
             in
-                { model | phxSocket = phxSocket }
+                { model | phxSocket = phxSocket, state = Loading }
                     ! [ Cmd.map PhoenixMsg phxCmd ]
 
-        ( CandidatesReceived raw, Playing state ) ->
+        ( DeviceOrientationChanged orientation, PlayerAbleToSpeak ) ->
+            case orientation of
+                Ok { beta, gamma } ->
+                    if (abs (90 - beta) < 5 && abs gamma < 5) then
+                        let
+                            push_ =
+                                Phoenix.Push.init "speak" model.channelName
+
+                            ( phxSocket, phxCmd ) =
+                                Phoenix.Socket.push push_ model.phxSocket
+                        in
+                            { model | phxSocket = phxSocket, state = Loading }
+                                ! [ Cmd.map PhoenixMsg phxCmd ]
+                    else
+                        model ! []
+
+                Err error ->
+                    model ! []
+
+        ( CandidatesReceived raw, _ ) ->
             case JD.decodeValue decoder raw of
                 Ok state ->
                     { model | state = PlayerChoosing state } ! []
@@ -109,7 +129,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Sub.batch [ Phoenix.Socket.listen model.phxSocket PhoenixMsg, DeviceOrientation.listen DeviceOrientationChanged ]
 
 
 view : Model -> Html Msg
