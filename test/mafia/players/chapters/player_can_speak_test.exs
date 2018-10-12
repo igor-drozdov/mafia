@@ -1,7 +1,7 @@
-defmodule Mafia.Players.Chapters.PlayerSpeaksTest do
+defmodule Mafia.Players.Chapters.PlayerCanSpeakTest do
   use MafiaWeb.ChannelCase
 
-  alias Mafia.Players.Chapters.PlayerSpeaks
+  alias Mafia.Players.Chapters.PlayerCanSpeak
 
   import Mafia.Factory
 
@@ -16,9 +16,9 @@ defmodule Mafia.Players.Chapters.PlayerSpeaksTest do
     test "broadcast player can speak", %{game: game, player: player} do
       @endpoint.subscribe("leader:current:#{game.id}")
 
-      PlayerSpeaks.notify_leader(game.id, player)
+      PlayerCanSpeak.notify_leader(game.id, player)
 
-      assert_broadcast("player_speaks", %{player: ^player})
+      assert_broadcast("player_can_speak", %{player: ^player})
     end
   end
 
@@ -26,9 +26,9 @@ defmodule Mafia.Players.Chapters.PlayerSpeaksTest do
     test "broadcast can speak", %{game: game, player: player} do
       @endpoint.subscribe("followers:current:#{game.id}:#{player.id}")
 
-      PlayerSpeaks.notify_follower(game.id, player.id)
+      PlayerCanSpeak.notify_follower(game.id, player.id)
 
-      assert_broadcast("player_speaks", %{})
+      assert_broadcast("player_can_speak", %{})
     end
   end
 end
