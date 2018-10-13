@@ -9,7 +9,9 @@ defmodule MafiaWeb.UserSocket do
   channel("followers:current*", MafiaWeb.Followers.CurrentChannel)
 
   ## Transports
-  transport(:websocket, Phoenix.Transports.WebSocket)
+  transport(:websocket, Phoenix.Transports.WebSocket,
+    check_origin: ["//mafia-game.gq"])
+
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
