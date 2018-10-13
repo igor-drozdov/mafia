@@ -10,7 +10,7 @@ defmodule MafiaWeb.UserSocket do
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket,
-    check_origin: ["//mafia-game.gq"])
+    check_origin: ["//mafia-game.gq", "//localhost"])
 
   # transport :longpoll, Phoenix.Transports.LongPoll
 

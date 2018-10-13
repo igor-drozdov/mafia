@@ -11,7 +11,6 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
 
 // Import local files
 //
@@ -20,13 +19,12 @@ import "phoenix_html"
 
 // import socket from "./socket"
 
-import ElmLeader from './leader';
-import ElmFollower from './follower';
+import Elm from './main';
 
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
 if (elmLeaderDiv) {
-  var app = ElmLeader.Leader.embed(elmLeaderDiv, {
+  var app = Elm.Leader.embed(elmLeaderDiv, {
     gameId: elmLeaderDiv.dataset.gameId,
     state: elmLeaderDiv.dataset.gameState,
     socketServer: elmLeaderDiv.dataset.socketServer
@@ -41,7 +39,7 @@ if (elmLeaderDiv) {
 const elmFollowerDiv = document.querySelector('#elm_follower_target');
 
 if (elmFollowerDiv) {
-  var app = ElmFollower.Follower.embed(elmFollowerDiv, {
+  var app = Elm.Follower.embed(elmFollowerDiv, {
     gameId: elmFollowerDiv.dataset.gameId,
     state: elmFollowerDiv.dataset.gameState,
     playerId: elmFollowerDiv.dataset.playerId,
