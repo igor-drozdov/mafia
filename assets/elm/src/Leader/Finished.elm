@@ -4,14 +4,13 @@ import Html exposing (Html, div, text, img)
 import Html.Attributes exposing (src, style, class)
 import Json.Decode as JD exposing (field)
 import Leader.Finished.Model exposing (..)
-import Socket exposing (socketServer)
 import Phoenix.Channel
 import Phoenix.Socket
 import Views.Logo exposing (logo, animatedLogo)
 
 
-init : String -> ( Model, Cmd Msg )
-init gameId =
+init : String -> String -> ( Model, Cmd Msg )
+init gameId socketServer =
     let
         channelName =
             ("leader:finished:" ++ gameId)

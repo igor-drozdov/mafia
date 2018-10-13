@@ -1,6 +1,5 @@
 module Socket exposing (..)
 
 
-socketServer : String
-socketServer =
-    "ws://localhost:4000/socket/websocket"
+type alias WithSocket a =
+    { a | socketServer : String }

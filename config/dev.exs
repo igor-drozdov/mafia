@@ -63,6 +63,8 @@ config :mafia, Mafia.Repo,
   hostname: "localhost",
   pool_size: 10
 
+config :mafia, :socket_host, "ws://localhost:4000/socket/websocket"
+
 config :mafia, :period,
   short: 2000,
   medium: 3000,

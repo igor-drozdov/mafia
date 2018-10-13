@@ -28,7 +28,8 @@ const elmLeaderDiv = document.querySelector('#elm_leader_target');
 if (elmLeaderDiv) {
   var app = ElmLeader.Leader.embed(elmLeaderDiv, {
     gameId: elmLeaderDiv.dataset.gameId,
-    state: elmLeaderDiv.dataset.gameState
+    state: elmLeaderDiv.dataset.gameState,
+    socketServer: elmLeaderDiv.dataset.socketServer
   });
 
   app.ports.play.subscribe(function(audioPath) {
@@ -43,7 +44,8 @@ if (elmFollowerDiv) {
   var app = ElmFollower.Follower.embed(elmFollowerDiv, {
     gameId: elmFollowerDiv.dataset.gameId,
     state: elmFollowerDiv.dataset.gameState,
-    playerId: elmFollowerDiv.dataset.playerId
+    playerId: elmFollowerDiv.dataset.playerId,
+    socketServer: elmFollowerDiv.dataset.socketServer
   });
 
   window.addEventListener("deviceorientation", function(data) {

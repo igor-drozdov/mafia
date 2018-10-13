@@ -9,12 +9,11 @@ import Leader.Init.Model exposing (..)
 import Array exposing (Array, fromList)
 import List.Extra exposing (find)
 import Ports.Audio exposing (playAudio)
-import Socket exposing (socketServer)
 import Views.Logo exposing (logo, animatedLogo)
 
 
-init : String -> ( Model, Cmd Msg )
-init gameId =
+init : String -> String -> ( Model, Cmd Msg )
+init gameId socketServer =
     let
         channelName =
             ("leader:init:" ++ gameId)

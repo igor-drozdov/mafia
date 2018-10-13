@@ -9,14 +9,13 @@ import Json.Encode as JE
 import Phoenix.Socket
 import Phoenix.Push
 import Follower.Current.Model exposing (..)
-import Socket exposing (socketServer)
 import Player
 import Views.Logo exposing (logo, animatedLogo)
 import Ports.DeviceOrientation as DeviceOrientation
 
 
-init : String -> String -> ( Model, Cmd Msg )
-init gameId playerId =
+init : String -> String -> String -> ( Model, Cmd Msg )
+init gameId playerId socketServer =
     let
         channelName =
             ("followers:current:" ++ gameId ++ ":" ++ playerId)

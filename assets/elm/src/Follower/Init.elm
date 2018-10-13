@@ -6,13 +6,12 @@ import Json.Decode as JD exposing (field)
 import Phoenix.Channel
 import Phoenix.Socket
 import Follower.Init.Model exposing (..)
-import Socket exposing (socketServer)
 import Views.Logo exposing (logo)
 import Player
 
 
-init : String -> String -> ( Model, Cmd Msg )
-init gameId playerId =
+init : String -> String -> String -> ( Model, Cmd Msg )
+init gameId playerId socketServer =
     let
         channelName =
             ("followers:init:" ++ gameId ++ ":" ++ playerId)

@@ -1,1 +1,6 @@
-<div id="elm_follower_target" data-game-id="<%= @game.id %>" data-player-id="<%= @player_id %>" data-game-state="<%= @game.state %>"></div>
+<div id="elm_follower_target"
+  data-game-id="<%= @game.id %>"
+  data-player-id="<%= @player_id %>"
+  data-game-state="<%= @game.state %>"
+  data-socket-server="<%= Application.get_env(:mafia, :socket_host) %>">
+</div>

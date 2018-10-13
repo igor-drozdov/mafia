@@ -7,14 +7,13 @@ import Phoenix.Socket
 import Json.Decode as JD exposing (field)
 import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
-import Socket exposing (socketServer)
 import Player
 import Time exposing (Time)
 import Views.Logo exposing (logo, animatedLogo, animatedCircuit)
 
 
-init : String -> ( Model, Cmd Msg )
-init gameId =
+init : String -> String -> ( Model, Cmd Msg )
+init gameId socketServer =
     let
         channelName =
             ("leader:current:" ++ gameId)

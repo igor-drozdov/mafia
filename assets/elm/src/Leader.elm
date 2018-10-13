@@ -11,12 +11,13 @@ import Leader.Finished as FinishedWidget
 import Leader.Init.Model as Init
 import Leader.Current.Model as Current
 import Leader.Finished.Model as Finished
+import Socket exposing (WithSocket)
 
 
 -- MAIN
 
 
-main : Program Flags Model Msg
+main : Program (WithSocket Flags) Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -36,27 +37,27 @@ type alias Flags =
     }
 
 
-init : Flags -> ( Model, Cmd Msg )
-init { gameId, state } =
+init : WithSocket Flags -> ( Model, Cmd Msg )
+init { gameId, socketServer, state } =
     case state of
         "current" ->
             let
                 ( model, subMsg ) =
-                    CurrentWidget.init gameId
+                    CurrentWidget.init gameId socketServer
             in
                 ( CurrentModel model, Cmd.map CurrentMsg subMsg )
 
         "finished" ->
             let
                 ( model, subMsg ) =
-                    FinishedWidget.init gameId
+                    FinishedWidget.init gameId socketServer
             in
                 ( FinishedModel model, Cmd.map FinishedMsg subMsg )
 
         _ ->
             let
                 ( model, subMsg ) =
-                    InitWidget.init gameId
+                    InitWidget.init gameId socketServer
             in
                 ( InitModel model, Cmd.map InitMsg subMsg )
 
@@ -108,10 +109,10 @@ decoder =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
-        ( InitMsg (Init.Transition raw), _ ) ->
+        ( InitMsg (Init.Transition raw), InitModel modelState ) ->
             case JD.decodeValue decoder raw of
-                Ok flags ->
-                    init flags
+                Ok { gameId, state } ->
+                    init { gameId = gameId, state = state, socketServer = modelState.phxSocket.path }
 
                 Err _ ->
                     model ! []
@@ -124,10 +125,10 @@ update msg model =
                 InitModel newModel
                     ! [ Cmd.map InitMsg subCmd ]
 
-        ( CurrentMsg (Current.Transition raw), _ ) ->
+        ( CurrentMsg (Current.Transition raw), CurrentModel modelState ) ->
             case JD.decodeValue decoder raw of
-                Ok flags ->
-                    init flags
+                Ok { gameId, state } ->
+                    init { gameId = gameId, state = state, socketServer = modelState.phxSocket.path }
 
                 Err _ ->
                     model ! []

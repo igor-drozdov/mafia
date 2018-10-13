@@ -11,6 +11,7 @@ import Follower.Init.Model as Init
 import Follower.Current.Model as Current
 import Follower.Finished.Model as Finished
 import Json.Decode as JD exposing (field)
+import Socket exposing (WithSocket)
 
 
 -- MAIN
@@ -23,7 +24,7 @@ type alias Flags =
     }
 
 
-main : Program Flags Model Msg
+main : Program (WithSocket Flags) Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -49,13 +50,13 @@ type Model
     | FinishedModel Finished.Model
 
 
-init : Flags -> ( Model, Cmd Msg )
-init { gameId, playerId, state } =
+init : WithSocket Flags -> ( Model, Cmd Msg )
+init { gameId, playerId, state, socketServer } =
     case state of
         "current" ->
             let
                 ( model, subMsg ) =
-                    CurrentWidget.init gameId playerId
+                    CurrentWidget.init gameId playerId socketServer
             in
                 ( CurrentModel model, Cmd.map CurrentMsg subMsg )
 
@@ -69,7 +70,7 @@ init { gameId, playerId, state } =
         _ ->
             let
                 ( model, subMsg ) =
-                    InitWidget.init gameId playerId
+                    InitWidget.init gameId playerId socketServer
             in
                 ( InitModel model, Cmd.map InitMsg subMsg )
 
@@ -106,10 +107,10 @@ decoder =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
-        ( InitMsg (Init.Transition raw), _ ) ->
+        ( InitMsg (Init.Transition raw), InitModel modelState ) ->
             case JD.decodeValue decoder raw of
-                Ok flags ->
-                    init flags
+                Ok { gameId, playerId, state } ->
+                    init { gameId = gameId, playerId = playerId, state = state, socketServer = modelState.phxSocket.path }
 
                 Err _ ->
                     model ! []
