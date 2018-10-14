@@ -6,29 +6,19 @@ import Phoenix.Socket
 import Player
 
 
-type alias State =
+type alias Model =
     { role : Maybe String
     , players : List Player.Model
     }
 
 
 type Msg
-    = LoadGame JE.Value
-    | RoleReceived JE.Value
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    = RoleReceived JE.Value
     | Transition JE.Value
 
 
-type alias WithSocket a =
-    { a | phxSocket : Phoenix.Socket.Socket Msg }
-
-
-type alias Model =
-    WithSocket State
-
-
-decoder : JD.Decoder State
+decoder : JD.Decoder Model
 decoder =
-    JD.map2 State
+    JD.map2 Model
         (JD.field "role" (JD.nullable JD.string))
         (JD.field "players" (JD.list Player.decoder))

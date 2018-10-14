@@ -24,8 +24,8 @@ defmodule Mafia.Chapters.VotingBeginsTest do
           {:ok, _, socket} =
             socket("user_id", %{})
             |> join(
-              MafiaWeb.Followers.CurrentChannel,
-              "followers:current:#{game_uuid}:#{player.id}"
+              MafiaWeb.Followers.Channel,
+              "followers:#{game_uuid}:#{player.id}"
             )
 
           socket
@@ -52,7 +52,7 @@ defmodule Mafia.Chapters.VotingBeginsTest do
           join_ref: nil,
           payload: ^payload,
           ref: nil,
-          topic: "followers:current:" <> ^uuids
+          topic: "followers:" <> ^uuids
         }
       end)
 
@@ -65,7 +65,7 @@ defmodule Mafia.Chapters.VotingBeginsTest do
   describe "#notify_player_chosen" do
     test "broadcasts player chosen", %{game_uuid: game_uuid} do
       player = insert(:player, game_id: game_uuid)
-      @endpoint.subscribe("followers:current:#{game_uuid}:#{player.id}")
+      @endpoint.subscribe("followers:#{game_uuid}:#{player.id}")
 
       VotingBegins.notify_player_chosen(game_uuid, player.id)
 

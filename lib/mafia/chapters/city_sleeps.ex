@@ -12,7 +12,7 @@ defmodule Mafia.Chapters.CitySleeps do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "city_sleeps"})
+    Endpoint.broadcast("leader:#{game_uuid}", "play_audio", %{audio: "city_sleeps"})
   end
 
   def wake_mafia do

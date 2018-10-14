@@ -15,9 +15,9 @@ defmodule Mafia.Chapters.StartGameTest do
     test "broadcast game started", %{game: game} do
       game_uuid = game.id
 
-      @endpoint.subscribe("leader:init:#{game_uuid}")
-      StartGame.notify_leader(game_uuid)
-      assert_broadcast("start_game", %{game_id: ^game_uuid, state: :current})
+      @endpoint.subscribe("leader:#{game_uuid}")
+      StartGame.notify_leader(game_uuid, [])
+      assert_broadcast("start_game", %{players: []})
     end
   end
 
@@ -27,15 +27,11 @@ defmodule Mafia.Chapters.StartGameTest do
 
       player = insert(:player, game_id: game_uuid)
       player_uuid = player.id
-      @endpoint.subscribe("followers:init:#{game_uuid}:#{player_uuid}")
+      @endpoint.subscribe("followers:#{game_uuid}:#{player_uuid}")
 
       StartGame.notify_followers(game_uuid, [player])
 
-      assert_broadcast("start_game", %{
-        game_id: ^game_uuid,
-        state: "current",
-        player_id: ^player_uuid
-      })
+      assert_broadcast("start_game", %{players: [^player]})
     end
   end
 

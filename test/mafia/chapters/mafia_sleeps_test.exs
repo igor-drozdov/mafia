@@ -7,8 +7,8 @@ defmodule Mafia.Chapters.MafiaSleepsTest do
 
   describe "#notify_leader" do
     test "broadcast mafia sleeps" do
-      game = insert(:game)
-      @endpoint.subscribe("leader:current:#{game.id}")
+      game = insert(:game, state: :current)
+      @endpoint.subscribe("leader:#{game.id}")
 
       MafiaSleeps.notify_leader(game.id)
 

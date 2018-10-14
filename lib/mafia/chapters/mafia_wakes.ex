@@ -14,7 +14,7 @@ defmodule Mafia.Chapters.MafiaWakes do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "mafia_wakes"})
+    Endpoint.broadcast("leader:#{game_uuid}", "play_audio", %{audio: "mafia_wakes"})
   end
 
   def notify_candidates_received(game_uuid, mafias, innocents) do
@@ -43,7 +43,7 @@ defmodule Mafia.Chapters.MafiaWakes do
 
   def notify_mafia_players(game_uuid, mafias, msg, payload \\ %{}) do
     Enum.each(mafias, fn mafia ->
-      Endpoint.broadcast("followers:current:#{game_uuid}:#{mafia.id}", msg, payload)
+      Endpoint.broadcast("followers:#{game_uuid}:#{mafia.id}", msg, payload)
     end)
   end
 end

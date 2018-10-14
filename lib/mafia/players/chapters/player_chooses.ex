@@ -23,13 +23,13 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
   end
 
   def notify_leader(game_uuid, player) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "player_chooses", %{player: player})
+    Endpoint.broadcast("leader:#{game_uuid}", "player_chooses", %{player: player})
   end
 
   def notify_player(game_uuid, player, players) do
     candidates = List.delete(players, player)
 
-    Endpoint.broadcast("followers:current:#{game_uuid}:#{player.id}", "candidates_received", %{
+    Endpoint.broadcast("followers:#{game_uuid}:#{player.id}", "candidates_received", %{
       players: candidates
     })
   end
@@ -51,6 +51,6 @@ defmodule Mafia.Players.Chapters.PlayerChooses do
   end
 
   def notify_player_chosen(game_uuid, player_uuid) do
-    Endpoint.broadcast("followers:current:#{game_uuid}:#{player_uuid}", "player_chosen", %{})
+    Endpoint.broadcast("followers:#{game_uuid}:#{player_uuid}", "player_chosen", %{})
   end
 end

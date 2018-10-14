@@ -32,7 +32,7 @@ defmodule Mafia.Chapters.Announcement do
   end
 
   def notify_leader(game_uuid, player) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "city_wakes", %{players: [player]})
+    Endpoint.broadcast("leader:#{game_uuid}", "city_wakes", %{players: [player]})
   end
 
   def handle_info({:transition, new_players}, %{game_uuid: game_uuid} = state) do

@@ -2,11 +2,8 @@ defmodule MafiaWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel("leader:init:*", MafiaWeb.Leader.InitChannel)
-  channel("leader:current:*", MafiaWeb.Leader.CurrentChannel)
-  channel("leader:finished:*", MafiaWeb.Leader.FinishedChannel)
-  channel("followers:init*", MafiaWeb.Followers.InitChannel)
-  channel("followers:current*", MafiaWeb.Followers.CurrentChannel)
+  channel("leader:*", MafiaWeb.Leader.Channel)
+  channel("followers:*", MafiaWeb.Followers.Channel)
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket,

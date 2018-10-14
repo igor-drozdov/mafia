@@ -34,7 +34,7 @@ defmodule Mafia.Chapters.HandoutRoles do
 
     Enum.each(
       players,
-      &Endpoint.broadcast("followers:init:#{game_uuid}:#{&1.id}", "role_received", %{
+      &Endpoint.broadcast("followers:#{game_uuid}:#{&1.id}", "role_received", %{
         role: role,
         players: List.delete(known_players, &1)
       })
@@ -42,7 +42,7 @@ defmodule Mafia.Chapters.HandoutRoles do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:init:#{game_uuid}", "roles_assigned", %{audio: "roles_assigned"})
+    Endpoint.broadcast("leader:#{game_uuid}", "roles_assigned", %{audio: "roles_assigned"})
   end
 
   def start_game(game_uuid) do

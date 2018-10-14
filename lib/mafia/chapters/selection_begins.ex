@@ -13,6 +13,6 @@ defmodule Mafia.Chapters.SelectionBegins do
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "selection_begins", %{})
+    Endpoint.broadcast("leader:#{game_uuid}", "selection_begins", %{})
   end
 end

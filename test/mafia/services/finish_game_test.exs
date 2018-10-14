@@ -7,7 +7,7 @@ defmodule Mafia.Services.FinishGameTest do
   import Mafia.Factory
 
   setup do
-    game = insert(:game)
+    game = insert(:game, state: :current)
     {:ok, game: game}
   end
 
@@ -26,10 +26,10 @@ defmodule Mafia.Services.FinishGameTest do
     test "broadcast game finished", %{game: game} do
       game_uuid = game.id
 
-      @endpoint.subscribe("leader:current:#{game_uuid}")
-      FinishGame.notify_leader(game_uuid)
+      @endpoint.subscribe("leader:#{game_uuid}")
+      FinishGame.notify_leader(game_uuid, :mafia)
 
-      assert_broadcast("finish_game", %{game_id: ^game_uuid, state: :finished})
+      assert_broadcast("finish_game", %{state: :mafia})
     end
   end
 end

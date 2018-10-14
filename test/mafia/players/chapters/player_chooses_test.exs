@@ -14,7 +14,7 @@ defmodule Mafia.Players.Chapters.PlayerChoosesTest do
   end
 
   test "#notify_player", %{game: game, player: player} do
-    @endpoint.subscribe("followers:current:#{game.id}:#{player.id}")
+    @endpoint.subscribe("followers:#{game.id}:#{player.id}")
 
     other_players = insert_list(3, :player, game: game)
     players = [player | other_players]
@@ -25,7 +25,7 @@ defmodule Mafia.Players.Chapters.PlayerChoosesTest do
   end
 
   test "#notify_player_chosen", %{game: game, player: player} do
-    @endpoint.subscribe("followers:current:#{game.id}:#{player.id}")
+    @endpoint.subscribe("followers:#{game.id}:#{player.id}")
 
     PlayerChooses.notify_player_chosen(game.id, player.id)
 

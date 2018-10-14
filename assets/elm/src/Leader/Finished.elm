@@ -3,73 +3,31 @@ module Leader.Finished exposing (..)
 import Html exposing (Html, div, text, img)
 import Html.Attributes exposing (src, style, class)
 import Json.Decode as JD exposing (field)
+import Json.Encode as JE
 import Leader.Finished.Model exposing (..)
-import Phoenix.Channel
-import Phoenix.Socket
-import Views.Logo exposing (logo, animatedLogo)
+import Views.Logo exposing (logo)
 
 
-init : String -> String -> ( Model, Cmd Msg )
-init gameId socketServer =
-    let
-        channelName =
-            ("leader:finished:" ++ gameId)
-
-        channel =
-            Phoenix.Channel.init channelName
-                |> Phoenix.Channel.onJoin LoadGame
-
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
-
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        phxSocketWithListener : Phoenix.Socket.Socket Msg
-        phxSocketWithListener =
-            phxSocket
-    in
-        ( { phxSocket = phxSocketWithListener, state = Loading }
-        , Cmd.map PhoenixMsg phxCmd
-        )
+init : JE.Value -> Result String Model
+init raw =
+    Result.map Finishing (JD.decodeValue decoder raw)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model.state ) of
-        ( PhoenixMsg msg, _ ) ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
-
-        ( LoadGame raw, Loading ) ->
-            case JD.decodeValue decoder raw of
-                Ok state ->
-                    { model | state = Finishing state } ! []
-
-                Err error ->
-                    model ! []
-
+    case ( msg, model ) of
         _ ->
             model ! []
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Sub.none
 
 
 view : Model -> Html Msg
 view model =
-    case model.state of
-        Loading ->
-            animatedLogo
-
+    case model of
         Finishing { state } ->
             case state of
                 "innocents" ->

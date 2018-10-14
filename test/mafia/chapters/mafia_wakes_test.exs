@@ -8,7 +8,7 @@ defmodule Mafia.Chapters.MafiaWakesTest do
 
   describe "#handle_run" do
     test "notity leader and mafia players" do
-      game = insert(:game)
+      game = insert(:game, state: :current)
       mafia = insert(:player, game_id: game.id, role: :mafia)
       innocent = insert(:player, game_id: game.id, role: :innocent)
       game_uuid = game.id
@@ -16,15 +16,15 @@ defmodule Mafia.Chapters.MafiaWakesTest do
       {:ok, _, socket} =
         socket("user_id", %{some: :assign})
         |> join(
-          MafiaWeb.Followers.CurrentChannel,
-          "followers:current:#{game_uuid}:#{mafia.id}"
+          MafiaWeb.Followers.Channel,
+          "followers:#{game_uuid}:#{mafia.id}"
         )
 
       {:ok, _, leader_socket} =
         socket("user_id", %{some: :assign})
         |> join(
-          MafiaWeb.Leader.CurrentChannel,
-          "leader:current:#{game_uuid}"
+          MafiaWeb.Leader.Channel,
+          "leader:#{game_uuid}"
         )
 
       MafiaWakes.handle_run(%{game_uuid: game_uuid, players: [mafia, innocent]})
@@ -34,7 +34,7 @@ defmodule Mafia.Chapters.MafiaWakesTest do
         join_ref: nil,
         payload: %{audio: "mafia_wakes"},
         ref: nil,
-        topic: "leader:current:" <> game_uuid
+        topic: "leader:" <> game_uuid
       }
 
       uuids = "#{game_uuid}:#{mafia.id}"
@@ -45,7 +45,7 @@ defmodule Mafia.Chapters.MafiaWakesTest do
         join_ref: nil,
         payload: ^payload,
         ref: nil,
-        topic: "followers:current:" <> ^uuids
+        topic: "followers:" <> ^uuids
       }
 
       leave(socket)

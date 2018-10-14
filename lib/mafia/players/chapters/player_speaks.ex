@@ -20,12 +20,12 @@ defmodule Mafia.Players.Chapters.PlayerSpeaks do
 
   def notify_leader(game_uuid, player) do
     payload = %{player: player, elapsed: div(@period, 1000)}
-    Endpoint.broadcast("leader:current:#{game_uuid}", "player_speaks", payload)
+    Endpoint.broadcast("leader:#{game_uuid}", "player_speaks", payload)
   end
 
   def notify_follower(game_uuid, player_uuid) do
     Endpoint.broadcast(
-      "followers:current:#{game_uuid}:#{player_uuid}", "player_speaks", %{})
+      "followers:#{game_uuid}:#{player_uuid}", "player_speaks", %{})
   end
 
   def handle_info(:transition,

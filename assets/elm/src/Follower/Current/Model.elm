@@ -3,17 +3,7 @@ module Follower.Current.Model exposing (..)
 import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Phoenix.Socket
-
-
--- import Ports.DeviceOrientation exposing (Orientation)
-
-
-type alias Orientation =
-    { alpha : Int
-    , beta : Int
-    , gamma : Int
-    }
+import Ports.DeviceOrientation exposing (Orientation)
 
 
 type alias PlayingState =
@@ -21,29 +11,20 @@ type alias PlayingState =
     }
 
 
-type State
-    = Loading
-    | Playing PlayingState
-    | PlayerAbleToSpeak
+type Model
+    = Playing PlayingState
+    | PlayerAbleToSpeak PlayingState
     | PlayerChoosing PlayingState
 
 
 type Msg
-    = LoadGame JE.Value
-    | PlayerCanSpeak JE.Value
+    = PlayerCanSpeak JE.Value
     | PlayerReadyToSpeak
     | DeviceOrientationChanged (Result String Orientation)
     | CandidatesReceived JE.Value
     | PlayerChosen JE.Value
     | ChooseCandidate String
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
-
-
-type alias Model =
-    { phxSocket : Phoenix.Socket.Socket Msg
-    , channelName : String
-    , state : State
-    }
+    | PushSocket String JE.Value
 
 
 decoder : JD.Decoder PlayingState

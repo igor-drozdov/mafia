@@ -3,8 +3,7 @@ module Leader.Init exposing (..)
 import Player
 import Html exposing (Html, div, text, button)
 import Json.Decode as JD exposing (field)
-import Phoenix.Channel
-import Phoenix.Socket
+import Json.Encode as JE
 import Leader.Init.Model exposing (..)
 import Array exposing (Array, fromList)
 import List.Extra exposing (find)
@@ -12,50 +11,22 @@ import Ports.Audio exposing (playAudio)
 import Views.Logo exposing (logo, animatedLogo)
 
 
-init : String -> String -> ( Model, Cmd Msg )
-init gameId socketServer =
-    let
-        channelName =
-            ("leader:init:" ++ gameId)
+socketMessages : List ( String, JE.Value -> Msg )
+socketMessages =
+    [ ( "follower_joined", FollowerJoined )
+    , ( "roles_assigned", RolesAssigned )
+    , ( "start_game", Transition )
+    ]
 
-        channel =
-            Phoenix.Channel.init channelName
-                |> Phoenix.Channel.onJoin LoadGame
 
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
-
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        phxSocketWithListener : Phoenix.Socket.Socket Msg
-        phxSocketWithListener =
-            phxSocket
-                |> Phoenix.Socket.on "follower_joined" channelName FollowerJoined
-                |> Phoenix.Socket.on "roles_assigned" channelName RolesAssigned
-                |> Phoenix.Socket.on "start_game" channelName Transition
-    in
-        ( { phxSocket = phxSocketWithListener, state = Loading }
-        , Cmd.map PhoenixMsg phxCmd
-        )
+init : JE.Value -> Result String Model
+init raw =
+    JD.decodeValue decoder raw
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model.state ) of
-        ( PhoenixMsg msg, _ ) ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
-
-        ( LoadGame raw, Loading ) ->
-            decode raw model ! []
-
+    case ( msg, model ) of
         ( RolesAssigned raw, _ ) ->
             model ! [ playAudio raw ]
 
@@ -74,7 +45,7 @@ update msg model =
                                 model ! []
 
                             Nothing ->
-                                { model | state = newState } ! []
+                                newState ! []
 
                 Err error ->
                     model ! []
@@ -85,15 +56,12 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Sub.none
 
 
 view : Model -> Html Msg
 view model =
-    case model.state of
-        Loading ->
-            animatedLogo
-
+    case model of
         Wait { total, players } ->
             if (Array.length players) == total then
                 div [] [ logo, text "All the players joined!" ]

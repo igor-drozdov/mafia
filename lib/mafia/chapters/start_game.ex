@@ -11,27 +11,23 @@ defmodule Mafia.Chapters.StartGame do
   defp handle_run(%{game_uuid: game_uuid} = state) do
     players = Repo.all(Player.incity(game_uuid))
 
-    notify_leader(game_uuid)
+    notify_leader(game_uuid, players)
     start_round()
 
     {:noreply, Map.put(state, :players, players)}
   end
 
-  def notify_leader(game_uuid) do
-    payload = %{game_id: game_uuid, state: :current}
-    Endpoint.broadcast("leader:init:#{game_uuid}", "start_game", payload)
+  def notify_leader(game_uuid, players) do
+    payload = %{players: players}
+    Endpoint.broadcast("leader:#{game_uuid}", "start_game", payload)
   end
 
   def notify_followers(game_uuid, players) do
+    payload = %{players: players}
+
     players
     |> Enum.each(fn player ->
-      payload = %{
-        game_id: game_uuid,
-        state: "current",
-        player_id: player.id
-      }
-
-      Endpoint.broadcast("followers:init:#{game_uuid}:#{player.id}", "start_game", payload)
+      Endpoint.broadcast("followers:#{game_uuid}:#{player.id}", "start_game", payload)
     end)
   end
 

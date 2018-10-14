@@ -7,8 +7,8 @@ defmodule Mafia.Chapters.SelectionBeginsTest do
 
   describe "#notify_leader" do
     test "broadcast selection begins" do
-      game = insert(:game)
-      @endpoint.subscribe("leader:current:#{game.id}")
+      game = insert(:game, state: :current)
+      @endpoint.subscribe("leader:#{game.id}")
 
       SelectionBegins.notify_leader(game.id)
 

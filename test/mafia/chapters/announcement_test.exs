@@ -9,14 +9,14 @@ defmodule Mafia.Chapters.AnnouncementTest do
   import Mafia.Factory
 
   setup do
-    game = insert(:game)
+    game = insert(:game, state: :current)
 
     {:ok, game: game}
   end
 
   describe "#notify_leader" do
     test "broadcast city wakes", %{game: game} do
-      @endpoint.subscribe("leader:current:#{game.id}")
+      @endpoint.subscribe("leader:#{game.id}")
       player = insert(:player, game: game)
 
       Announcement.notify_leader(game.id, player)

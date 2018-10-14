@@ -3,7 +3,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
 
   alias Mafia.Chapters.HandoutRoles
   alias Mafia.{Repo, Players.Player}
-  alias MafiaWeb.Followers.InitChannel
+  alias MafiaWeb.Followers.Channel
 
   import Mafia.Factory
 
@@ -33,7 +33,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
         Enum.map(players, fn player ->
           {:ok, _, socket} =
             socket("user_id", %{some: :assign})
-            |> join(InitChannel, "followers:init:#{game_uuid}:#{player.id}")
+            |> join(Channel, "followers:#{game_uuid}:#{player.id}")
 
           socket
         end)
@@ -47,7 +47,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
         assert_receive %Phoenix.Socket.Message{
           event: "role_received",
           payload: %{role: :mafia, players: [^other_player]},
-          topic: "followers:init:" <> ^uuids
+          topic: "followers:" <> ^uuids
         }
       end)
 
@@ -57,7 +57,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
         assert_receive %Phoenix.Socket.Message{
           event: "role_received",
           payload: %{role: :innocent, players: []},
-          topic: "followers:init:" <> ^uuids
+          topic: "followers:" <> ^uuids
         }
       end)
 
@@ -67,7 +67,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
 
   describe "#notify_leader" do
     test "broadcast roles assigned", %{game_uuid: game_uuid} do
-      @endpoint.subscribe("leader:init:#{game_uuid}")
+      @endpoint.subscribe("leader:#{game_uuid}")
       HandoutRoles.notify_leader(game_uuid)
       assert_broadcast("roles_assigned", %{audio: "roles_assigned"})
     end

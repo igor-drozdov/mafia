@@ -1,7 +1,7 @@
-defmodule MafiaWeb.Leader.InitChannelTest do
+defmodule MafiaWeb.Leader.ChannelTest do
   use MafiaWeb.ChannelCase
 
-  alias MafiaWeb.Leader.InitChannel
+  alias MafiaWeb.Leader.Channel
 
   import Mafia.Factory
 
@@ -10,7 +10,7 @@ defmodule MafiaWeb.Leader.InitChannelTest do
 
     {:ok, ^game, socket} =
       socket("user_id", %{some: :assign})
-      |> join(InitChannel, "leader:init:#{game.id}")
+      |> join(Channel, "leader:#{game.id}")
 
     assert socket.assigns.game == game
   end

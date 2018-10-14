@@ -24,7 +24,7 @@ defmodule Mafia.Chapters.VotingBegins do
       payload = %{players: List.delete(nominated_players, player)}
 
       Endpoint.broadcast(
-        "followers:current:#{game_uuid}:#{player.id}",
+        "followers:#{game_uuid}:#{player.id}",
         "candidates_received",
         payload
       )
@@ -54,7 +54,7 @@ defmodule Mafia.Chapters.VotingBegins do
 
   def notify_player_chosen(game_uuid, current_player_uuid) do
     Endpoint.broadcast(
-      "followers:current:#{game_uuid}:#{current_player_uuid}",
+      "followers:#{game_uuid}:#{current_player_uuid}",
       "player_chosen",
       %{}
     )

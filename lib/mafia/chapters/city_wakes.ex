@@ -24,11 +24,11 @@ defmodule Mafia.Chapters.CityWakes do
   end
 
   def send_night_results(game_uuid, players) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "city_wakes", %{players: players})
+    Endpoint.broadcast("leader:#{game_uuid}", "city_wakes", %{players: players})
   end
 
   def notify_leader(game_uuid) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "play_audio", %{audio: "city_wakes"})
+    Endpoint.broadcast("leader:#{game_uuid}", "play_audio", %{audio: "city_wakes"})
   end
 
   def handle_info(:transition, %{game_uuid: game_uuid} = state) do

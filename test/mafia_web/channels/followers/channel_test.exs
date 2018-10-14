@@ -1,7 +1,7 @@
-defmodule MafiaWeb.Followers.InitChannelTest do
+defmodule MafiaWeb.Followers.ChannelTest do
   use MafiaWeb.ChannelCase
 
-  alias MafiaWeb.Followers.InitChannel
+  alias MafiaWeb.Followers.Channel
 
   import Mafia.Factory
 
@@ -9,11 +9,11 @@ defmodule MafiaWeb.Followers.InitChannelTest do
     game_uuid = insert(:game).id
     player = insert(:player, game_id: game_uuid)
 
-    @endpoint.subscribe("leader:init:#{game_uuid}")
+    @endpoint.subscribe("leader:#{game_uuid}")
 
     {:ok, _, _} =
       socket("user_id", %{some: :assign})
-      |> join(InitChannel, "followers:init:#{game_uuid}:#{player.id}")
+      |> join(Channel, "followers:#{game_uuid}:#{player.id}")
 
     {:ok, player: player}
   end

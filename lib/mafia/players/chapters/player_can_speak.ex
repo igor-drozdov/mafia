@@ -22,12 +22,12 @@ defmodule Mafia.Players.Chapters.PlayerCanSpeak do
   end
 
   def notify_leader(game_uuid, player) do
-    Endpoint.broadcast("leader:current:#{game_uuid}", "player_can_speak", %{player: player})
+    Endpoint.broadcast("leader:#{game_uuid}", "player_can_speak", %{player: player})
   end
 
   def notify_follower(game_uuid, player_uuid) do
     Endpoint.broadcast(
-      "followers:current:#{game_uuid}:#{player_uuid}", "player_can_speak", %{})
+      "followers:#{game_uuid}:#{player_uuid}", "player_can_speak", %{})
   end
 
   def handle_cast(:speak, %{game_uuid: game_uuid, player: player} = state) do

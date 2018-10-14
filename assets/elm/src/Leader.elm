@@ -5,6 +5,7 @@ module Leader exposing (..)
 import Html exposing (Html)
 import Platform.Cmd
 import Json.Decode as JD exposing (field)
+import Json.Encode as JE
 import Leader.Init as InitWidget
 import Leader.Current as CurrentWidget
 import Leader.Finished as FinishedWidget
@@ -12,6 +13,9 @@ import Leader.Init.Model as Init
 import Leader.Current.Model as Current
 import Leader.Finished.Model as Finished
 import Socket exposing (WithSocket)
+import Phoenix.Socket
+import Phoenix.Channel
+import Views.Logo exposing (animatedLogo)
 
 
 -- MAIN
@@ -39,43 +43,59 @@ type alias Flags =
 
 init : WithSocket Flags -> ( Model, Cmd Msg )
 init { gameId, socketServer, state } =
-    case state of
-        "current" ->
-            let
-                ( model, subMsg ) =
-                    CurrentWidget.init gameId socketServer
-            in
-                ( CurrentModel model, Cmd.map CurrentMsg subMsg )
+    let
+        channelName =
+            ("leader:" ++ gameId)
 
-        "finished" ->
-            let
-                ( model, subMsg ) =
-                    FinishedWidget.init gameId socketServer
-            in
-                ( FinishedModel model, Cmd.map FinishedMsg subMsg )
+        channel =
+            Phoenix.Channel.init channelName
+                |> Phoenix.Channel.onJoin (LoadGame state)
 
-        _ ->
-            let
-                ( model, subMsg ) =
-                    InitWidget.init gameId socketServer
-            in
-                ( InitModel model, Cmd.map InitMsg subMsg )
+        initPhxSocket =
+            Phoenix.Socket.init socketServer
+                |> Phoenix.Socket.withDebug
+
+        ( phxSocket, phxCmd ) =
+            Phoenix.Socket.join channel initPhxSocket
+
+        assignListener wrapper ( msg, cmd ) socket =
+            socket
+                |> Phoenix.Socket.on msg channelName (wrapper << cmd)
+
+        assignListeners wrapper messages phxSocket =
+            List.foldl (assignListener wrapper) phxSocket messages
+
+        phxSocketWithListeners =
+            phxSocket
+                |> assignListeners CurrentMsg CurrentWidget.socketMessages
+                |> assignListeners InitMsg InitWidget.socketMessages
+    in
+        ( { phxSocket = phxSocketWithListeners, state = Loading }, Cmd.map PhoenixMsg phxCmd )
 
 
 
 -- MODEL
 
 
-type Model
+type alias Model =
+    { phxSocket : Phoenix.Socket.Socket Msg
+    , state : State
+    }
+
+
+type State
     = InitModel Init.Model
     | CurrentModel Current.Model
     | FinishedModel Finished.Model
+    | Loading
 
 
 type Msg
     = InitMsg Init.Msg
     | CurrentMsg Current.Msg
     | FinishedMsg Finished.Msg
+    | LoadGame String JE.Value
+    | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
 
 
@@ -84,15 +104,25 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model of
-        InitModel state ->
-            Sub.map InitMsg <| InitWidget.subscriptions state
+    let
+        childSubscriptions =
+            case model.state of
+                InitModel state ->
+                    Sub.map InitMsg <| InitWidget.subscriptions state
 
-        CurrentModel state ->
-            Sub.map CurrentMsg <| CurrentWidget.subscriptions state
+                CurrentModel state ->
+                    Sub.map CurrentMsg <| CurrentWidget.subscriptions state
 
-        FinishedModel state ->
-            Sub.map FinishedMsg <| FinishedWidget.subscriptions state
+                FinishedModel state ->
+                    Sub.map FinishedMsg <| FinishedWidget.subscriptions state
+
+                _ ->
+                    Sub.none
+
+        mainSubscriptions =
+            [ Phoenix.Socket.listen model.phxSocket PhoenixMsg ]
+    in
+        Sub.batch (childSubscriptions :: mainSubscriptions)
 
 
 
@@ -108,37 +138,66 @@ decoder =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model ) of
-        ( InitMsg (Init.Transition raw), InitModel modelState ) ->
-            case JD.decodeValue decoder raw of
-                Ok { gameId, state } ->
-                    init { gameId = gameId, state = state, socketServer = modelState.phxSocket.path }
+    case ( msg, model.state ) of
+        ( PhoenixMsg msg, _ ) ->
+            let
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.update msg model.phxSocket
+            in
+                ( { model | phxSocket = phxSocket }
+                , Cmd.map PhoenixMsg phxCmd
+                )
 
-                Err _ ->
-                    model ! []
+        ( LoadGame state raw, _ ) ->
+            let
+                initStateResult =
+                    case state of
+                        "current" ->
+                            Result.map CurrentModel <| CurrentWidget.init raw
+
+                        "finished" ->
+                            Result.map FinishedModel <| FinishedWidget.init raw
+
+                        _ ->
+                            Result.map InitModel <| InitWidget.init raw
+            in
+                case initStateResult of
+                    Ok initState ->
+                        ( { model | state = initState }, Cmd.none )
+
+                    Err err ->
+                        ( model, Cmd.none )
+
+        ( InitMsg (Init.Transition raw), _ ) ->
+            case CurrentWidget.init raw of
+                Ok state ->
+                    ( { model | state = CurrentModel state }, Cmd.none )
+
+                Err err ->
+                    ( model, Cmd.none )
+
+        ( CurrentMsg (Current.Transition raw), _ ) ->
+            case FinishedWidget.init raw of
+                Ok state ->
+                    ( { model | state = FinishedModel state }, Cmd.none )
+
+                Err err ->
+                    ( model, Cmd.none )
 
         ( InitMsg m, InitModel state ) ->
             let
                 ( newModel, subCmd ) =
                     InitWidget.update m state
             in
-                InitModel newModel
+                { model | state = InitModel newModel }
                     ! [ Cmd.map InitMsg subCmd ]
-
-        ( CurrentMsg (Current.Transition raw), CurrentModel modelState ) ->
-            case JD.decodeValue decoder raw of
-                Ok { gameId, state } ->
-                    init { gameId = gameId, state = state, socketServer = modelState.phxSocket.path }
-
-                Err _ ->
-                    model ! []
 
         ( CurrentMsg m, CurrentModel state ) ->
             let
                 ( newModel, subCmd ) =
                     CurrentWidget.update m state
             in
-                CurrentModel newModel
+                { model | state = CurrentModel newModel }
                     ! [ Cmd.map CurrentMsg subCmd ]
 
         ( FinishedMsg m, FinishedModel state ) ->
@@ -146,7 +205,7 @@ update msg model =
                 ( newModel, subCmd ) =
                     FinishedWidget.update m state
             in
-                FinishedModel newModel
+                { model | state = FinishedModel newModel }
                     ! [ Cmd.map FinishedMsg subCmd ]
 
         _ ->
@@ -159,7 +218,10 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    case model of
+    case model.state of
+        Loading ->
+            animatedLogo
+
         InitModel state ->
             Html.map InitMsg <| InitWidget.view state
 

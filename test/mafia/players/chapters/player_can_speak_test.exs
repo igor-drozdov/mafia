@@ -6,7 +6,7 @@ defmodule Mafia.Players.Chapters.PlayerCanSpeakTest do
   import Mafia.Factory
 
   setup do
-    game = insert(:game)
+    game = insert(:game, state: :current)
     player = insert(:player, game: game)
 
     {:ok, game: game, player: player}
@@ -14,7 +14,7 @@ defmodule Mafia.Players.Chapters.PlayerCanSpeakTest do
 
   describe "#notify_leader" do
     test "broadcast player can speak", %{game: game, player: player} do
-      @endpoint.subscribe("leader:current:#{game.id}")
+      @endpoint.subscribe("leader:#{game.id}")
 
       PlayerCanSpeak.notify_leader(game.id, player)
 
@@ -24,7 +24,7 @@ defmodule Mafia.Players.Chapters.PlayerCanSpeakTest do
 
   describe "#notify_follower" do
     test "broadcast can speak", %{game: game, player: player} do
-      @endpoint.subscribe("followers:current:#{game.id}:#{player.id}")
+      @endpoint.subscribe("followers:#{game.id}:#{player.id}")
 
       PlayerCanSpeak.notify_follower(game.id, player.id)
 

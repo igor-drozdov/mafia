@@ -6,8 +6,8 @@ defmodule Mafia.Chapters.CityWakesTest do
   import Mafia.Factory
 
   setup do
-    game = insert(:game)
-    @endpoint.subscribe("leader:current:#{game.id}")
+    game = insert(:game, state: :current)
+    @endpoint.subscribe("leader:#{game.id}")
 
     {:ok, game_uuid: game.id}
   end

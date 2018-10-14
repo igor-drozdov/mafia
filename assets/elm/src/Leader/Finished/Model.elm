@@ -1,13 +1,10 @@
 module Leader.Finished.Model exposing (..)
 
 import Json.Decode as JD exposing (field)
-import Json.Encode as JE
-import Phoenix.Socket
 
 
 type Msg
-    = LoadGame JE.Value
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    = NoOp
 
 
 type alias FinishingState =
@@ -15,15 +12,8 @@ type alias FinishingState =
     }
 
 
-type State
-    = Loading
-    | Finishing FinishingState
-
-
-type alias Model =
-    { phxSocket : Phoenix.Socket.Socket Msg
-    , state : State
-    }
+type Model
+    = Finishing FinishingState
 
 
 decoder : JD.Decoder FinishingState
