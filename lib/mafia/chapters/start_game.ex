@@ -11,8 +11,7 @@ defmodule Mafia.Chapters.StartGame do
   defp handle_run(%{game_uuid: game_uuid} = state) do
     players = Repo.all(Player.incity(game_uuid))
 
-    notify_leader(game_uuid, players)
-    start_round()
+    start_round(game_uuid)
 
     {:noreply, Map.put(state, :players, players)}
   end
@@ -31,13 +30,15 @@ defmodule Mafia.Chapters.StartGame do
     end)
   end
 
-  def start_round do
+  def start_round(game_uuid) do
+    update_game(game_uuid)
+
     Process.send_after(self(), :transition, @period)
   end
 
   def handle_info(:transition, %{game_uuid: game_uuid, players: players} = state) do
+    notify_leader(game_uuid, players)
     notify_followers(game_uuid, players)
-    update_game(game_uuid)
 
     RoundBegins.run(game_uuid, state)
 
