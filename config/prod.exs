@@ -66,6 +66,6 @@ config :phoenix, :serve_endpoints, true
 import_config "prod.secret.exs"
 
 config :mafia, :period,
-  short: 7000,
-  medium: 25000,
-  long: 45000
+  short: 5000,
+  medium: 7000,
+  long: 10000
