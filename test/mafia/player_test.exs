@@ -51,7 +51,7 @@ defmodule Mafia.PlayerTest do
     } do
       incity_players = Player.incity(game.id) |> Repo.all() |> Repo.preload(:game)
 
-      assert incity_players == [deprecated_player, previously_nominated_player, nominated_player]
+      assert incity_players == [nominated_player, previously_nominated_player, deprecated_player]
     end
   end
 

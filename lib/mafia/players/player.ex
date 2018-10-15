@@ -35,10 +35,11 @@ defmodule Mafia.Players.Player do
       Player
       |> join(:inner, [p], ps in assoc(p, :player_statuses), ps.type == ^:ostracized)
       |> select([p], p.id)
-      |> order_by([p], p.inserted_at)
       |> Repo.all()
 
-    Player |> where([p], p.game_id == ^game_uuid and p.id not in ^ostricized_player_ids)
+    Player
+    |> where([p], p.game_id == ^game_uuid and p.id not in ^ostricized_player_ids)
+    |> order_by([p], p.inserted_at)
   end
 
   def by_status(round_id, type) do
