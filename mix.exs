@@ -26,6 +26,7 @@ defmodule Mafia.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:demo), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -42,9 +43,10 @@ defmodule Mafia.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:ecto_enum, "~> 1.0"},
-      {:ex_machina, "~> 2.2", only: :test},
       {:edeliver, ">= 1.6.0"},
-      {:distillery, "~> 2.0", warn_missing: false}
+      {:distillery, "~> 2.0", warn_missing: false},
+      {:ex_machina, "~> 2.2", only: [:test, :demo]},
+      {:hound, "~> 1.0", only: [:test, :demo]}
     ]
   end
 
