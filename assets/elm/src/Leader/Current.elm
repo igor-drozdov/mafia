@@ -1,7 +1,7 @@
 module Leader.Current exposing (..)
 
 import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, id)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Leader.Current.Model exposing (..)
@@ -90,7 +90,7 @@ view model =
                 ]
 
         CityAwaken state ->
-            div []
+            div [ class "ostrisized-player" ]
                 [ logo
                 , div [] [ text "The following players is ostracized from city:" ]
                 , div []
@@ -99,13 +99,13 @@ view model =
                 ]
 
         PlayerAbleToSpeak player ->
-            div []
+            div [ id "player-can-speak" ]
                 [ logo
                 , div [] [ text (player.name ++ ", speak!") ]
                 ]
 
         PlayerSpeaking { player, elapsed } ->
-            div []
+            div [ id "player-speaks" ]
                 [ animatedCircuit (div [ class "elapsed" ] [ text (toString elapsed) ])
                 , div [] [ text (player.name ++ " speaks!") ]
                 ]

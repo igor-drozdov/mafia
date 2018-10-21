@@ -1,7 +1,7 @@
 module Leader.Finished exposing (..)
 
 import Html exposing (Html, div, text, img)
-import Html.Attributes exposing (src, style, class)
+import Html.Attributes exposing (src, style, class, id)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Leader.Finished.Model exposing (..)
@@ -34,7 +34,7 @@ view model =
                     div [] [ logo, text "Innocents win" ]
 
                 "mafia" ->
-                    div [ class "margin-top" ]
+                    div [ id "mafia-wins", class "margin-top" ]
                         [ img [ src "/images/mafia-wins.gif", style [ ( "width", "70%" ) ] ] []
                         ]
 

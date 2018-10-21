@@ -4,7 +4,7 @@ use Mix.Config
 # you can enable the server option below.
 config :mafia, MafiaWeb.Endpoint,
   http: [port: 4001],
-  server: false
+  server: true
 
 # Print only warnings and errors during test
 config :logger, level: :warn
@@ -19,6 +19,10 @@ config :mafia, Mafia.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :mafia, :period,
-  short: 0,
-  medium: 0,
-  long: 0
+  short: 100,
+  medium: 100,
+  long: 1000
+
+config :hound, driver: "chrome_driver"
+
+config :mafia, :socket_host, "ws://localhost:4001/socket/websocket"
