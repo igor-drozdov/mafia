@@ -21,7 +21,7 @@ config :mafia, Mafia.Repo,
 config :mafia, :period,
   short: 100,
   medium: 100,
-  long: 1000
+  long: 100
 
 config :hound, driver: "chrome_driver"
 

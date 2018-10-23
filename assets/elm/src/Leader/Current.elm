@@ -58,7 +58,7 @@ update msg model =
                     model ! []
 
         ( Tick _, PlayerSpeaking { player, elapsed } ) ->
-            ( PlayerSpeaking (PlayerSpeakingState player (elapsed - 1)), Cmd.none )
+            ( PlayerSpeaking (PlayerSpeakingState player (elapsed - 1000)), Cmd.none )
 
         ( PlayerChooses raw, _ ) ->
             case JD.decodeValue playerDecoder raw of
@@ -106,7 +106,7 @@ view model =
 
         PlayerSpeaking { player, elapsed } ->
             div [ id "player-speaks" ]
-                [ animatedCircuit (div [ class "elapsed" ] [ text (toString elapsed) ])
+                [ animatedCircuit (div [ class "elapsed" ] [ text (toString (elapsed // 1000)) ])
                 , div [] [ text (player.name ++ " speaks!") ]
                 ]
 
