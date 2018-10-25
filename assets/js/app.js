@@ -17,18 +17,21 @@
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
-
+import embedSocketPortsTo from "./socket"
 import Elm from './main';
 
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
 if (elmLeaderDiv) {
+  let gameId = elmLeaderDiv.dataset.gameId;
+
   var app = Elm.Leader.embed(elmLeaderDiv, {
-    gameId: elmLeaderDiv.dataset.gameId,
+    gameId: gameId,
     state: elmLeaderDiv.dataset.gameState,
     socketServer: elmLeaderDiv.dataset.socketServer
   });
+
+  embedSocketPortsTo(app, "leader:" + gameId)
 
   app.ports.play.subscribe(function(audioPath) {
     var audio = new Audio(audioPath);
@@ -39,12 +42,16 @@ if (elmLeaderDiv) {
 const elmFollowerDiv = document.querySelector('#elm_follower_target');
 
 if (elmFollowerDiv) {
+  let gameId = elmFollowerDiv.dataset.gameId;
+  let playerId = elmFollowerDiv.dataset.playerId;
+
   var app = Elm.Follower.embed(elmFollowerDiv, {
-    gameId: elmFollowerDiv.dataset.gameId,
+    gameId: gameId,
     state: elmFollowerDiv.dataset.gameState,
-    playerId: elmFollowerDiv.dataset.playerId,
-    socketServer: elmFollowerDiv.dataset.socketServer
+    playerId: playerId
   });
+
+  embedSocketPortsTo(app, "followers:" + gameId + ":" + playerId)
 
   window.addEventListener("deviceorientation", function(data) {
     app.ports.listener.send(data);

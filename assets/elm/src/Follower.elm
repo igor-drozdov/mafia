@@ -12,10 +12,7 @@ import Follower.Current.Model as Current
 import Follower.Finished.Model as Finished
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Socket exposing (WithSocket)
-import Phoenix.Socket
-import Phoenix.Channel
-import Phoenix.Push
+import Ports.Socket as Socket
 import Views.Logo exposing (animatedLogo)
 
 
@@ -29,7 +26,7 @@ type alias Flags =
     }
 
 
-main : Program (WithSocket Flags) Model Msg
+main : Program Flags Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -48,12 +45,11 @@ type Msg
     | CurrentMsg Current.Msg
     | FinishedMsg Finished.Msg
     | LoadGame String JE.Value
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | UnknownSocketEvent String JE.Value
 
 
 type alias Model =
-    { phxSocket : Phoenix.Socket.Socket Msg
-    , channel : String
+    { channel : Socket.Channel Msg
     , state : State
     }
 
@@ -65,36 +61,28 @@ type State
     | Loading
 
 
-init : WithSocket Flags -> ( Model, Cmd Msg )
-init { gameId, playerId, state, socketServer } =
+init : Flags -> ( Model, Cmd Msg )
+init { gameId, playerId, state } =
     let
-        channelName =
-            ("followers:" ++ gameId ++ ":" ++ playerId)
+        initChannel =
+            Socket.init (LoadGame state) UnknownSocketEvent
 
-        channel =
-            Phoenix.Channel.init channelName
-                |> Phoenix.Channel.onJoin (LoadGame state)
+        assignListener wrapper ( eventName, cmd ) channel =
+            channel
+                |> Socket.on eventName (wrapper << cmd)
 
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
+        assignListeners wrapper messages channel =
+            List.foldl (assignListener wrapper) channel messages
 
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        assignListener wrapper ( msg, cmd ) socket =
-            socket
-                |> Phoenix.Socket.on msg channelName (wrapper << cmd)
-
-        assignListeners wrapper messages phxSocket =
-            List.foldl (assignListener wrapper) phxSocket messages
-
-        phxSocketWithListeners =
-            phxSocket
+        channelWithListeners =
+            initChannel
                 |> assignListeners CurrentMsg CurrentWidget.socketMessages
                 |> assignListeners InitMsg InitWidget.socketMessages
+
+        joinCommand =
+            Socket.join channelWithListeners
     in
-        ( Model phxSocketWithListeners channelName Loading, Cmd.map PhoenixMsg phxCmd )
+        ( Model channelWithListeners Loading, joinCommand )
 
 
 
@@ -116,7 +104,7 @@ subscriptions model =
                     Sub.none
 
         mainSubscriptions =
-            [ Phoenix.Socket.listen model.phxSocket PhoenixMsg ]
+            [ Socket.listen model.channel ]
     in
         Sub.batch (childSubscriptions :: mainSubscriptions)
 
@@ -136,15 +124,6 @@ decoder =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.state ) of
-        ( PhoenixMsg msg, _ ) ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
-
         ( LoadGame state raw, Loading ) ->
             let
                 initStateResult =
@@ -181,17 +160,8 @@ update msg model =
                 { model | state = InitModel newModel }
                     ! [ Cmd.map InitMsg subCmd ]
 
-        ( CurrentMsg (Current.PushSocket msg payload), CurrentModel state ) ->
-            let
-                push_ =
-                    Phoenix.Push.init msg model.channel
-                        |> Phoenix.Push.withPayload payload
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.push push_ model.phxSocket
-            in
-                { model | phxSocket = phxSocket }
-                    ! [ Cmd.map PhoenixMsg phxCmd ]
+        ( CurrentMsg (Current.PushSocket event payload), CurrentModel state ) ->
+            ( model, Socket.push event payload )
 
         ( CurrentMsg m, CurrentModel state ) ->
             let

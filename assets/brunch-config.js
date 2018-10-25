@@ -53,7 +53,8 @@ exports.config = {
       mainModules: ["src/Leader.elm", "src/Follower.elm"],
       makeParameters: ["--warn"],
       outputFolder: '../js/',
-      outputFile: 'main.js'
+      outputFile: 'main.js',
+      executablePath: '../node_modules/elm/binwrappers'
     },
   },
 

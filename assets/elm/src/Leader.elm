@@ -12,16 +12,14 @@ import Leader.Finished as FinishedWidget
 import Leader.Init.Model as Init
 import Leader.Current.Model as Current
 import Leader.Finished.Model as Finished
-import Socket exposing (WithSocket)
-import Phoenix.Socket
-import Phoenix.Channel
+import Ports.Socket as Socket
 import Views.Logo exposing (animatedLogo)
 
 
 -- MAIN
 
 
-main : Program (WithSocket Flags) Model Msg
+main : Program Flags Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -41,36 +39,28 @@ type alias Flags =
     }
 
 
-init : WithSocket Flags -> ( Model, Cmd Msg )
-init { gameId, socketServer, state } =
+init : Flags -> ( Model, Cmd Msg )
+init { gameId, state } =
     let
-        channelName =
-            ("leader:" ++ gameId)
+        initChannel =
+            Socket.init (LoadGame state) UnknownSocketEvent
 
-        channel =
-            Phoenix.Channel.init channelName
-                |> Phoenix.Channel.onJoin (LoadGame state)
+        assignListener wrapper ( eventName, cmd ) channel =
+            channel
+                |> Socket.on eventName (wrapper << cmd)
 
-        initPhxSocket =
-            Phoenix.Socket.init socketServer
-                |> Phoenix.Socket.withDebug
+        assignListeners wrapper messages channel =
+            List.foldl (assignListener wrapper) channel messages
 
-        ( phxSocket, phxCmd ) =
-            Phoenix.Socket.join channel initPhxSocket
-
-        assignListener wrapper ( msg, cmd ) socket =
-            socket
-                |> Phoenix.Socket.on msg channelName (wrapper << cmd)
-
-        assignListeners wrapper messages phxSocket =
-            List.foldl (assignListener wrapper) phxSocket messages
-
-        phxSocketWithListeners =
-            phxSocket
+        channelWithListeners =
+            initChannel
                 |> assignListeners CurrentMsg CurrentWidget.socketMessages
                 |> assignListeners InitMsg InitWidget.socketMessages
+
+        joinCommand =
+            Socket.join channelWithListeners
     in
-        ( { phxSocket = phxSocketWithListeners, state = Loading }, Cmd.map PhoenixMsg phxCmd )
+        ( { channel = channelWithListeners, state = Loading }, joinCommand )
 
 
 
@@ -78,7 +68,7 @@ init { gameId, socketServer, state } =
 
 
 type alias Model =
-    { phxSocket : Phoenix.Socket.Socket Msg
+    { channel : Socket.Channel Msg
     , state : State
     }
 
@@ -95,7 +85,7 @@ type Msg
     | CurrentMsg Current.Msg
     | FinishedMsg Finished.Msg
     | LoadGame String JE.Value
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | UnknownSocketEvent String JE.Value
 
 
 
@@ -120,7 +110,7 @@ subscriptions model =
                     Sub.none
 
         mainSubscriptions =
-            [ Phoenix.Socket.listen model.phxSocket PhoenixMsg ]
+            [ Socket.listen model.channel ]
     in
         Sub.batch (childSubscriptions :: mainSubscriptions)
 
@@ -139,15 +129,6 @@ decoder =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.state ) of
-        ( PhoenixMsg msg, _ ) ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }
-                , Cmd.map PhoenixMsg phxCmd
-                )
-
         ( LoadGame state raw, _ ) ->
             let
                 initStateResult =

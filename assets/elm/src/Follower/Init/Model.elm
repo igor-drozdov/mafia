@@ -2,7 +2,6 @@ module Follower.Init.Model exposing (..)
 
 import Json.Encode as JE
 import Json.Decode as JD
-import Phoenix.Socket
 import Player
 
 
