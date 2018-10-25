@@ -1,7 +1,7 @@
-module Follower.Init.Model exposing (..)
+module Follower.Init.Model exposing (Model, Msg(..), decoder)
 
-import Json.Encode as JE
 import Json.Decode as JD
+import Json.Encode as JE
 import Player
 
 

@@ -1,4 +1,4 @@
-module Views.Logo exposing (..)
+module Views.Logo exposing (animatedCircuit, animatedLogo, logo)
 
 import Html exposing (Html, div, img)
 import Html.Attributes exposing (class, src)

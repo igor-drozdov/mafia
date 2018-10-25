@@ -1,9 +1,9 @@
-module Leader.Current.Model exposing (..)
+module Leader.Current.Model exposing (Model(..), Msg(..), PlayerSpeakingState, PlayingState, decoder, playerDecoder, playerSpeakingDecoder)
 
-import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Time exposing (Time)
+import Player
+import Time
 
 
 type alias PlayingState =
@@ -33,7 +33,7 @@ type Msg
     | PlayerChooses JE.Value
     | SelectionBegins JE.Value
     | Transition JE.Value
-    | Tick Time
+    | Tick Time.Posix
 
 
 decoder : JD.Decoder PlayingState

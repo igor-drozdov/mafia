@@ -1,4 +1,4 @@
-module Leader.Current exposing (..)
+module Leader.Current exposing (init, socketMessages, subscriptions, update, view)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, id)
@@ -6,8 +6,8 @@ import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Leader.Current.Model exposing (..)
 import Ports.Audio as Audio
-import Time exposing (Time)
-import Views.Logo exposing (logo, animatedLogo, animatedCircuit)
+import Time
+import Views.Logo exposing (animatedCircuit, animatedLogo, logo)
 
 
 socketMessages : List ( String, JE.Value -> Msg )
@@ -22,7 +22,7 @@ socketMessages =
     ]
 
 
-init : JD.Value -> Result String Model
+init : JD.Value -> Result JD.Error Model
 init raw =
     Result.map Playing (JD.decodeValue decoder raw)
 
@@ -31,7 +31,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         ( AudioReceived raw, _ ) ->
-            model ! [ Audio.playAudio raw ]
+            ( model
+            , Audio.playAudio raw
+            )
 
         ( CityWakes raw, _ ) ->
             case JD.decodeValue decoder raw of
@@ -39,7 +41,9 @@ update msg model =
                     ( CityAwaken state, Cmd.none )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         ( PlayerCanSpeak raw, _ ) ->
             case JD.decodeValue playerDecoder raw of
@@ -47,7 +51,9 @@ update msg model =
                     ( PlayerAbleToSpeak state, Cmd.none )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         ( PlayerSpeaks raw, _ ) ->
             case JD.decodeValue playerSpeakingDecoder raw of
@@ -55,7 +61,9 @@ update msg model =
                     ( PlayerSpeaking state, Cmd.none )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         ( Tick _, PlayerSpeaking { player, elapsed } ) ->
             ( PlayerSpeaking (PlayerSpeakingState player (elapsed - 1000)), Cmd.none )
@@ -66,7 +74,9 @@ update msg model =
                     ( PlayerChoosing state, Cmd.none )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         ( SelectionBegins _, _ ) ->
             ( Playing (PlayingState []), Cmd.none )
@@ -86,7 +96,7 @@ view model =
         Playing state ->
             div []
                 [ logo
-                , text ((toString (List.length state.players)) ++ " players")
+                , text (String.fromInt (List.length state.players) ++ " players")
                 ]
 
         CityAwaken state ->
@@ -106,7 +116,7 @@ view model =
 
         PlayerSpeaking { player, elapsed } ->
             div [ id "player-speaks" ]
-                [ animatedCircuit (div [ class "elapsed" ] [ text (toString (elapsed // 1000)) ])
+                [ animatedCircuit (div [ class "elapsed" ] [ text (String.fromInt (elapsed // 1000)) ])
                 , div [] [ text (player.name ++ " speaks!") ]
                 ]
 

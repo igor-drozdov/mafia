@@ -1,19 +1,21 @@
-module Leader exposing (..)
+module Leader exposing (Flags, Model, Msg(..), State(..), decoder, init, main, subscriptions, update, view)
 
 --where
 
+import Browser
 import Html exposing (Html)
-import Platform.Cmd
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Leader.Init as InitWidget
 import Leader.Current as CurrentWidget
-import Leader.Finished as FinishedWidget
-import Leader.Init.Model as Init
 import Leader.Current.Model as Current
+import Leader.Finished as FinishedWidget
 import Leader.Finished.Model as Finished
+import Leader.Init as InitWidget
+import Leader.Init.Model as Init
+import Platform.Cmd
 import Ports.Socket as Socket
 import Views.Logo exposing (animatedLogo)
+
 
 
 -- MAIN
@@ -21,7 +23,7 @@ import Views.Logo exposing (animatedLogo)
 
 main : Program Flags Model Msg
 main =
-    Html.programWithFlags
+    Browser.element
         { init = init
         , update = update
         , view = view
@@ -34,13 +36,12 @@ main =
 
 
 type alias Flags =
-    { gameId : String
-    , state : String
+    { state : String
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { gameId, state } =
+init { state } =
     let
         initChannel =
             Socket.init (LoadGame state) UnknownSocketEvent
@@ -60,7 +61,7 @@ init { gameId, state } =
         joinCommand =
             Socket.join channelWithListeners
     in
-        ( { channel = channelWithListeners, state = Loading }, joinCommand )
+    ( { channel = channelWithListeners, state = Loading }, joinCommand )
 
 
 
@@ -112,7 +113,7 @@ subscriptions model =
         mainSubscriptions =
             [ Socket.listen model.channel ]
     in
-        Sub.batch (childSubscriptions :: mainSubscriptions)
+    Sub.batch (childSubscriptions :: mainSubscriptions)
 
 
 
@@ -121,8 +122,7 @@ subscriptions model =
 
 decoder : JD.Decoder Flags
 decoder =
-    JD.map2 Flags
-        (field "game_id" JD.string)
+    JD.map Flags
         (field "state" JD.string)
 
 
@@ -142,12 +142,12 @@ update msg model =
                         _ ->
                             Result.map InitModel <| InitWidget.init raw
             in
-                case initStateResult of
-                    Ok initState ->
-                        ( { model | state = initState }, Cmd.none )
+            case initStateResult of
+                Ok initState ->
+                    ( { model | state = initState }, Cmd.none )
 
-                    Err err ->
-                        ( model, Cmd.none )
+                Err err ->
+                    ( model, Cmd.none )
 
         ( InitMsg (Init.Transition raw), _ ) ->
             case CurrentWidget.init raw of
@@ -170,27 +170,32 @@ update msg model =
                 ( newModel, subCmd ) =
                     InitWidget.update m state
             in
-                { model | state = InitModel newModel }
-                    ! [ Cmd.map InitMsg subCmd ]
+            ( { model | state = InitModel newModel }
+            , Cmd.map InitMsg subCmd
+            )
 
         ( CurrentMsg m, CurrentModel state ) ->
             let
                 ( newModel, subCmd ) =
                     CurrentWidget.update m state
             in
-                { model | state = CurrentModel newModel }
-                    ! [ Cmd.map CurrentMsg subCmd ]
+            ( { model | state = CurrentModel newModel }
+            , Cmd.map CurrentMsg subCmd
+            )
 
         ( FinishedMsg m, FinishedModel state ) ->
             let
                 ( newModel, subCmd ) =
                     FinishedWidget.update m state
             in
-                { model | state = FinishedModel newModel }
-                    ! [ Cmd.map FinishedMsg subCmd ]
+            ( { model | state = FinishedModel newModel }
+            , Cmd.map FinishedMsg subCmd
+            )
 
         _ ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
 
 

@@ -1,15 +1,15 @@
-module Follower.Current exposing (..)
+module Follower.Current exposing (init, socketMessages, subscriptions, update, view, viewCandidate)
 
-import Html exposing (Html, div, text, button)
-import Html.Events exposing (onClick)
+import Follower.Current.Model exposing (..)
+import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
 import Json.Decode as JD
 import Json.Encode as JE
-import Follower.Current.Model exposing (..)
 import Player
+import Ports.DeviceOrientation as DeviceOrientation
 import Task
 import Views.Logo exposing (logo)
-import Ports.DeviceOrientation as DeviceOrientation
 
 
 socketMessages : List ( String, JE.Value -> Msg )
@@ -20,7 +20,7 @@ socketMessages =
     ]
 
 
-init : JE.Value -> Result String Model
+init : JE.Value -> Result JD.Error Model
 init raw =
     Result.map Playing (JD.decodeValue decoder raw)
 
@@ -37,18 +37,19 @@ update msg model =
                     Task.succeed (PushSocket "speak" (JE.object []))
                         |> Task.perform identity
             in
-                ( Playing state, command )
+            ( Playing state, command )
 
         ( DeviceOrientationChanged orientation, PlayerAbleToSpeak state ) ->
             case orientation of
                 Ok { beta, gamma } ->
-                    if (abs (90 - beta) < 5 && abs gamma < 5) then
+                    if abs (90 - beta) < 5 && abs gamma < 5 then
                         let
                             command =
                                 Task.succeed (PushSocket "speak" (JE.object []))
                                     |> Task.perform identity
                         in
-                            ( Playing state, command )
+                        ( Playing state, command )
+
                     else
                         ( model, Cmd.none )
 
@@ -72,7 +73,7 @@ update msg model =
                     Task.succeed (PushSocket "choose_candidate" payload)
                         |> Task.perform identity
             in
-                ( model, command )
+            ( model, command )
 
         ( PlayerChosen _, PlayerChoosing state ) ->
             ( Playing state, Cmd.none )
@@ -99,7 +100,7 @@ view model =
                 ]
 
         PlayerChoosing state ->
-            div [ class "pure-form" ] <| logo :: (List.map viewCandidate state.players)
+            div [ class "pure-form" ] <| logo :: List.map viewCandidate state.players
 
 
 viewCandidate : Player.Model -> Html Msg

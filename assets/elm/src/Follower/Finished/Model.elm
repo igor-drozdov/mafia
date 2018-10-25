@@ -1,4 +1,4 @@
-module Follower.Finished.Model exposing (..)
+module Follower.Finished.Model exposing (Model, Msg(..))
 
 import Player
 

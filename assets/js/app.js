@@ -17,18 +17,21 @@
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
+import css from '../css/app.css';
+
 import embedSocketPortsTo from "./socket"
-import Elm from './main';
+import {Elm} from './main';
 
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
 if (elmLeaderDiv) {
   let gameId = elmLeaderDiv.dataset.gameId;
 
-  var app = Elm.Leader.embed(elmLeaderDiv, {
-    gameId: gameId,
-    state: elmLeaderDiv.dataset.gameState,
-    socketServer: elmLeaderDiv.dataset.socketServer
+  var app = Elm.Leader.init({
+    node: elmLeaderDiv,
+    flags: {
+      state: elmLeaderDiv.dataset.gameState,
+    }
   });
 
   embedSocketPortsTo(app, "leader:" + gameId)
@@ -45,10 +48,11 @@ if (elmFollowerDiv) {
   let gameId = elmFollowerDiv.dataset.gameId;
   let playerId = elmFollowerDiv.dataset.playerId;
 
-  var app = Elm.Follower.embed(elmFollowerDiv, {
-    gameId: gameId,
-    state: elmFollowerDiv.dataset.gameState,
-    playerId: playerId
+  var app = Elm.Follower.init({
+    node: elmFollowerDiv,
+    flags: {
+      state: elmFollowerDiv.dataset.gameState,
+    }
   });
 
   embedSocketPortsTo(app, "followers:" + gameId + ":" + playerId)

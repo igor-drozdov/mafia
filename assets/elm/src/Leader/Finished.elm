@@ -1,14 +1,14 @@
-module Leader.Finished exposing (..)
+module Leader.Finished exposing (init, subscriptions, update, view)
 
-import Html exposing (Html, div, text, img)
-import Html.Attributes exposing (src, style, class, id)
+import Html exposing (Html, div, img, text)
+import Html.Attributes exposing (class, id, src, style)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Leader.Finished.Model exposing (..)
 import Views.Logo exposing (logo)
 
 
-init : JE.Value -> Result String Model
+init : JE.Value -> Result JD.Error Model
 init raw =
     Result.map Finishing (JD.decodeValue decoder raw)
 
@@ -17,7 +17,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         _ ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
@@ -35,7 +37,7 @@ view model =
 
                 "mafia" ->
                     div [ id "mafia-wins", class "margin-top" ]
-                        [ img [ src "/images/mafia-wins.gif", style [ ( "width", "70%" ) ] ] []
+                        [ img [ src "/images/mafia-wins.gif", style "width" "70%" ] []
                         ]
 
                 _ ->

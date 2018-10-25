@@ -1,7 +1,7 @@
-port module Ports.Socket exposing (..)
+port module Ports.Socket exposing (Channel, init, join, joinListenerPort, joinPort, listen, on, onListenerPort, onPort, push, pushPort)
 
-import Json.Encode as JE
 import Dict exposing (Dict)
+import Json.Encode as JE
 
 
 port onPort : String -> Cmd msg
@@ -38,7 +38,7 @@ on event msgWrapper channel =
 
 join : Channel msg -> Cmd msg
 join channel =
-    Cmd.batch ((joinPort ()) :: (List.map onPort (Dict.keys channel.onEvents)))
+    Cmd.batch (joinPort () :: List.map onPort (Dict.keys channel.onEvents))
 
 
 push : String -> JE.Value -> Cmd msg
@@ -51,14 +51,14 @@ listen channel =
     let
         getHandler : ( String, JE.Value ) -> msg
         getHandler ( event, payload ) =
-            case (Dict.get event channel.onEvents) of
+            case Dict.get event channel.onEvents of
                 Just msgWrapper ->
                     msgWrapper payload
 
                 Nothing ->
                     channel.onUnknownEvent event payload
     in
-        Sub.batch
-            [ joinListenerPort (channel.onJoin)
-            , onListenerPort getHandler
-            ]
+    Sub.batch
+        [ joinListenerPort channel.onJoin
+        , onListenerPort getHandler
+        ]

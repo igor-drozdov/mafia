@@ -1,4 +1,4 @@
-port module Ports.Audio exposing (..)
+port module Ports.Audio exposing (play, playAudio)
 
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE

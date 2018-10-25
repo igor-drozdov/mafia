@@ -1,12 +1,12 @@
-module Follower.Init exposing (..)
+module Follower.Init exposing (displayOthers, init, socketMessages, subscriptions, update, view)
 
-import Html exposing (Html, div, text, button, img)
+import Follower.Init.Model exposing (..)
+import Html exposing (Html, button, div, img, text)
 import Html.Attributes exposing (src)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-import Follower.Init.Model exposing (..)
-import Views.Logo exposing (logo)
 import Player
+import Views.Logo exposing (logo)
 
 
 socketMessages : List ( String, JE.Value -> Msg )
@@ -16,7 +16,7 @@ socketMessages =
     ]
 
 
-init : JE.Value -> Result String Model
+init : JE.Value -> Result JD.Error Model
 init _ =
     Ok (Model Nothing [])
 
@@ -27,13 +27,19 @@ update msg model =
         RoleReceived raw ->
             case JD.decodeValue decoder raw of
                 Ok { role, players } ->
-                    { model | role = role, players = players } ! []
+                    ( { model | role = role, players = players }
+                    , Cmd.none
+                    )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         _ ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
@@ -42,8 +48,8 @@ subscriptions model =
 
 
 view : Model -> Html Msg
-view { role, players } =
-    case role of
+view model =
+    case model.role of
         Nothing ->
             div []
                 [ logo
@@ -54,7 +60,7 @@ view { role, players } =
             div []
                 [ div [] [ text ("You are " ++ role) ]
                 , img [ src ("/images/" ++ role ++ ".jpg") ] []
-                , displayOthers players
+                , displayOthers model.players
                 ]
 
 

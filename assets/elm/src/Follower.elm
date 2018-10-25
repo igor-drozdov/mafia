@@ -1,34 +1,34 @@
-module Follower exposing (..)
+module Follower exposing (Flags, Model, Msg(..), State(..), decoder, init, main, subscriptions, update, view)
 
 --where
 
-import Html exposing (Html, div, text)
-import Platform.Cmd
-import Follower.Init as InitWidget
+import Browser
 import Follower.Current as CurrentWidget
-import Follower.Finished as FinishedWidget
-import Follower.Init.Model as Init
 import Follower.Current.Model as Current
+import Follower.Finished as FinishedWidget
 import Follower.Finished.Model as Finished
+import Follower.Init as InitWidget
+import Follower.Init.Model as Init
+import Html exposing (Html, div, text)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
+import Platform.Cmd
 import Ports.Socket as Socket
 import Views.Logo exposing (animatedLogo)
+
 
 
 -- MAIN
 
 
 type alias Flags =
-    { gameId : String
-    , playerId : String
-    , state : String
+    { state : String
     }
 
 
 main : Program Flags Model Msg
 main =
-    Html.programWithFlags
+    Browser.element
         { init = init
         , update = update
         , view = view
@@ -62,7 +62,7 @@ type State
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { gameId, playerId, state } =
+init { state } =
     let
         initChannel =
             Socket.init (LoadGame state) UnknownSocketEvent
@@ -82,7 +82,7 @@ init { gameId, playerId, state } =
         joinCommand =
             Socket.join channelWithListeners
     in
-        ( Model channelWithListeners Loading, joinCommand )
+    ( Model channelWithListeners Loading, joinCommand )
 
 
 
@@ -106,7 +106,7 @@ subscriptions model =
         mainSubscriptions =
             [ Socket.listen model.channel ]
     in
-        Sub.batch (childSubscriptions :: mainSubscriptions)
+    Sub.batch (childSubscriptions :: mainSubscriptions)
 
 
 
@@ -115,9 +115,7 @@ subscriptions model =
 
 decoder : JD.Decoder Flags
 decoder =
-    JD.map3 Flags
-        (field "game_id" JD.string)
-        (field "player_id" JD.string)
+    JD.map Flags
         (field "state" JD.string)
 
 
@@ -137,12 +135,12 @@ update msg model =
                         _ ->
                             Result.map InitModel <| InitWidget.init raw
             in
-                case initStateResult of
-                    Ok initState ->
-                        ( { model | state = initState }, Cmd.none )
+            case initStateResult of
+                Ok initState ->
+                    ( { model | state = initState }, Cmd.none )
 
-                    Err err ->
-                        ( model, Cmd.none )
+                Err err ->
+                    ( model, Cmd.none )
 
         ( InitMsg (Init.Transition raw), InitModel modelState ) ->
             case CurrentWidget.init raw of
@@ -157,8 +155,9 @@ update msg model =
                 ( newModel, subCmd ) =
                     InitWidget.update m state
             in
-                { model | state = InitModel newModel }
-                    ! [ Cmd.map InitMsg subCmd ]
+            ( { model | state = InitModel newModel }
+            , Cmd.map InitMsg subCmd
+            )
 
         ( CurrentMsg (Current.PushSocket event payload), CurrentModel state ) ->
             ( model, Socket.push event payload )
@@ -168,16 +167,18 @@ update msg model =
                 ( newModel, subCmd ) =
                     CurrentWidget.update m state
             in
-                { model | state = CurrentModel newModel }
-                    ! [ Cmd.map CurrentMsg subCmd ]
+            ( { model | state = CurrentModel newModel }
+            , Cmd.map CurrentMsg subCmd
+            )
 
         ( FinishedMsg m, FinishedModel state ) ->
             let
                 ( newModel, subCmd ) =
                     FinishedWidget.update m state
             in
-                { model | state = FinishedModel newModel }
-                    ! [ Cmd.map FinishedMsg subCmd ]
+            ( { model | state = FinishedModel newModel }
+            , Cmd.map FinishedMsg subCmd
+            )
 
         _ ->
             ( model, Cmd.none )

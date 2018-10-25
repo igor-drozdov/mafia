@@ -1,4 +1,4 @@
-module Leader.Finished.Model exposing (..)
+module Leader.Finished.Model exposing (FinishingState, Model(..), Msg(..), decoder)
 
 import Json.Decode as JD exposing (field)
 
@@ -19,4 +19,4 @@ type Model
 decoder : JD.Decoder FinishingState
 decoder =
     JD.map FinishingState
-        (field "state" (JD.string))
+        (field "state" JD.string)

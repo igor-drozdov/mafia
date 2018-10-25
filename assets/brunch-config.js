@@ -51,10 +51,10 @@ exports.config = {
     elmBrunch: {
       elmFolder: "elm",
       mainModules: ["src/Leader.elm", "src/Follower.elm"],
-      makeParameters: ["--warn"],
+      makeParameters: [],
       outputFolder: '../js/',
       outputFile: 'main.js',
-      executablePath: '../node_modules/elm/binwrappers'
+      executablePath: '../node_modules/elm/bin'
     },
   },
 

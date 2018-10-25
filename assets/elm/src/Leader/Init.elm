@@ -1,15 +1,15 @@
-module Leader.Init exposing (..)
+module Leader.Init exposing (init, socketMessages, subscriptions, update, view, viewPlayer)
 
-import Player
-import Html exposing (Html, div, text, button)
+import Array exposing (Array, fromList)
+import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (id)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
 import Leader.Init.Model exposing (..)
-import Array exposing (Array, fromList)
 import List.Extra exposing (find)
+import Player
 import Ports.Audio exposing (playAudio)
-import Views.Logo exposing (logo, animatedLogo)
+import Views.Logo exposing (animatedLogo, logo)
 
 
 socketMessages : List ( String, JE.Value -> Msg )
@@ -20,7 +20,7 @@ socketMessages =
     ]
 
 
-init : JE.Value -> Result String Model
+init : JE.Value -> Result JD.Error Model
 init raw =
     JD.decodeValue decoder raw
 
@@ -29,7 +29,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         ( RolesAssigned raw, _ ) ->
-            model ! [ playAudio raw ]
+            ( model
+            , playAudio raw
+            )
 
         ( FollowerJoined raw, Wait state ) ->
             case JD.decodeValue Player.decoder raw of
@@ -41,18 +43,26 @@ update msg model =
                         newState =
                             Wait { state | players = Array.push player state.players }
                     in
-                        case foundModel of
-                            Just _ ->
-                                model ! []
+                    case foundModel of
+                        Just _ ->
+                            ( model
+                            , Cmd.none
+                            )
 
-                            Nothing ->
-                                newState ! []
+                        Nothing ->
+                            ( newState
+                            , Cmd.none
+                            )
 
                 Err error ->
-                    model ! []
+                    ( model
+                    , Cmd.none
+                    )
 
         _ ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
@@ -66,7 +76,7 @@ view model =
         Wait { total, players } ->
             div [ id "players" ]
                 [ animatedLogo
-                , div [] [ text ("Waiting for " ++ (toString total) ++ " players to connect...") ]
+                , div [] [ text ("Waiting for " ++ String.fromInt total ++ " players to connect...") ]
                 , div [] (List.map (viewPlayer players) (List.range 0 (total - 1)))
                 ]
 

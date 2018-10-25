@@ -1,8 +1,8 @@
-module Follower.Current.Model exposing (..)
+module Follower.Current.Model exposing (Model(..), Msg(..), PlayingState, decoder)
 
-import Player
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
+import Player
 import Ports.DeviceOrientation exposing (Orientation)
 
 
@@ -20,7 +20,7 @@ type Model
 type Msg
     = PlayerCanSpeak JE.Value
     | PlayerReadyToSpeak
-    | DeviceOrientationChanged (Result String Orientation)
+    | DeviceOrientationChanged (Result JD.Error Orientation)
     | CandidatesReceived JE.Value
     | PlayerChosen JE.Value
     | ChooseCandidate String
