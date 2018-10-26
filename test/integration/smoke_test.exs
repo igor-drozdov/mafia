@@ -79,7 +79,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
     Mafia.Players.Player.incity(game_uuid)
     |> where([p], p.role == ^role)
     |> Mafia.Repo.all()
-    |> List.first()
+    |> Enum.random()
   end
 
   def choose_player(player_name, innocent_name, sleep_time) when player_name == innocent_name do
