@@ -1,7 +1,8 @@
 defmodule MafiaWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :mafia
 
-  socket("/socket", MafiaWeb.UserSocket)
+  socket("/socket", MafiaWeb.UserSocket,
+    websocket: [check_origin: ["//mafia-game.gq", "//localhost"]])
 
   # Serve at "/" the static files from "priv/static" directory.
   #

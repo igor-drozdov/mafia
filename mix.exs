@@ -34,16 +34,17 @@ defmodule Mafia.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.2"},
+      {:phoenix, "~> 1.4.0-rc.2", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 2.0"},
       {:ecto_enum, "~> 1.0"},
       {:edeliver, ">= 1.6.0"},
+      {:poison, "~> 3.1"},
       {:distillery, "~> 2.0", warn_missing: false},
       {:ex_machina, "~> 2.2", only: [:test, :demo]},
       {:hound, "~> 1.0", only: [:test, :demo]}

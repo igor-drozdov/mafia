@@ -5,12 +5,6 @@ defmodule MafiaWeb.UserSocket do
   channel("leader:*", MafiaWeb.Leader.Channel)
   channel("followers:*", MafiaWeb.Followers.Channel)
 
-  ## Transports
-  transport(:websocket, Phoenix.Transports.WebSocket,
-    check_origin: ["//mafia-game.gq", "//localhost"])
-
-  # transport :longpoll, Phoenix.Transports.LongPoll
-
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
   # verification, you can put default assigns into
