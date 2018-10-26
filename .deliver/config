@@ -42,10 +42,10 @@ pre_erlang_clean_compile() {
 
     cd assets
     npm install
-    brunch build --production
+    node_modules/webpack/bin/webpack.js --mode production
     cd ..
 
     # run your custom task
-    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
+    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phx.digest $SILENCE
   "
 }
