@@ -4,7 +4,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
   @short_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:short)
   @medium_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:medium)
   @long_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:long)
-  @transport_delay 40
+  @transport_delay 35
   @number_of_players 5
 
   def create_game do

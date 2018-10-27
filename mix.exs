@@ -41,7 +41,7 @@ defmodule Mafia.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 1.0"},
       {:ecto_enum, "~> 1.0"},
       {:edeliver, ">= 1.6.0"},
       {:poison, "~> 3.1"},
