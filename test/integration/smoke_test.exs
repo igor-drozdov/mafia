@@ -5,10 +5,11 @@ defmodule MafiaWeb.Integration.SmokeTest do
   @medium_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:medium)
   @long_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:long)
   @transport_delay 40
+  @number_of_players 5
 
   def create_game do
     element = find_element(:name, "game[total]")
-    fill_field(element, 5)
+    fill_field(element, @number_of_players)
     submit_element(element)
 
     "http://localhost:4001/games/" <> game_uuid = current_url()
@@ -160,13 +161,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
 
     game_uuid = create_game()
 
-    players = [
-      "first_player",
-      "second_player",
-      "third_player",
-      "fourth_player",
-      "fifth_player"
-    ]
+    players = Enum.map (1..@number_of_players), & "#{&1}_player"
 
     players
     |> connect_players()
