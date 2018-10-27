@@ -4,7 +4,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
   @short_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:short)
   @medium_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:medium)
   @long_period Application.get_env(:mafia, :period) |> Keyword.fetch!(:long)
-  @transport_delay 30
+  @transport_delay 40
 
   def create_game do
     element = find_element(:name, "game[total]")
@@ -53,6 +53,8 @@ defmodule MafiaWeb.Integration.SmokeTest do
   end
 
   def player_speaks(player_name) do
+    :timer.sleep(@transport_delay)
+
     element = find_element(:id, "player-can-speak")
 
     assert inner_text(element) == "\n#{player_name}, speak!"

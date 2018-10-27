@@ -21,18 +21,23 @@ defmodule Mafia.Players.Chapters.PlayerCanSpeak do
     notify_follower(game_uuid, player.id)
   end
 
+  def handle_cast(:speak, %{game_uuid: game_uuid, player: player} = state) do
+    PlayerSpeaks.run(game_uuid, player, state)
+
+    {:stop, :shutdown, state}
+  end
+
+  def handle_cast({:sync, player_uuid}, %{game_uuid: game_uuid} = state) do
+    notify_follower(game_uuid, player_uuid)
+
+    {:noreply, state}
+  end
+
   def notify_leader(game_uuid, player) do
     Endpoint.broadcast("leader:#{game_uuid}", "player_can_speak", %{player: player})
   end
 
   def notify_follower(game_uuid, player_uuid) do
-    Endpoint.broadcast(
-      "followers:#{game_uuid}:#{player_uuid}", "player_can_speak", %{})
-  end
-
-  def handle_cast(:speak, %{game_uuid: game_uuid, player: player} = state) do
-    PlayerSpeaks.run(game_uuid, player, state)
-
-    {:stop, :shutdown, state}
+    Endpoint.broadcast("followers:#{game_uuid}:#{player_uuid}", "player_can_speak", %{})
   end
 end

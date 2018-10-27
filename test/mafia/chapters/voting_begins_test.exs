@@ -56,8 +56,6 @@ defmodule Mafia.Chapters.VotingBeginsTest do
         }
       end)
 
-      assert VotingBegins.all_players_voted?(players, 2)
-
       Enum.each(sockets, &leave(&1))
     end
   end

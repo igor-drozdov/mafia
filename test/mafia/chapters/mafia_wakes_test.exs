@@ -8,7 +8,7 @@ defmodule Mafia.Chapters.MafiaWakesTest do
 
   describe "#handle_run" do
     test "notity leader and mafia players" do
-      game = insert(:game, state: :current)
+      game = insert(:game)
       mafia = insert(:player, game_id: game.id, role: :mafia)
       innocent = insert(:player, game_id: game.id, role: :innocent)
       game_uuid = game.id

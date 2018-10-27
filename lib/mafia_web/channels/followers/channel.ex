@@ -8,14 +8,21 @@ defmodule MafiaWeb.Followers.Channel do
     [game_uuid, player_uuid] = String.split(ids, ":")
     game = Games.get_game!(game_uuid) |> Repo.preload(:players)
 
-    init(game, player_uuid, game.state)
-
     new_socket =
       socket
-      |> assign(:game_uuid, game_uuid)
+      |> assign(:game, game)
       |> assign(:player_uuid, player_uuid)
 
+    send(self(), :initialize)
+
     {:ok, game, new_socket}
+  end
+
+  def handle_info(:initialize, socket) do
+    %{game: game, player_uuid: player_uuid} = socket.assigns
+    init(game, player_uuid, game.state)
+
+    {:noreply, socket}
   end
 
   def init(game, player_uuid, :init) do
@@ -26,18 +33,12 @@ defmodule MafiaWeb.Followers.Channel do
 
     Endpoint.broadcast("leader:#{game.id}", "follower_joined", player)
 
-    if enough_players_connected?(game), do: handout_roles!(game)
+    if length(game.players) == game.total, do: Mafia.Chapters.HandoutRoles.run(game.id)
   end
 
-  def init(_, _, _) do
-  end
-
-  defp enough_players_connected?(game) do
-    length(game.players) == game.total
-  end
-
-  defp handout_roles!(game) do
-    Mafia.Chapters.HandoutRoles.run(game.id)
+  def init(game, player_uuid, _) do
+    Mafia.Narrator.current(game.id)
+    |> GenServer.cast({:sync, player_uuid})
   end
 
   def handle_in("choose_candidate", %{"player_id" => target_player_uuid}, socket) do
@@ -55,7 +56,7 @@ defmodule MafiaWeb.Followers.Channel do
     {:noreply, socket}
   end
 
-  defp current_data(%{game_uuid: game_uuid, player_uuid: current_player_uuid}) do
-    {current_player_uuid, Mafia.Narrator.current(game_uuid)}
+  defp current_data(%{game: game, player_uuid: current_player_uuid}) do
+    {current_player_uuid, Mafia.Narrator.current(game.id)}
   end
 end

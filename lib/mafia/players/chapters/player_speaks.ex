@@ -24,13 +24,13 @@ defmodule Mafia.Players.Chapters.PlayerSpeaks do
   end
 
   def notify_follower(game_uuid, player_uuid) do
-    Endpoint.broadcast(
-      "followers:#{game_uuid}:#{player_uuid}", "player_speaks", %{})
+    Endpoint.broadcast("followers:#{game_uuid}:#{player_uuid}", "player_speaks", %{})
   end
 
-  def handle_info(:transition,
-    %{game_uuid: game_uuid, other_players: other_players} = state) do
-
+  def handle_info(
+        :transition,
+        %{game_uuid: game_uuid, other_players: other_players} = state
+      ) do
     PlayerCanSpeak.run(game_uuid, other_players, state)
 
     {:stop, :shutdown, state}
