@@ -14,14 +14,14 @@ defmodule Mafia.Chapters.MafiaWakesTest do
       game_uuid = game.id
 
       {:ok, _, socket} =
-        socket("user_id", %{some: :assign})
+        socket(MafiaWeb.UserSocket, "user_id", %{some: :assign})
         |> join(
           MafiaWeb.Followers.Channel,
           "followers:#{game_uuid}:#{mafia.id}"
         )
 
       {:ok, _, leader_socket} =
-        socket("user_id", %{some: :assign})
+        socket(MafiaWeb.UserSocket, "user_id", %{some: :assign})
         |> join(
           MafiaWeb.Leader.Channel,
           "leader:#{game_uuid}"

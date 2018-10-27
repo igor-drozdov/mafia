@@ -12,7 +12,7 @@ defmodule MafiaWeb.Followers.ChannelTest do
     @endpoint.subscribe("leader:#{game_uuid}")
 
     {:ok, _, _} =
-      socket("user_id", %{some: :assign})
+      socket(MafiaWeb.UserSocket, "user_id", %{some: :assign})
       |> join(Channel, "followers:#{game_uuid}:#{player.id}")
 
     {:ok, player: player}

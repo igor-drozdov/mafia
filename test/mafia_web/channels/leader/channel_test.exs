@@ -9,7 +9,7 @@ defmodule MafiaWeb.Leader.ChannelTest do
     game = insert(:game) |> Mafia.Repo.preload(:players)
 
     {:ok, ^game, socket} =
-      socket("user_id", %{some: :assign})
+      socket(MafiaWeb.UserSocket, "user_id", %{some: :assign})
       |> join(Channel, "leader:#{game.id}")
 
     assert socket.assigns.game == game

@@ -22,7 +22,7 @@ defmodule Mafia.Chapters.VotingBeginsTest do
       sockets =
         Enum.map([nominated, another_nominated, general], fn player ->
           {:ok, _, socket} =
-            socket("user_id", %{})
+            socket(MafiaWeb.UserSocket, "user_id", %{})
             |> join(
               MafiaWeb.Followers.Channel,
               "followers:#{game_uuid}:#{player.id}"

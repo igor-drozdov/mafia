@@ -32,7 +32,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
       sockets =
         Enum.map(players, fn player ->
           {:ok, _, socket} =
-            socket("user_id", %{some: :assign})
+            socket(MafiaWeb.UserSocket, "user_id", %{some: :assign})
             |> join(Channel, "followers:#{game_uuid}:#{player.id}")
 
           socket
