@@ -1,8 +1,10 @@
 defmodule Mafia.Chapters.InnocentsWin do
   use Mafia.Chapter
 
+  alias Mafia.Services.Game
+
   defp handle_run(%{game_uuid: game_uuid} = state) do
-    Mafia.Services.FinishGame.run(game_uuid, winner: :innocents)
+    Game.Finish.run(game_uuid, winner: :innocents)
 
     {:stop, :shutdown, state}
   end

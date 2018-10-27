@@ -1,4 +1,4 @@
-defmodule Mafia.Services.FinishGame do
+defmodule Mafia.Services.Game.Finish do
   alias Mafia.{Games.Game, Games, Repo}
   alias MafiaWeb.Endpoint
 

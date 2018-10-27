@@ -1,7 +1,7 @@
-defmodule Mafia.Services.FinishGameTest do
+defmodule Mafia.Services.Game.FinishTest do
   use MafiaWeb.ChannelCase
 
-  alias Mafia.Services.FinishGame
+  alias Mafia.Services.Game.Finish
   alias Mafia.{Repo, Games}
 
   import Mafia.Factory
@@ -13,7 +13,7 @@ defmodule Mafia.Services.FinishGameTest do
 
   describe "state of the game and winner" do
     test "updates the game to finished state and creates a winner", %{game: game} do
-      FinishGame.run(game.id, winner: :mafia)
+      Finish.run(game.id, winner: :mafia)
 
       game = Games.get_game(game.id) |> Repo.preload(:winner)
 
@@ -27,7 +27,7 @@ defmodule Mafia.Services.FinishGameTest do
       game_uuid = game.id
 
       @endpoint.subscribe("leader:#{game_uuid}")
-      FinishGame.notify_leader(game_uuid, :mafia)
+      Finish.notify_leader(game_uuid, :mafia)
 
       assert_broadcast("finish_game", %{state: :mafia})
     end
