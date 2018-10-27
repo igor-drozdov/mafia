@@ -20,7 +20,7 @@ defmodule MafiaWeb.IntegrationCase do
   end
 
   setup do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Mafia.Repo, ownership_timeout: 300000)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Mafia.Repo, ownership_timeout: 300_000)
     Ecto.Adapters.SQL.Sandbox.mode(Mafia.Repo, {:shared, self()})
 
     :ok

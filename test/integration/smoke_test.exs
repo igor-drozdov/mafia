@@ -18,8 +18,8 @@ defmodule MafiaWeb.Integration.SmokeTest do
 
   def connect_players(players) do
     players
-    |> Enum.with_index
-    |> Enum.each(& connect_player(&1, current_url()))
+    |> Enum.with_index()
+    |> Enum.each(&connect_player(&1, current_url()))
 
     players
   end
@@ -104,7 +104,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
     :timer.sleep(@short_period)
 
     find_all_elements(:tag, "button")
-    |> Enum.find(& inner_text(&1) == String.upcase(innocent_name))
+    |> Enum.find(&(inner_text(&1) == String.upcase(innocent_name)))
     |> click()
   end
 
@@ -124,15 +124,15 @@ defmodule MafiaWeb.Integration.SmokeTest do
     :timer.sleep(@short_period)
 
     players
-    |> Enum.each(& player_speaks(&1))
+    |> Enum.each(&player_speaks(&1))
 
     innocent_player_name = get_player(game_uuid, ostrisized_role).name
 
     players
-    |> Enum.each(& choose_player(&1, innocent_player_name, @transport_delay))
+    |> Enum.each(&choose_player(&1, innocent_player_name, @transport_delay))
 
     players
-    |> Enum.each(& choose_player(&1, innocent_player_name, @transport_delay))
+    |> Enum.each(&choose_player(&1, innocent_player_name, @transport_delay))
 
     verify_player_ostrisized(innocent_player_name)
 
@@ -161,7 +161,11 @@ defmodule MafiaWeb.Integration.SmokeTest do
     game_uuid = create_game()
 
     players = [
-      "first_player","second_player", "third_player", "fourth_player", "fifth_player"
+      "first_player",
+      "second_player",
+      "third_player",
+      "fourth_player",
+      "fifth_player"
     ]
 
     players

@@ -14,8 +14,7 @@ config :mafia, MafiaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "alfAFmcEjAPGZz9EHxeGWHFSnHCSFlr9CzpmICKXRacsepBDO+9Mo1LiLp64NK5p",
   render_errors: [view: MafiaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Mafia.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Mafia.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -24,4 +23,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

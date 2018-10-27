@@ -42,7 +42,7 @@ defmodule Mafia.Chapters.HandoutRolesTest do
 
       Enum.each(Enum.zip(mafias, Enum.reverse(mafias)), fn {player, other_player} ->
         uuids = "#{game_uuid}:#{player.id}"
-        other_player = %{ other_player | role: nil }
+        other_player = %{other_player | role: nil}
 
         assert_receive %Phoenix.Socket.Message{
           event: "role_received",

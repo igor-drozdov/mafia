@@ -1,14 +1,18 @@
 defmodule MafiaWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :mafia
 
-  socket("/socket", MafiaWeb.UserSocket,
-    websocket: [check_origin: ["//mafia-game.gq", "//localhost"]])
+  socket(
+    "/socket",
+    MafiaWeb.UserSocket,
+    websocket: [check_origin: ["//mafia-game.gq", "//localhost"]]
+  )
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
-  plug(Plug.Static,
+  plug(
+    Plug.Static,
     at: "/",
     from: :mafia,
     gzip: false,
@@ -25,7 +29,8 @@ defmodule MafiaWeb.Endpoint do
 
   plug(Plug.Logger)
 
-  plug(Plug.Parsers,
+  plug(
+    Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison
@@ -37,7 +42,8 @@ defmodule MafiaWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug(Plug.Session,
+  plug(
+    Plug.Session,
     store: :cookie,
     key: "_mafia_key",
     signing_salt: "mIcx9ouF"
