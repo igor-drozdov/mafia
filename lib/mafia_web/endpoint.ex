@@ -15,7 +15,7 @@ defmodule MafiaWeb.Endpoint do
     Plug.Static,
     at: "/",
     from: :mafia,
-    gzip: false,
+    gzip: true,
     only: ~w(css fonts images audios js favicon.ico robots.txt)
   )
 
