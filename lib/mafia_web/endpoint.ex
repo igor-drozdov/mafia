@@ -16,7 +16,7 @@ defmodule MafiaWeb.Endpoint do
     at: "/",
     from: :mafia,
     gzip: true,
-    only: ~w(css fonts images audios js favicon.ico robots.txt)
+    only: ~w(css fonts images audios js favicon.ico robots.txt manifest.json)
   )
 
   # Code reloading can be explicitly enabled under the

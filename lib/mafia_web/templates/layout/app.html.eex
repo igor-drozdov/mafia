@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="theme-color" content="#cc2e55"/>
 
     <title>Mafia</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="icon" type="image/ico" href="<%= static_path(@conn, "/images/favicon.ico") %>">
+    <link rel="manifest" href="/manifest.json">
   </head>
 
   <body>
