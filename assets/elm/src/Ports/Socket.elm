@@ -1,4 +1,4 @@
-port module Ports.Socket exposing (Channel, init, join, joinListenerPort, joinPort, listen, on, onListenerPort, onPort, push, pushPort)
+port module Ports.Socket exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode as JE
@@ -58,7 +58,7 @@ listen channel =
                 Nothing ->
                     channel.onUnknownEvent event payload
     in
-    Sub.batch
-        [ joinListenerPort channel.onJoin
-        , onListenerPort getHandler
-        ]
+        Sub.batch
+            [ joinListenerPort channel.onJoin
+            , onListenerPort getHandler
+            ]

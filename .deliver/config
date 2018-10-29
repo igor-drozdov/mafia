@@ -42,10 +42,6 @@ pre_erlang_clean_compile() {
 
     cd assets
     npm install
-    cd elm
-    sh optimize.sh
-    cd ..
-    mv elm/main.js js/main.js
     ./node_modules/webpack/bin/webpack.js --mode production
     cd ..
 

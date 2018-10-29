@@ -35,7 +35,13 @@ module.exports = (env, options) => ({
           loader: 'elm-webpack-loader',
           options: {
             debug: options.mode === "development",
-            optimize: options.mode === "production"
+            optimize: options.mode !== "development",
+            pathToElm: '../node_modules/elm/bin/elm',
+            cwd: path.resolve(__dirname, 'elm'),
+            files: [
+              path.resolve(__dirname, "elm/src/Leader.elm"),
+              path.resolve(__dirname, "elm/src/Follower.elm")
+            ]
           }
         }
       },

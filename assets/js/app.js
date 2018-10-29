@@ -20,7 +20,8 @@
 import css from '../css/app.css';
 
 import embedSocketPortsTo from "./socket"
-import {Elm} from './main';
+import {Follower} from '../elm/src/Follower.elm';
+import {Elm} from '../elm/src/Leader.elm';
 
 const elmLeaderDiv = document.querySelector('#elm_leader_target');
 
@@ -48,7 +49,7 @@ if (elmFollowerDiv) {
   let gameId = elmFollowerDiv.dataset.gameId;
   let playerId = elmFollowerDiv.dataset.playerId;
 
-  var app = Elm.Follower.init({
+  var app = Follower.init({
     node: elmFollowerDiv,
     flags: {
       state: elmFollowerDiv.dataset.gameState,
