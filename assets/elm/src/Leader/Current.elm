@@ -1,6 +1,6 @@
 module Leader.Current exposing (init, socketMessages, subscriptions, update, view)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, text, span)
 import Html.Attributes exposing (class, id)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
@@ -111,13 +111,19 @@ view model =
         PlayerAbleToSpeak player ->
             div [ id "player-can-speak" ]
                 [ logo
-                , div [] [ text (player.name ++ ", speak!") ]
+                , div []
+                    [ span [ class "colored" ] [ text player.name ]
+                    , span [] [ text ", speak!" ]
+                    ]
                 ]
 
         PlayerSpeaking { player, elapsed } ->
             div [ id "player-speaks" ]
                 [ animatedCircuit (div [ class "elapsed" ] [ text (String.fromInt (elapsed // 1000)) ])
-                , div [] [ text (player.name ++ " speaks!") ]
+                , div []
+                    [ span [ class "colored" ] [ text player.name ]
+                    , span [] [ text " speaks!" ]
+                    ]
                 ]
 
         PlayerChoosing player ->

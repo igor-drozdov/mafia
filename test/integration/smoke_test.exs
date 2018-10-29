@@ -58,7 +58,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
 
     element = find_element(:id, "player-can-speak")
 
-    assert inner_text(element) == "\n#{player_name}, speak!"
+    assert inner_text(element) == "#{player_name}, speak!"
 
     change_session_to(player_name, user_agent: :safari_iphone)
 
@@ -118,7 +118,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
       find_element(:class, "ostrisized-player")
       |> inner_text()
 
-    assert message == "\nThe following players is ostracized from city:\n#{player_name}"
+    assert message == "The following players is ostracized from city:\n#{player_name}"
   end
 
   def play_round(players, game_uuid, ostrisized_role) do
@@ -161,7 +161,7 @@ defmodule MafiaWeb.Integration.SmokeTest do
 
     game_uuid = create_game()
 
-    players = Enum.map (1..@number_of_players), & "#{&1}_player"
+    players = Enum.map(1..@number_of_players, &"#{&1}_player")
 
     players
     |> connect_players()

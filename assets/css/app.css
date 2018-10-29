@@ -61,8 +61,8 @@ body {
 }
 
 .logo {
-  margin-top: 3%;
-  margin-bottom: 2%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   position: relative;
 }
 
@@ -80,12 +80,11 @@ body {
 
 .elapsed {
   color: #cc2e55;
-  position: absolute;
+  position: relative;
   transform: translateY(-50%) translateX(50%);
   top: 50%;
   right: 50%;
-  font-size: 10em;
-  font-weight: bold;
+  font-size: 15em;
 }
 
 @media only screen and (max-width: 640px) {
@@ -104,7 +103,16 @@ body {
 html, button, input, select, textarea,
 .pure-g [class *= "pure-u"] {
     /* Set your content font stack here: */
-    font-family: sans-serif;
+    font-family: 'Spicy Rice', cursive;
+    font-size: 1.15em;
+}
+
+.colored {
+  color: #cc2e55;
+}
+
+.circuit {
+  height: 350px;
 }
 
 @import url("./phoenix.css");

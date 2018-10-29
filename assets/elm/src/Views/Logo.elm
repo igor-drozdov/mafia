@@ -20,7 +20,6 @@ animatedLogo =
 
 animatedCircuit : Html msg -> Html msg
 animatedCircuit content =
-    div [ class "logo" ]
-        [ img [ src "/images/animated-circuit.svg" ] []
-        , content
+    div [ class "logo", class "circuit" ]
+        [ content
         ]
