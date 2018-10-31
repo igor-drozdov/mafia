@@ -1,6 +1,8 @@
-# Mafia
+Web application for playing Mafia game offline. What does it mean? Please, check out the blog post about it for an explanation!
 
-To start your Phoenix server:
+# Development
+
+To start the Phoenix server:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
@@ -9,12 +11,13 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+# Tests
 
-## Learn more
+To run unit and acceptance tests:
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+  * Install [`chromedriver`](http://chromedriver.chromium.org/getting-started)
+  * Start tests with `mix test`
+
+To run acceptance tests in demonstrantion mode (deliberately slower to view the behaviour of the app in a browser):
+
+  * Start tests with `MIX_ENV=demo mix test --trace test/integration/smoke_test.exs`
