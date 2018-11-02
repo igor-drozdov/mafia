@@ -1,4 +1,4 @@
-Web application for playing Mafia game offline. What does it mean? Please, check out the blog post about it for an explanation!
+Web application for playing Mafia game offline. What does it mean? Please, check out [`the blog post`](https://ihar.me/elixir/2018/10/26/mafia-werewolf-game-elixir-phoenix-elm/) about it for an explanation!
 
 # Development
 
